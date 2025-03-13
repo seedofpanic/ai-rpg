@@ -3,12 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "vite",
-    "build": "vite build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "electron-dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
-    "electron-pack": "electron-builder -c.extraMetadata.main=build/main.js",
-    "preelectron-pack": "npm run build"
+    "build": "vite build"
   },
   "keywords": [],
   "author": "",
