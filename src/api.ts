@@ -1,13 +1,10 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { npcStore } from './models/npcs';
 import { gameStore } from 'models/gameStore';
-import { itemsData } from './models/itemsData';
-import { lore } from './models/loreBook';
 import { createContext } from './contextCreator';
 
 export const sendMessage = async (message: string, npcId: string): Promise<string> => {
     try {
-        const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GEMINI_API_KEY || '');
+        const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || '');
         const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
         const player = gameStore.player;
 

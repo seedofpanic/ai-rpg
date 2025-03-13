@@ -14,7 +14,7 @@ const GameContainer = styled.div`
 `;
 
 const Game: React.FC = () => {
-  const [dialoguePosition, setDialoguePosition] = useState({ top: 20, left: 50 });
+  const [dialoguePosition, setDialoguePosition] = useState({ top: 200, left: 500 });
   const [dialogueSize, setDialogueSize] = useState({ width: 600, height: 400 });
   const [isDragging, setIsDragging] = useState(false);
 
