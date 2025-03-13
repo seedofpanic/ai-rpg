@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { gameStore } from 'models/gameStore';
 import { createContext } from './contextCreator';
 
-export const sendMessage = async (message: string, npcId: string): Promise<string> => {
+export const sendMessage = async (message: string, npcId: string): Promise<{text: string, tokensCount: number} | null> => {
     try {
         const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || '');
         const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
@@ -12,13 +12,13 @@ export const sendMessage = async (message: string, npcId: string): Promise<strin
             throw new Error('Player not found');
         }
 
-        const prompt = createContext(npcId, player, message);
+        const prompt = createContext(model, npcId, player, message);
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
-        return response.text();
+        return {text: response.text(), tokensCount: response.usageMetadata.candidatesTokensDetails[0].tokensCount};
     } catch (error) {
         console.error('Error calling Gemini API:', error);
-        return 'Error: Failed to get response from AI';
+        return null;
     }
 };

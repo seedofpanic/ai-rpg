@@ -5,6 +5,7 @@ import { itemsData } from './itemsData'; // Import itemsData
 interface Message {
   text: string;
   isPlayer: boolean;
+  tokensCount: number;
 }
 
 interface InventoryItem {

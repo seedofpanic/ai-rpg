@@ -2,15 +2,16 @@ import { npcStore } from './models/npcs';
 import { itemsData } from './models/itemsData';
 import { lore } from './models/loreBook';
 import { Player } from 'models/Player';
+import { GenerativeModel } from '@google/generative-ai';
 
-export const createContext = (npcId: string, player: Player, message: string) => {
+export const createContext = (model: GenerativeModel, npcId: string, player: Player, message: string) => {
     const npcContext = npcStore.npcs[npcId];
 
     if (!npcContext) {
         throw new Error('NPC not found');
     }
 
-    return `
+    const beforeDialog = `
     You are an NPC named ${npcContext.name}. Here is your context:
 
     Basic Information:
@@ -22,7 +23,7 @@ export const createContext = (npcId: string, player: Player, message: string) =>
     - Gold: ${npcContext.gold}
 
     Knowledge and Experience:
-    Agnir, Kadera, ${npcContext.knowledge.map(k => `- ${k}`).join('\n')}
+    Agnir, Kaldera, ${npcContext.knowledge.map(k => `- ${k}`).join('\n')}
 
     Location (${npcContext.location.name}):
     ${npcContext.location.description}
@@ -53,7 +54,8 @@ export const createContext = (npcId: string, player: Player, message: string) =>
     - Gold: ${player.gold}
 
     Recent Dialog:
-    ${npcContext.dialogueHistory.slice(-5).map(d => `${d.isPlayer ? 'Player' : npcContext.name}: ${d.text}`).join('\n')}
+    `;
+    const afterDialog = `
 
     Lore:
     ${lore}
@@ -64,4 +66,17 @@ export const createContext = (npcId: string, player: Player, message: string) =>
     If you found the player's message offensive, add "*offensive*".
     If you found the player's message interesting, add "*interesting*".
     Player's message: ${message}`;
+
+    let tokensCount = 0;
+    let dialogIndex = 0;
+
+    while (tokensCount < 500000 && dialogIndex < npcContext.dialogueHistory.length) {
+        const dialogItem = npcContext.dialogueHistory[dialogIndex];
+        tokensCount += dialogItem.tokensCount || 20; // 20 for hello message
+        dialogIndex++;
+    }
+    const dialogContext = dialogIndex > 1 ? npcContext.dialogueHistory.slice(-dialogIndex + 1).map(d => `${d.isPlayer ? 'Player' : npcContext.name}: ${d.text}`).join('\n') : '';
+    console.log("Total dialog tokens count:", tokensCount);
+
+    return `${beforeDialog}${dialogContext}${afterDialog}`;
 };

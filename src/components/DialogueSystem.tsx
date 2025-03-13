@@ -37,7 +37,7 @@ const DialogueContainer = styled.div<{ width: number; height: number; top: numbe
 `;
 
 const MessageLog = styled.div`
-  height: 200px;
+  min-height: 200px;
   overflow-y: auto;
   margin-bottom: 10px;
   padding: 10px;
@@ -130,9 +130,16 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, player,
     // Send message to API with NPC context
     try {
         const response = await sendMessage(input, npcId);
-        npcContext.state = response.match(/\*(.*?)\*/)?.[1] || npcContext.state;
-        const text = response.replace(/\*(.*?)\*/g, '').replace(" +", " "); // Remove state from response
-        npcContext.dialogueHistory.push({text: text, isPlayer: false}); // Save to dialogue history
+
+        if (!response) {
+            return;
+        }
+
+        const { text, tokensCount } = response;
+
+        npcContext.state = text.match(/\*(.*?)\*/)?.[1] || npcContext.state;
+        const message = text.replace(/\*(.*?)\*/g, '').replace(" +", " "); // Remove state from response
+        npcContext.dialogueHistory.push({text: message, isPlayer: false, tokensCount }); // Save to dialogue history
     } catch (error) {
         console.error('Failed to send message:', error);
     }
