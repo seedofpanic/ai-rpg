@@ -31,7 +31,7 @@ touch .env
 
 # Open the .env file in a text editor and add the necessary environment variables
 # Example:
-# REACT_APP_GEMINI_API_KEY=your_api_key_here
+# VITE_GEMINI_API_KEY=your_api_key_here
 ```
 
 You can obtain your API key from [Google AI Studio](https://aistudio.google.com/apikey).
