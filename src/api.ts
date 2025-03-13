@@ -12,38 +12,45 @@ export const sendMessage = async (message: string, npcId: string, player: { name
         }
 
         const prompt = `
-You are playing the role of an NPC named ${npcContext.name}. Here is your context:
+        You are an NPC named ${npcContext.name}. Here is your context:
 
-Basic Information:
-- Role: ${npcContext.role}
-- Personality: ${npcContext.personality}
-- Background: ${npcContext.background}
+        Basic Information:
+        - Role: ${npcContext.role}
+        - Personality: ${npcContext.personality}
+        - Background: ${npcContext.background}
 
-Knowledge and Experience:
-${npcContext.knowledge.map(k => `- ${k}`).join('\n')}
+        Knowledge and Experience:
+        ${npcContext.knowledge.map(k => `- ${k}`).join('\n')}
 
-Location (${npcContext.location.name}):
-${npcContext.location.description}
+        Location (${npcContext.location.name}):
+        ${npcContext.location.description}
 
-Environment:
-- Nearby NPCs: ${npcContext.location.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].role}`).join(', ')}
-- Location Features: ${npcContext.environmentKnowledge.locationFeatures.join(', ')}
-- Current Events: ${npcContext.environmentKnowledge.localEvents.join(', ')}
-- Common Visitors: ${npcContext.environmentKnowledge.commonVisitors.join(', ')}
+        Environment:
+        - Nearby NPCs: ${npcContext.location.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].role}`).join(', ')}
+        - Location Features: ${npcContext.environmentKnowledge.locationFeatures.join(', ')}
+        - Current Events: ${npcContext.environmentKnowledge.localEvents.join(', ')}
+        - Common Visitors: ${npcContext.environmentKnowledge.commonVisitors.join(', ')}
 
-Relationships with other NPCs:
-${Object.entries(npcContext.relationships).map(([name, relation]) => `- ${name}: ${relation}`).join('\n')}
+        Relationships with other NPCs:
+        ${Object.entries(npcContext.relationships).map(([name, relation]) => `- ${name}: ${relation}`).join('\n')}
 
-Other Locations:
-${npcStore.locations.map(loc => `- ${loc.name}: ${loc.description}\n NPCs there: ${loc.npcs.join(",")} ${loc.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].role}`).join(', ')}`).join('\n')}
+        Other Locations:
+        ${npcStore.locations.map(loc => {
+        const npcs = ` NPCs there: ${loc.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].role}`).join(', ')}`
 
-Player:
-- Name: ${player.name}
-- Gender: ${player.gender}
-- Race: ${player.race}
-- Class: ${player.class}
+        return `- ${loc.name}: ${loc.description}\n${loc.npcs.length ? npcs : ''}`
+        }).join('\n')}
 
-Respond according to this context, considering your environment and current location. You can mention location details, events, and other NPCs if appropriate. Player's message: ${message}`;
+        Player:
+        - Name: ${player.name}
+        - Gender: ${player.gender}
+        - Race: ${player.race}
+        - Class: ${player.class}
+
+        Recent Dialog:
+        ${npcContext.dialogueHistory.slice(-5).map(d => `${d.isPlayer ? 'Player' : npcContext.name}: ${d.text}`).join('\n')}
+
+        Respond based on this context, considering your environment and current location. Mention location details, events, and other NPCs if relevant. Keep it brief. Player's message: ${message}`;
 
         
         const result = await model.generateContent(prompt);

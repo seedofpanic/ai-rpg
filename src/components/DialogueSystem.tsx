@@ -116,7 +116,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, player 
     if (input.trim() === "") return;
 
     // Add player message to chat
-    npcContext.dialogueHistory.push({text: input, isPlayer: false}); // Save to dialogue history
+    npcContext.dialogueHistory.push({text: input, isPlayer: true}); // Save to dialogue history
     setInput("");
 
     // Send message to API with NPC context
