@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import NPC from './NPC';
-import Player from './Player';
+import PlayerView from './PlayerView';
 import { observer } from 'mobx-react-lite';
 import { npcStore } from '../models/npcs';
 import { locations } from '../models/npcs'; // Import locations
+import { Player } from '../models/Player'; // Import Player
 
 const MapContainer = styled.div`
   width: 100%;
@@ -32,12 +33,7 @@ const LocationContainer = styled.div<{ x: number; y: number; width: number; heig
 
 interface MapProps {
   onNpcInteraction: (npcId: string) => void;
-  player: {
-    name: string;
-    gender: string;
-    race: string;
-    class: string;
-  };
+  player: Player;
 }
 
 const Map: React.FC<MapProps> = ({ onNpcInteraction, player }) => {
@@ -52,7 +48,7 @@ const Map: React.FC<MapProps> = ({ onNpcInteraction, player }) => {
 
   return (
     <MapContainer onClick={handleClick}>
-      <Player x={playerPosition.x} y={playerPosition.y} />
+      <PlayerView x={playerPosition.x} y={playerPosition.y} />
       {locations.map((location, index) => (
         <LocationContainer key={index} x={location.x} y={location.y} width={location.width} height={location.height}>
           {location.name}

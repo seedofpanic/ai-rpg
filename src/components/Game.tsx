@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Map from './Map';
 import DialogueSystem from './DialogueSystem';
-import PlayerCustomization from './PlayerCustomization'; // Import PlayerCustomization
+import PlayerCustomization from './PlayerCustomization';
+import { observer } from 'mobx-react-lite';
+import { gameStore } from '../models/gameStore'; // Import gameStore
 
 const GameContainer = styled.div`
   width: 100vw;
@@ -11,50 +13,27 @@ const GameContainer = styled.div`
   overflow: hidden;
 `;
 
-interface GameState {
-  isDialogueOpen: boolean;
-  activeNpcId: string | null;
-}
-
 const Game: React.FC = () => {
-  const [gameState, setGameState] = useState<GameState>({
-    isDialogueOpen: false,
-    activeNpcId: null,
-  });
-
-  const [player, setPlayer] = useState({
-    name: '',
-    gender: '',
-    race: '',
-    class: ''
-  });
-
   const handleNpcInteraction = (npcId: string) => {
-    setGameState({
-      isDialogueOpen: true,
-      activeNpcId: npcId,
-    });
+    gameStore.openDialogue(npcId);
   };
 
   const handleCloseDialogue = () => {
-    setGameState({
-      isDialogueOpen: false,
-      activeNpcId: null,
-    });
+    gameStore.closeDialogue();
   };
 
   return (
     <GameContainer>
-      {!player.name ? (
-        <PlayerCustomization onCustomize={setPlayer} />
+      {!gameStore.player ? (
+        <PlayerCustomization onCustomize={(player) => gameStore.setPlayer(player)} />
       ) : (
         <>
-          <Map onNpcInteraction={handleNpcInteraction} player={player} />
-          {gameState.isDialogueOpen && (
+          <Map onNpcInteraction={handleNpcInteraction} player={gameStore.player} />
+          {gameStore.isDialogueOpen && (
             <DialogueSystem
-              npcId={gameState.activeNpcId!}
+              npcId={gameStore.activeNpcId!}
               onClose={handleCloseDialogue}
-              player={player}
+              player={gameStore.player}
             />
           )}
         </>
@@ -63,4 +42,4 @@ const Game: React.FC = () => {
   );
 };
 
-export default Game;
+export default observer(Game);

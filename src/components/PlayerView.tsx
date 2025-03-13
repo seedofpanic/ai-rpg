@@ -18,8 +18,8 @@ const PlayerContainer = styled.div<PlayerProps>`
   transition: all 0.3s ease;
 `;
 
-const Player: React.FC<PlayerProps> = ({ x, y }) => {
+const PlayerView: React.FC<PlayerProps> = ({ x, y }) => {
   return <PlayerContainer x={x} y={y} />;
 };
 
-export default Player; 
+export default PlayerView; 

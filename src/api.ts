@@ -1,10 +1,17 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { npcStore } from './models/npcs';
+import { gameStore } from 'models/gameStore';
+import { itemsData } from './models/itemsData';
 
-export const sendMessage = async (message: string, npcId: string, player: { name: string; gender: string; race: string; class: string }): Promise<string> => {
+export const sendMessage = async (message: string, npcId: string): Promise<string> => {
     try {
         const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GEMINI_API_KEY || '');
         const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+        const player = gameStore.player;
+
+        if (!player) {
+            throw new Error('Player not found');
+        }
         
         const npcContext = npcStore.npcs[npcId];
         if (!npcContext) {
@@ -18,6 +25,9 @@ export const sendMessage = async (message: string, npcId: string, player: { name
         - Role: ${npcContext.role}
         - Personality: ${npcContext.personality}
         - Background: ${npcContext.background}
+        You have only items that are in your inventory:
+        ${npcContext.inventory?.map(item => `- ${itemsData.get(item.itemId)?.name} x${item.quantity}`).join('\n') || 'No items in inventory'}
+        - Gold: ${npcContext.gold}
 
         Knowledge and Experience:
         ${npcContext.knowledge.map(k => `- ${k}`).join('\n')}
@@ -46,6 +56,9 @@ export const sendMessage = async (message: string, npcId: string, player: { name
         - Gender: ${player.gender}
         - Race: ${player.race}
         - Class: ${player.class}
+        Players inventory:
+        ${player.inventory?.map(item => `- ${itemsData.get(item.itemId)?.name} x${item.quantity}`).join('\n') || 'No items in inventory'}
+        - Gold: ${player.gold}
 
         Recent Dialog:
         ${npcContext.dialogueHistory.slice(-5).map(d => `${d.isPlayer ? 'Player' : npcContext.name}: ${d.text}`).join('\n')}

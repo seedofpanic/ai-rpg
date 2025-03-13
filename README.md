@@ -21,6 +21,21 @@ cd ai-rpg
 npm install
 ```
 
+## Environment Variables
+
+Create a `.env` file in the root directory of the project to configure environment variables.
+
+```bash
+# Create a .env file
+touch .env
+
+# Open the .env file in a text editor and add the necessary environment variables
+# Example:
+# REACT_APP_GEMINI_API_KEY=your_api_key_here
+```
+
+You can obtain your API key from [Google AI Studio](https://aistudio.google.com/apikey).
+
 ## Usage
 
 Instructions on how to use the project.

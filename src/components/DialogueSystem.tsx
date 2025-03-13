@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { sendMessage } from '../api';
 import { npcStore } from '../models/npcs';
 import { observer } from 'mobx-react';
+import { gameStore } from '../models/gameStore'; // Import gameStore
 
 interface DialogueSystemProps {
   npcId: string;
@@ -121,7 +122,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, player 
 
     // Send message to API with NPC context
     try {
-        const response = await sendMessage(input, npcId, player);
+        const response = await sendMessage(input, npcId);
         npcContext.state = response.match(/\*(.*?)\*/)?.[1] || npcContext.state;
         const text = response.replace(/\*(.*?)\*/g, '').replace(" +", " "); // Remove state from response
         npcContext.dialogueHistory.push({text: text, isPlayer: false}); // Save to dialogue history

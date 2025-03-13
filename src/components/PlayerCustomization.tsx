@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { gameStore } from '../models/gameStore';
+import { Player } from '../models/Player'; // Import Player
 
 const CustomizationContainer = styled.div`
   display: flex;
@@ -43,18 +45,20 @@ const Button = styled.button`
 `;
 
 interface PlayerCustomizationProps {
-  onCustomize: (player: { name: string; gender: string; race: string; class: string }) => void;
+  onCustomize: (player: Player) => void;
 }
 
 const PlayerCustomization: React.FC<PlayerCustomizationProps> = ({ onCustomize }) => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState('Yin');
   const [gender, setGender] = useState('Female');
   const [race, setRace] = useState('Elf');
   const [playerClass, setPlayerClass] = useState('Mage');
 
   const handleSubmit = () => {
     if (name && gender && race && playerClass) {
-      onCustomize({ name, gender, race, class: playerClass });
+      const player = new Player(name, gender, race, playerClass);
+      gameStore.setPlayer(player); // Set player in gameStore
+      onCustomize(player);
     }
   };
 

@@ -1,9 +1,15 @@
 import { v4 as uuidv4 } from 'uuid';
 import { makeAutoObservable } from 'mobx';
+import { itemsData } from './itemsData'; // Import itemsData
 
 interface Message {
   text: string;
   isPlayer: boolean;
+}
+
+interface InventoryItem {
+  itemId: string;
+  quantity: number;
 }
 
 export interface NPC {
@@ -24,6 +30,8 @@ export interface NPC {
     };
     dialogueHistory: Message[]; // Add dialogueHistory
     state?: string; // Add state
+    inventory?: InventoryItem[]; // Add inventory
+    gold: number; // Add gold
 }
 
 const names = ["Mikhail", "Vasily", "Peter", "Anna", "Ivan", "Alexey", "Dmitry", "Nikolay", "Elena", "Olga", "Maria", "Sergey", "Andrey", "Tatyana", "Yulia", "Alexander", "Vladimir", "Ekaterina", "Natalya", "Galina"];
@@ -122,6 +130,16 @@ function getRandomElement<T>(arr: T[]): T {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
+function generateRandomInventory(): InventoryItem[] {
+    const inventorySize = Math.floor(Math.random() * 5) + 1; // Random inventory size between 1 and 5
+    const itemKeys = Array.from(itemsData.keys());
+    const inventory = new Set<InventoryItem>();
+    while (inventory.size < inventorySize) {
+        inventory.add({itemId: getRandomElement(itemKeys), quantity: 1}); // Random quantity between 1 and 3
+    }
+    return Array.from(inventory);
+}
+
 function generateRandomNPC(locs: Location[]): NPC {
     const id = uuidv4();
     const name = getRandomElement(names);
@@ -148,7 +166,9 @@ function generateRandomNPC(locs: Location[]): NPC {
             locationFeatures: ["Random feature 1", "Random feature 2"],
             commonVisitors: ["Random visitor 1", "Random visitor 2"]
         },
-        dialogueHistory: [] // Initialize dialogueHistory
+        dialogueHistory: [], // Initialize dialogueHistory
+        inventory: generateRandomInventory(), // Initialize inventory with random items from itemsData
+        gold: Math.floor(Math.random() * 200) // Initialize gold
     });
 
     location.npcs.push(npc.id);
