@@ -45,6 +45,10 @@ Instructions on how to use the project.
 npm start
 ```
 
+## Contributing
+
+Any contribution is welcome.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

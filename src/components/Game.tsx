@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Map from './Map';
 import DialogueSystem from './DialogueSystem';
@@ -14,6 +14,27 @@ const GameContainer = styled.div`
 `;
 
 const Game: React.FC = () => {
+  const [dialoguePosition, setDialoguePosition] = useState({ top: 20, left: 50 });
+  const [dialogueSize, setDialogueSize] = useState({ width: 600, height: 400 });
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isDragging) {
+      setDialoguePosition({
+        top: e.clientY - 20,
+        left: e.clientX + 100,
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
   const handleNpcInteraction = (npcId: string) => {
     gameStore.openDialogue(npcId);
   };
@@ -23,7 +44,10 @@ const Game: React.FC = () => {
   };
 
   return (
-    <GameContainer>
+    <GameContainer
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+    >
       {!gameStore.player ? (
         <PlayerCustomization onCustomize={(player) => gameStore.setPlayer(player)} />
       ) : (
@@ -31,9 +55,12 @@ const Game: React.FC = () => {
           <Map onNpcInteraction={handleNpcInteraction} player={gameStore.player} />
           {gameStore.isDialogueOpen && (
             <DialogueSystem
+              onTitleMouseDown={handleMouseDown}
               npcId={gameStore.activeNpcId!}
               onClose={handleCloseDialogue}
               player={gameStore.player}
+              position={dialoguePosition}
+              size={dialogueSize}
             />
           )}
         </>

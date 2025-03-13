@@ -14,19 +14,26 @@ interface DialogueSystemProps {
     race: string;
     class: string;
   };
+  position: { top: number; left: number };
+  size: { width: number; height: number };
+  onTitleMouseDown: (e: React.MouseEvent) => void;
 }
 
-const DialogueContainer = styled.div`
+const DialogueContainer = styled.div<{ width: number; height: number; top: number; left: number }>`
   position: absolute;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 80%;
-  max-width: 600px;
+  width: ${props => props.width}px;
+  height: ${props => props.height}px;
+  top: ${props => props.top}px;
+  left: ${props => props.left}px;
   background-color: rgba(38, 70, 83, 0.95);
   border-radius: 8px;
   padding: 20px;
   color: white;
+  resize: both;
+  overflow: auto;
 `;
 
 const MessageLog = styled.div`
@@ -96,7 +103,7 @@ const NPCHeader = styled.div`
   text-align: center;
 `;
 
-const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, player }) => {
+const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, player, position, size, onTitleMouseDown }) => {
   const npcContext = npcStore.npcs[npcId];
   const [input, setInput] = useState("");
   const messageLogRef = useRef<HTMLDivElement>(null);
@@ -138,9 +145,15 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, player 
   };
 
   return (
-    <DialogueContainer>
+    <DialogueContainer
+      style={{display: "flex", flexDirection: "column"}}
+      width={size.width}
+      height={size.height}
+      top={position.top}
+      left={position.left}
+    >
       <CloseButton onClick={onClose}>×</CloseButton>
-      <NPCHeader>{npcContext?.name} {npcContext.role} {npcContext.state}</NPCHeader>
+      <NPCHeader onMouseDown={onTitleMouseDown}>{npcContext?.name} {npcContext.role} {npcContext.state}</NPCHeader>
       <MessageLog ref={messageLogRef}>
         {npcContext.dialogueHistory.map((message, index) => (
           <Message key={index} $isPlayer={message.isPlayer}>
