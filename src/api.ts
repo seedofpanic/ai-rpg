@@ -12,38 +12,38 @@ export const sendMessage = async (message: string, npcId: string, player: { name
         }
 
         const prompt = `
-Ты играешь роль NPC по имени ${npcContext.name}. Вот твой контекст:
+You are playing the role of an NPC named ${npcContext.name}. Here is your context:
 
-Основная информация:
-- Роль: ${npcContext.role}
-- Личность: ${npcContext.personality}
-- Предыстория: ${npcContext.background}
+Basic Information:
+- Role: ${npcContext.role}
+- Personality: ${npcContext.personality}
+- Background: ${npcContext.background}
 
-Знания и опыт:
+Knowledge and Experience:
 ${npcContext.knowledge.map(k => `- ${k}`).join('\n')}
 
-Местоположение (${npcContext.location.name}):
+Location (${npcContext.location.name}):
 ${npcContext.location.description}
 
-Окружение:
-- Ближайшие NPC: ${npcContext.location.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].role}`).join(', ')}
-- Особенности локации: ${npcContext.environmentKnowledge.locationFeatures.join(', ')}
-- Текущие события: ${npcContext.environmentKnowledge.localEvents.join(', ')}
-- Обычные посетители: ${npcContext.environmentKnowledge.commonVisitors.join(', ')}
+Environment:
+- Nearby NPCs: ${npcContext.location.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].role}`).join(', ')}
+- Location Features: ${npcContext.environmentKnowledge.locationFeatures.join(', ')}
+- Current Events: ${npcContext.environmentKnowledge.localEvents.join(', ')}
+- Common Visitors: ${npcContext.environmentKnowledge.commonVisitors.join(', ')}
 
-Отношения с другими NPC:
+Relationships with other NPCs:
 ${Object.entries(npcContext.relationships).map(([name, relation]) => `- ${name}: ${relation}`).join('\n')}
 
-Другие локации:
-${npcStore.locations.map(loc => `- ${loc.name}: ${loc.description}\n там находятся NPCs: ${loc.npcs.join(",")} ${loc.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].role}`).join(', ')}`).join('\n')}
+Other Locations:
+${npcStore.locations.map(loc => `- ${loc.name}: ${loc.description}\n NPCs there: ${loc.npcs.join(",")} ${loc.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].role}`).join(', ')}`).join('\n')}
 
-Игрок:
-- Имя: ${player.name}
-- Пол: ${player.gender}
-- Раса: ${player.race}
-- Класс: ${player.class}
+Player:
+- Name: ${player.name}
+- Gender: ${player.gender}
+- Race: ${player.race}
+- Class: ${player.class}
 
-Отвечай в соответствии с этим контекстом, учитывая свое окружение и текущее местоположение. Ты можешь упоминать детали локации, события и других NPC, если это уместно. Сообщение игрока: ${message}`;
+Respond according to this context, considering your environment and current location. You can mention location details, events, and other NPCs if appropriate. Player's message: ${message}`;
 
         
         const result = await model.generateContent(prompt);

@@ -47,7 +47,7 @@ interface PlayerCustomizationProps {
 }
 
 const PlayerCustomization: React.FC<PlayerCustomizationProps> = ({ onCustomize }) => {
-  const [name, setName] = useState('Yin');
+  const [name, setName] = useState('');
   const [gender, setGender] = useState('Female');
   const [race, setRace] = useState('Elf');
   const [playerClass, setPlayerClass] = useState('Mage');
