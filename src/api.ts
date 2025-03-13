@@ -50,7 +50,12 @@ export const sendMessage = async (message: string, npcId: string, player: { name
         Recent Dialog:
         ${npcContext.dialogueHistory.slice(-5).map(d => `${d.isPlayer ? 'Player' : npcContext.name}: ${d.text}`).join('\n')}
 
-        Respond based on this context, considering your environment and current location. Mention location details, events, and other NPCs if relevant. Keep it brief. Player's message: ${message}`;
+        Respond based on this context, considering your environment and current location. Mention location details, events, and other NPCs if relevant. Keep it brief.
+        If you liked the player's message, add "*like*".
+        If you found the player's message confusing, add "*confused*".
+        If you found the player's message offensive, add "*offensive*".
+        If you found the player's message interesting, add "*interesting*".
+        Player's message: ${message}`;
 
         
         const result = await model.generateContent(prompt);

@@ -23,6 +23,7 @@ export interface NPC {
         commonVisitors: string[];
     };
     dialogueHistory: Message[]; // Add dialogueHistory
+    state?: string; // Add state
 }
 
 const names = ["Mikhail", "Vasily", "Peter", "Anna", "Ivan", "Alexey", "Dmitry", "Nikolay", "Elena", "Olga", "Maria", "Sergey", "Andrey", "Tatyana", "Yulia", "Alexander", "Vladimir", "Ekaterina", "Natalya", "Galina"];

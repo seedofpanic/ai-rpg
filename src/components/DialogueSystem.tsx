@@ -122,7 +122,9 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, player 
     // Send message to API with NPC context
     try {
         const response = await sendMessage(input, npcId, player);
-        npcContext.dialogueHistory.push({text: response, isPlayer: false}); // Save to dialogue history
+        npcContext.state = response.match(/\*(.*?)\*/)?.[1] || npcContext.state;
+        const text = response.replace(/\*(.*?)\*/g, '').replace(" +", " "); // Remove state from response
+        npcContext.dialogueHistory.push({text: text, isPlayer: false}); // Save to dialogue history
     } catch (error) {
         console.error('Failed to send message:', error);
     }
@@ -137,7 +139,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, player 
   return (
     <DialogueContainer>
       <CloseButton onClick={onClose}>×</CloseButton>
-      <NPCHeader>{npcContext?.name}</NPCHeader>
+      <NPCHeader>{npcContext?.name} {npcContext.role} {npcContext.state}</NPCHeader>
       <MessageLog ref={messageLogRef}>
         {npcContext.dialogueHistory.map((message, index) => (
           <Message key={index} $isPlayer={message.isPlayer}>
