@@ -38,6 +38,8 @@ export default defineConfig({
     command: 'npx vite preview --port 3000',
     url: 'http://localhost:3000',
     reuseExistingServer: !!process.env.LOCAL,
+    stdout: "ignore",
+    stderr: "pipe",
   },
 
   /* Configure projects for major browsers */
