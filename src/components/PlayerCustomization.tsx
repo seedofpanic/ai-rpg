@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { gameStore } from '../models/gameStore';
 import { Player } from '../models/Player'; // Import Player
+import { apiConfig } from 'api';
 
 const CustomizationContainer = styled.div`
   display: flex;
@@ -53,9 +54,17 @@ const PlayerCustomization: React.FC<PlayerCustomizationProps> = ({ onCustomize }
   const [gender, setGender] = useState('');
   const [race, setRace] = useState('');
   const [playerClass, setPlayerClass] = useState('');
+  const [apiKey, setApiKey] = useState(apiConfig.apiKey);
 
   // Restore settings from localStorage on component mount
   useEffect(() => {
+    if (!apiConfig.apiKey) {
+      const savedApiKey = localStorage.getItem('apiKey');
+      if (savedApiKey) {
+        setApiKey(savedApiKey);
+      }
+    }
+
     const savedName = localStorage.getItem('playerName');
     const savedGender = localStorage.getItem('playerGender');
     const savedRace = localStorage.getItem('playerRace');
@@ -67,8 +76,19 @@ const PlayerCustomization: React.FC<PlayerCustomizationProps> = ({ onCustomize }
     if (savedClass) setPlayerClass(savedClass);
   }, []);
 
+  const handleApiKeySave = () => {
+    if (apiKey) {
+      localStorage.setItem('apiKey', apiKey);
+    }
+  };
+
   const handleSubmit = () => {
+    if (!apiKey) {
+      alert('Please provide a valid API key.');
+      return;
+    }
     if (name && gender && race && playerClass) {
+      apiConfig.apiKey = apiKey; // Set API key in apiConfig
       // Save settings to localStorage
       localStorage.setItem('playerName', name);
       localStorage.setItem('playerGender', gender);
@@ -83,7 +103,19 @@ const PlayerCustomization: React.FC<PlayerCustomizationProps> = ({ onCustomize }
 
   return (
     <CustomizationContainer>
+      {!import.meta.env.VITE_GEMINI_API_KEY && (
+        <>
+          <Input
+            type="text"
+            placeholder="Enter API Key"
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
+          />
+          <Button onClick={handleApiKeySave}>Save API Key to local storage</Button>
+        </>
+      )}
       <h1>Character Customization</h1>
+      
       <Input
         type="text"
         placeholder="Name"
