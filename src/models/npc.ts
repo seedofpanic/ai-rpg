@@ -53,6 +53,7 @@ export class NPC {
     x: number;
     y: number;
     name: string;
+    race: string;
     role: string;
     personality: string;
     knowledge: string[];
@@ -74,6 +75,7 @@ export class NPC {
         x: number,
         y: number,
         name: string,
+        race: string,
         role: string,
         personality: string,
         knowledge: string[],
@@ -94,6 +96,7 @@ export class NPC {
         this.x = x;
         this.y = y;
         this.name = name;
+        this.race = race;
         this.role = role;
         this.personality = personality;
         this.knowledge = knowledge;
@@ -117,6 +120,7 @@ export class NPC {
         const backgroundIndex = Math.floor(Math.random() * backgroundsData.length);
         const background = backgroundsData.splice(backgroundIndex, 1)[0];
         const name = background?.name || getRandomElement(names);
+        const race = background?.race || 'Human';
         const role = getRandomElement(roles);
         const personality = getRandomElement(personalities);
         const knowledge = Array.from({ length: 3 }, () => getRandomElement(knowledgePool));
@@ -129,6 +133,7 @@ export class NPC {
             x,
             y,
             name,
+            race,
             role,
             personality,
             knowledge,

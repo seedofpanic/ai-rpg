@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { gameStore } from '../models/gameStore';
 import { Player } from '../models/Player'; // Import Player
@@ -49,13 +49,32 @@ interface PlayerCustomizationProps {
 }
 
 const PlayerCustomization: React.FC<PlayerCustomizationProps> = ({ onCustomize }) => {
-  const [name, setName] = useState('Yin');
-  const [gender, setGender] = useState('Female');
-  const [race, setRace] = useState('Elf');
-  const [playerClass, setPlayerClass] = useState('Mage');
+  const [name, setName] = useState('');
+  const [gender, setGender] = useState('');
+  const [race, setRace] = useState('');
+  const [playerClass, setPlayerClass] = useState('');
+
+  // Restore settings from localStorage on component mount
+  useEffect(() => {
+    const savedName = localStorage.getItem('playerName');
+    const savedGender = localStorage.getItem('playerGender');
+    const savedRace = localStorage.getItem('playerRace');
+    const savedClass = localStorage.getItem('playerClass');
+
+    if (savedName) setName(savedName);
+    if (savedGender) setGender(savedGender);
+    if (savedRace) setRace(savedRace);
+    if (savedClass) setPlayerClass(savedClass);
+  }, []);
 
   const handleSubmit = () => {
     if (name && gender && race && playerClass) {
+      // Save settings to localStorage
+      localStorage.setItem('playerName', name);
+      localStorage.setItem('playerGender', gender);
+      localStorage.setItem('playerRace', race);
+      localStorage.setItem('playerClass', playerClass);
+
       const player = new Player(name, gender, race, playerClass);
       gameStore.setPlayer(player); // Set player in gameStore
       onCustomize(player);

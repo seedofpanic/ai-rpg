@@ -35,7 +35,7 @@ export const createContext = (model: GenerativeModel, npcId: string, player: Pla
     ${npcContext.location.description}
 
     Environment:
-    - Nearby NPCs: ${npcContext.location.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].role} ${npcStore.npcs[npcId].background}`).join(', ')}
+    - Nearby NPCs: ${npcContext.location.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].race} ${npcStore.npcs[npcId].role} ${npcStore.npcs[npcId].background}`).join(', ')}
 
     Relationships with other NPCs:
     ${Object.entries(npcContext.relationships).map(([name, relation]) => `- ${name}: ${relation}`).join('\n')}
