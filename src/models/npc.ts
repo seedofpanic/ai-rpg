@@ -172,19 +172,19 @@ export class NPC {
 
         switch (state) {
             case 'like':
-                return 20;
+                return 4;
             case 'confused':
-                return -5;
+                return -1;
             case 'offensive':
                 return -50;
             case 'interesting':
-                return 5;
+                return 1;
             case 'unfriendly':
-                return -10;
+                return -2;
             case 'hostile':
-                return -20;
+                return -4;
             case 'friendly':
-                return 10;
+                return 2;
             case 'neutral':
                 return 0;
             case 'cautious':
