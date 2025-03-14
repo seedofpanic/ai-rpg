@@ -224,7 +224,25 @@ export class NPC {
         this.dialogueHistory.push(message);
     }
 
-    removeItem(itemId: string) {
+    removeItem({itemId, quantity}: InventoryItem) {
         this.inventory = this.inventory?.filter(item => item.itemId !== itemId);
+        if (this.inventory) {
+            const item = this.inventory.find(i => i.itemId === itemId);
+            if (item) {
+                item.quantity -= quantity;
+                if (item.quantity <= 0) {
+                    this.inventory = this.inventory.filter(i => i.itemId !== itemId);
+                }
+            }
+        }
+    }
+
+    addItem({itemId, quantity}: InventoryItem) {
+        const item = this.inventory?.find(i => i.itemId === itemId);
+        if (item) {
+            item.quantity += quantity;
+        } else {
+            this.inventory?.push({ itemId, quantity });
+        }
     }
 }

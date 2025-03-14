@@ -161,6 +161,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
   const [input, setInput] = useState("");
   const messageLogRef = useRef<HTMLDivElement>(null);
   const [shopItems, setShopItems] = useState<{ name: string; price: number }[]>([]);
+  const [buyItems, setBuyItems] = useState<{ name: string; price: number }[]>([]);
 
   useEffect(() => {
     if (!npcContext.dialogueHistory.length) {
@@ -174,19 +175,25 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
     }
   }, [npcId]);
 
-  const parseShopItems = (message: string) => {
+  const parseItems = (message: string, tag: 'sell' | 'buy') => {
     const items: { name: string; price: number }[] = [];
-    const regex = /<sell>(.*?)<\/sell>/;
+    const regex = new RegExp(`<${tag}>(.*?)</${tag}>`);
     let match = message.match(regex);
     if (match && match[1]) {
       const itemsMatch = match[1].split(';');
       for (const item of itemsMatch) {
         const [name, price] = item.split(',');
-        items.push({ name: name.trim(), price: parseFloat(price.trim()) });
+        if (itemsData.entries().find(([id, itemData]) => itemData.name === name.trim())) {
+          items.push({ name: name.trim(), price: parseFloat(price.trim()) });
+        }
       }
     }
     return items;
   };
+
+  const parseShopItems = (message: string) => parseItems(message, 'sell');
+
+  const parseBuyItems = (message: string) => parseItems(message, 'buy');
 
   const handleBuyItem = (item: { name: string; price: number }) => {
     if (gameStore.player.gold >= item.price) {
@@ -204,6 +211,18 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
       console.log('Not enough gold.');
     }
   };
+
+  const handleSellItem = (item: { name: string; price: number }) => { 
+    const itemId = itemsData.keys().find(id => itemsData.get(id)?.name === item.name);
+    if (itemId) {
+      gameStore.player.gold += item.price;
+      setBuyItems(buyItems.filter(i => i !== item));
+      gameStore.player?.removeItemFromInventory({itemId, quantity: 1});
+      npcContext.addItem({ itemId, quantity: 1 });
+    }
+    npcContext.addDialogHistory({text: `Player sold ${item.name} for ${item.price} gold to ${npcContext.name}`, type: MessageType.Action, tokensCount: 20}); // Save to dialogue history
+    console.log(`Sold ${item.name} for ${item.price} gold.`);
+  }
 
   const handleSend = async () => {
     if (input.trim() === "") return;
@@ -225,6 +244,8 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
         npcContext.setState(text.match(/\*(.*?)\*/)?.[1] || npcContext.state);
         // Parse shop items from the response
         const items = parseShopItems(text);
+        const buyItems = parseBuyItems(text);
+        setBuyItems(buyItems);
         setShopItems(items);
         const message = text.replace(/\*(.*?)\*/g, '').replace(/<sell>.*?<\/sell>/, ""); // Remove state from response
         
@@ -270,16 +291,22 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
         <Box style={{ flex: "40%", marginLeft: "20px" }}>
           <ShopContainer>
             <h3>Shop</h3>
-            {shopItems.length > 0 ? (
-              shopItems.map((item, index) => (
+            {shopItems.length ? shopItems.map((item, index) => (
                 <ShopItem key={index}>
                   <span>{item.name}</span>
                   <span>{item.price} gold</span>
                   <ShopButton onClick={() => handleBuyItem(item)}>Buy</ShopButton>
                 </ShopItem>
-              ))
-            ) : (
-              <p>No items available.</p>
+              )) : <p>No items available.</p>}
+            <h3>Sell</h3>
+            {buyItems.length ? buyItems.map((item, index) => (
+              <ShopItem key={index}>
+                <span>{item.name}</span>
+                <span>{item.price} gold</span>
+                <ShopButton onClick={() => handleSellItem(item)}>Sell</ShopButton>
+              </ShopItem>
+              )) : (
+              <p>No items available to sell.</p>
             )}
           </ShopContainer>
         </Box>

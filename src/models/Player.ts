@@ -23,8 +23,24 @@ export class Player {
   }
 
   addItemToInventory(item: InventorySlot) {
-    this.inventory.push(item);
+    const existingItem = this.inventory.find((i) => i.itemId === item.itemId);
+    if (existingItem) {
+      existingItem.quantity += item.quantity;
+    } else {
+      this.inventory.push(item);
+    }
   }
+
+  removeItemFromInventory(item: InventorySlot) {
+    const existingItem = this.inventory.find((i) => i.itemId === item.itemId);
+    if (existingItem) {
+      existingItem.quantity -= item.quantity;
+      if (existingItem.quantity <= 0) {
+        this.inventory = this.inventory.filter((i) => i.itemId !== item.itemId);
+      }
+    }
+  }
+    
 
   spendGold(amount: number) {
     if (this.gold >= amount) {

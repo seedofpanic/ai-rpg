@@ -15,8 +15,8 @@ const GameContainer = styled.div`
 `;
 
 const Game: React.FC = () => {
-  const [dialoguePosition, setDialoguePosition] = useState({ top: 200, left: 500 });
-  const [dialogueSize, setDialogueSize] = useState({ width: 600, height: 400 });
+  const [dialoguePosition, setDialoguePosition] = useState({ top: 50, left: 550 });
+  const [dialogueSize, setDialogueSize] = useState({ width: 1000, height: 800 });
   const [isDragging, setIsDragging] = useState(false);
 
   const handleMouseDown = (e: React.MouseEvent) => {
