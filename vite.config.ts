@@ -6,6 +6,7 @@ import viteCompression from 'vite-plugin-compression';
 export default defineConfig({
   plugins: [react(), viteTsconfigPaths(), viteCompression()],
   server: {
+    port: 3000,
     open: true,
   },
   base: '/ai-rpg/',

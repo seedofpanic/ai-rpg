@@ -58,7 +58,7 @@ test.beforeEach(async ({ page }) => {
       });
     });
 
-    await page.goto('http://localhost:5173');
+    await page.goto('http://localhost:3000');
 
     // Customize character
     await page.fill('input[placeholder="Name"]', 'TestPlayer');
@@ -77,6 +77,7 @@ test.describe('AI RPG E2E Tests', () => {
   test('should allow interaction with NPCs', async ({ page }) => {
     // Interact with an NPC
     const npc = page.locator('[data-testid="npc-view"]').first();
+    await npc.scrollIntoViewIfNeeded();
     await npc.click();
 
     const dialogContainer = page.locator('[data-testid="dialog-container"]');
