@@ -181,6 +181,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
         gameStore.player.gold -= item.price;
         setShopItems(shopItems.filter(i => i !== item));
       
+        npcContext.removeItem(itemId);
         gameStore.player?.addItemToInventory({ itemId, quantity: 1 });
       }
       console.log(`Bought ${item.name} for ${item.price} gold.`);
