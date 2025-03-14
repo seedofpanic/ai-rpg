@@ -109,6 +109,7 @@ const PlayerCustomization: React.FC<PlayerCustomizationProps> = ({ onCustomize }
             You can acquire an API key <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">here</a>.
           </p>
           <Input
+            data-testid="api-key-input"
             required
             type="text"
             placeholder="Enter API Key"

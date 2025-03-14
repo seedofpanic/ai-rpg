@@ -61,6 +61,12 @@ test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:3000');
 
     // Customize character
+    await page.waitForSelector('input[placeholder="Name"]', { state: 'visible' });
+
+    if (await page.isVisible('[data-testid="api-key-input"]')) {
+      await page.fill('[data-testid="api-key-input"]', 'test-api-key');
+    }
+
     await page.fill('input[placeholder="Name"]', 'TestPlayer');
     await page.selectOption('select:has-text("Gender")', 'Male');
     await page.selectOption('select:has-text("Race")', 'Human');
