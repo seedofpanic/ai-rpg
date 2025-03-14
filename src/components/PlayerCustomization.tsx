@@ -105,7 +105,11 @@ const PlayerCustomization: React.FC<PlayerCustomizationProps> = ({ onCustomize }
     <CustomizationContainer>
       {!import.meta.env.VITE_GEMINI_API_KEY && (
         <>
+          <p>
+            You can acquire an API key <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">here</a>.
+          </p>
           <Input
+            required
             type="text"
             placeholder="Enter API Key"
             value={apiKey}

@@ -36,6 +36,10 @@ touch .env
 
 You can obtain your API key from [Google AI Studio](https://aistudio.google.com/apikey).
 
+## Demo
+
+You can also try the live demo of the project by visiting [AI RPG Demo](https://seedofpanic.github.io/ai-rpg/).
+
 ## Usage
 
 Instructions on how to use the project.
