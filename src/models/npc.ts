@@ -9,9 +9,15 @@ interface InventoryItem {
     quantity: number;
 }
 
+export enum MessageType {
+    Player,
+    NPC,
+    Action,
+}
+
 interface Message {
     text: string;
-    isPlayer: boolean;
+    type: MessageType;
     tokensCount: number;
     relationChange?: number;
 }
@@ -214,7 +220,7 @@ export class NPC {
         this.state = newState;
     }
 
-    addDialogHistory(message: { text: string; isPlayer: boolean; tokensCount: number; }) {
+    addDialogHistory(message: Message) {
         this.dialogueHistory.push(message);
     }
 

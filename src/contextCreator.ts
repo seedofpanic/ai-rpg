@@ -3,6 +3,7 @@ import { itemsData } from './models/itemsData';
 import { lore } from './models/loreBook';
 import { Player } from 'models/Player';
 import { GenerativeModel } from '@google/generative-ai';
+import { MessageType } from 'models/npc';
 
 export const createContext = (model: GenerativeModel, npcId: string, player: Player, message: string) => {
     const npcContext = npcStore.npcs[npcId];
@@ -80,7 +81,19 @@ export const createContext = (model: GenerativeModel, npcId: string, player: Pla
         tokensCount += dialogItem.tokensCount || 20; // 20 for hello message
         dialogIndex++;
     }
-    const dialogContext = dialogIndex > 1 ? npcContext.dialogueHistory.slice(-dialogIndex + 1).map(d => `${d.isPlayer ? 'Player' : npcContext.name}: ${d.text}`).join('\n') : '';
+    const dialogContext = dialogIndex > 1 
+        ? npcContext.dialogueHistory.slice(-dialogIndex + 1).map(d => {
+            let prefix = "";
+            if (d.type === MessageType.Player) {
+                prefix = "Player: ";
+            } else if (d.type === MessageType.Action) {
+                prefix = "";
+            } else {
+                prefix = `${npcContext.name}: `;
+            }
+            return `${prefix}${d.text}`;
+        }).join('\n') 
+        : '';
     console.log("Total dialog tokens count:", tokensCount);
 
     return `${beforeDialog}${dialogContext}${afterDialog}`;

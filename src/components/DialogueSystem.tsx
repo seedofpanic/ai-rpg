@@ -5,6 +5,7 @@ import { npcStore } from '../models/npcs';
 import { observer } from 'mobx-react';
 import { gameStore } from '../models/gameStore'; // Import gameStore
 import { itemsData } from 'models/itemsData';
+import { MessageType } from 'models/npc';
 
 interface DialogueSystemProps {
   npcId: string;
@@ -40,13 +41,26 @@ const MessageLog = styled.div`
   border-radius: 4px;
 `;
 
-const Message = styled.div<{ $isPlayer?: boolean }>`
+const Message = styled.div<{ $type?: MessageType }>`
   margin: 5px 0;
   padding: 5px 10px;
-  background-color: ${props => props.$isPlayer ? '#e76f51' : '#2a9d8f'};
+  background-color: ${props => {
+    switch (props.$type) {
+      case MessageType.Player:
+        return '#e76f51';
+      case MessageType.NPC:
+        return '#2a9d8f';
+      case MessageType.Action:
+        return '#264653';
+      default:
+        return '#6c757d';
+    }
+  }};
+  color: ${props => (props.$type === MessageType.Action ? '#f4f4f4' : 'white')};
   border-radius: 4px;
   max-width: 80%;
-  margin-left: ${props => props.$isPlayer ? 'auto' : '0'};
+  margin-left: ${props => (props.$type === MessageType.Player ? 'auto' : '0')};
+  font-style: ${props => (props.$type === MessageType.Action ? 'italic' : 'normal')};
 `;
 
 const InputContainer = styled.div`
@@ -150,7 +164,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
 
   useEffect(() => {
     if (!npcContext.dialogueHistory.length) {
-      npcContext.addDialogHistory({text: npcStore.getNpcGreating(npcId), isPlayer: false, tokensCount: 20}); // Save to dialogue history
+      npcContext.addDialogHistory({text: npcStore.getNpcGreating(npcId), type: MessageType.NPC, tokensCount: 20}); // Save to dialogue history
     }
   }, [npcId]);
 
@@ -184,6 +198,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
         npcContext.removeItem(itemId);
         gameStore.player?.addItemToInventory({ itemId, quantity: 1 });
       }
+      npcContext.addDialogHistory({text: `Player bought ${item.name} for ${item.price} gold from ${npcContext.name}`, type: MessageType.Action, tokensCount: 20}); // Save to dialogue history
       console.log(`Bought ${item.name} for ${item.price} gold.`);
     } else {
       console.log('Not enough gold.');
@@ -194,7 +209,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
     if (input.trim() === "") return;
 
     // TODO: Will need to calculate tokens count based on the message
-    npcContext.dialogueHistory.push({text: input, isPlayer: true, tokensCount: 30}); // Save to dialogue history
+    npcContext.dialogueHistory.push({text: input, type: MessageType.Player, tokensCount: 30}); // Save to dialogue history
     setInput("");
 
     // Send message to API with NPC context
@@ -215,7 +230,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
         
         const relationChange = npcContext.getRelationChange(npcContext.state);
         npcContext.changeRelation(relationChange); // Change relation based on response
-        npcContext.dialogueHistory.push({text: message, isPlayer: false, tokensCount, relationChange}); // Save to dialogue history
+        npcContext.dialogueHistory.push({text: message, type: MessageType.NPC, tokensCount, relationChange}); // Save to dialogue history
     } catch (error) {
         console.error('Failed to send message:', error);
     }
@@ -237,7 +252,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
         <Box style={{flex: "60%"}}>
           <MessageLog ref={messageLogRef}>
             {npcContext.dialogueHistory.map((message, index) => (
-              <Message key={index} $isPlayer={message.isPlayer}>
+              <Message key={index} $type={message.type}>
                 {message.text}
               </Message>
             ))}
