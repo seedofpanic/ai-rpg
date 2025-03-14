@@ -19,7 +19,7 @@ const PlayerContainer = styled.div<PlayerProps>`
 `;
 
 const PlayerView: React.FC<PlayerProps> = ({ x, y }) => {
-  return <PlayerContainer x={x} y={y} />;
+  return <PlayerContainer data-testid="player-view" x={x} y={y} />;
 };
 
 export default PlayerView; 

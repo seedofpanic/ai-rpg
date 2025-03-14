@@ -265,6 +265,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
 
   return (
     <DialogueContainer
+      data-testid="dialog-container"
       style={{display: "flex", flexDirection: "column", width: size.width, height: size.height, top: position.top, left: position.left}}
     >
       <CloseButton onClick={onClose}>×</CloseButton>
@@ -280,30 +281,34 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
           </MessageLog>
           <InputContainer>
             <Input
+              data-testid="message-input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="Enter a message..."
             />
-            <Button onClick={handleSend}>Send</Button>
+            <Button data-testid="send-message" onClick={handleSend}>Send</Button>
           </InputContainer>
         </Box>
         <Box style={{ flex: "40%", marginLeft: "20px" }}>
           <ShopContainer>
-            <h3>Shop</h3>
-            {shopItems.length ? shopItems.map((item, index) => (
-                <ShopItem key={index}>
-                  <span>{item.name}</span>
-                  <span>{item.price} gold</span>
-                  <ShopButton onClick={() => handleBuyItem(item)}>Buy</ShopButton>
-                </ShopItem>
-              )) : <p>No items available.</p>}
+            <div data-testid="items-to-sell">
+              <h3>Shop</h3>
+              {shopItems.length ? shopItems.map((item, index) => (
+                  <ShopItem data-testid="trade-item" key={index}>
+                    <span>{item.name}</span>
+                    <span>{item.price} gold</span>
+                    <ShopButton data-testid="buy-item" onClick={() => handleBuyItem(item)}>Buy</ShopButton>
+                  </ShopItem>
+                )) : <p>No items available.</p>}
+            </div>
+            <div data-testid="items-to-buy"></div>
             <h3>Sell</h3>
             {buyItems.length ? buyItems.map((item, index) => (
               <ShopItem key={index}>
                 <span>{item.name}</span>
                 <span>{item.price} gold</span>
-                <ShopButton onClick={() => handleSellItem(item)}>Sell</ShopButton>
+                <ShopButton data-testid="sell-item" onClick={() => handleSellItem(item)}>Sell</ShopButton>
               </ShopItem>
               )) : (
               <p>No items available to sell.</p>

@@ -11,12 +11,12 @@ const GameContainer = styled.div`
   width: 100vw;
   height: 100vh;
   position: relative;
-  overflow: hidden;
+  overflow: auto;
 `;
 
 const Game: React.FC = () => {
   const [dialoguePosition, setDialoguePosition] = useState({ top: 50, left: 550 });
-  const [dialogueSize, setDialogueSize] = useState({ width: 1000, height: 800 });
+  const [dialogueSize, setDialogueSize] = useState({ width: 900, height: 600 });
   const [isDragging, setIsDragging] = useState(false);
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -46,6 +46,7 @@ const Game: React.FC = () => {
 
   return (
     <GameContainer
+      data-testid="game-container"
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >

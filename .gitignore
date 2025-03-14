@@ -39,3 +39,12 @@ Thumbs.db
 # User-specific files
 build/
 dist/
+
+# Playwright test artifacts
+playwright-report/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

@@ -25,7 +25,7 @@ interface PlayerInventoryProps {
 
 const PlayerInventory: React.FC<PlayerInventoryProps> = ({ player }) => {
   return (
-    <InventoryContainer>
+    <InventoryContainer data-testid="player-inventory">
       <h3>Inventory</h3>
       <p>Gold: {player.gold}</p>
       {player.inventory.length > 0 ? (
@@ -33,7 +33,7 @@ const PlayerInventory: React.FC<PlayerInventoryProps> = ({ player }) => {
           const item = itemsData.get(itemId);
           if (!item) return null;
 
-          return <InventoryItem key={index}>
+          return <InventoryItem data-testid="item-veiw" key={index}>
             {item.name} - {item.description}
           </InventoryItem>
         })

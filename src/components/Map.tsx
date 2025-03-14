@@ -8,8 +8,8 @@ import { locations } from '../models/location'; // Import locations
 import { Player } from '../models/Player'; // Import Player
 
 const MapContainer = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 2000px;
+  height: 1500px;
   background-color: #2a9d8f;
   position: relative;
 `;

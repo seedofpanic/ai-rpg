@@ -72,7 +72,7 @@ const NPCLocation = styled.div`
 
 const NPC: React.FC<NPCProps> = ({ id, x, y, name, role, location, onClick }) => {
   return (
-    <NPCContainer x={x} y={y} onClick={onClick}>
+    <NPCContainer data-testid="npc-view" x={x} y={y} onClick={onClick}>
       <NPCInfo>
         <NPCName>{name}</NPCName>
         <NPCRole>{role}</NPCRole>
