@@ -36,7 +36,7 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: {
     command: 'npx vite preview --port 3000',
-    url: 'http://localhost:3000',
+    port: 3000,
     reuseExistingServer: !!process.env.LOCAL,
     stdout: "ignore",
     stderr: "pipe",
