@@ -209,4 +209,8 @@ export class NPC {
     addDialogHistory(message: { text: string; isPlayer: boolean; tokensCount: number; }) {
         this.dialogueHistory.push(message);
     }
+
+    removeItem(itemId: string) {
+        this.inventory = this.inventory?.filter(item => item.itemId !== itemId);
+    }
 }
