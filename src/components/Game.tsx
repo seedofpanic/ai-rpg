@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Map from './Map';
 import DialogueSystem from './DialogueSystem';
 import PlayerCustomization from './PlayerCustomization';
+import PlayerInventory from './PlayerInventory'; // Import PlayerInventory
 import { observer } from 'mobx-react-lite';
 import { gameStore } from '../models/gameStore'; // Import gameStore
 
@@ -63,6 +64,7 @@ const Game: React.FC = () => {
               size={dialogueSize}
             />
           )}
+          <PlayerInventory player={gameStore.player} /> {/* Add PlayerInventory */}
         </>
       )}
     </GameContainer>

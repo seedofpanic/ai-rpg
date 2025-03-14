@@ -16,7 +16,10 @@ export const sendMessage = async (message: string, npcId: string): Promise<{text
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
-        return {text: response.text(), tokensCount: response.usageMetadata.candidatesTokensDetails[0].tokensCount};
+        return {
+            text: response.text(), // Ensure <sell></sell> tags are preserved
+            tokensCount: response.usageMetadata.candidatesTokensDetails[0].tokensCount
+        };
     } catch (error) {
         console.error('Error calling Gemini API:', error);
         return null;

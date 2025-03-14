@@ -36,6 +36,8 @@ export const createContext = (model: GenerativeModel, npcId: string, player: Pla
 
     Relationships with other NPCs:
     ${Object.entries(npcContext.relationships).map(([name, relation]) => `- ${name}: ${relation}`).join('\n')}
+    
+    Relationship with Player: ${npcContext.getPlayerRelation()}. Increase selling price if you don't like the player.
 
     Other Locations:
     ${npcStore.locations.map(loc => {
@@ -65,6 +67,9 @@ export const createContext = (model: GenerativeModel, npcId: string, player: Pla
     If you found the player's message confusing, add "*confused*".
     If you found the player's message offensive, add "*offensive*".
     If you found the player's message interesting, add "*interesting*".
+    If you found the player's message unfriendly or hostile, add "*unfriendly*".
+    If you are talking about trade, add a list of items with prices wrapped in <sell></sell>. Example: <sell>Iron Sword,50;Red mask,34</sell>
+
     Player's message: ${message}`;
 
     let tokensCount = 0;

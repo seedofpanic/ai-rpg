@@ -4,7 +4,7 @@ import NPC from './NPC';
 import PlayerView from './PlayerView';
 import { observer } from 'mobx-react-lite';
 import { npcStore } from '../models/npcs';
-import { locations } from '../models/npcs'; // Import locations
+import { locations } from '../models/location'; // Import locations
 import { Player } from '../models/Player'; // Import Player
 
 const MapContainer = styled.div`
