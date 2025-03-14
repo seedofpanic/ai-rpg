@@ -247,7 +247,9 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
         const buyItems = parseBuyItems(text);
         setBuyItems(buyItems);
         setShopItems(items);
-        const message = text.replace(/\*(.*?)\*/g, '').replace(/<sell>.*?<\/sell>/, ""); // Remove state from response
+        const message = text.replace(/\*(.*?)\*/g, '')
+          .replace(/<sell>.*?<\/sell>/, "")
+          .replace(/<buy>.*?<\/buy>/, ""); // Remove state from response
         
         const relationChange = npcContext.getRelationChange(npcContext.state);
         npcContext.changeRelation(relationChange); // Change relation based on response

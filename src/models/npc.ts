@@ -205,6 +205,8 @@ export class NPC {
                 return 1;
             case 'wary':
                 return -1;
+            case 'frugality':
+                return -3;
             default:
                 return 0;
         }
