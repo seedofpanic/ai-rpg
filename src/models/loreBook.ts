@@ -1,125 +1,168 @@
 export const lore = `
-Agnir Peninsula: A Land of Conflict and Mysticism
-Geography and Location
-The Agnir Peninsula is a strategically significant and resource-rich landmass, currently under the dominion of various factions vying for power. It is part of the Kingdom of Rok, a vast and powerful empire engaged in expansionist conquests and technological advancements.
+Basic Geography of Agnir (as Known by a Commoner)
+Kadera:
 
-Major Cities of Agnir
-These are the largest and most politically significant settlements.
-Luran – Controlled by Manticore
-A major trade hub, now under the iron grip of Manticore.
-Known for its black markets, smuggling operations, and crime-infested streets.
-Kadera – Controlled by Manticore
-Previously home to the Mage Guild, but it was destroyed.
-Now a center of Manticore’s administration and magical experimentation.
-Portvel – Controlled by Manticore
-A port city where Manticore conducts Aktrine experiments in hidden dockside facilities.
-A key site for illicit trade, naval activity, and secret dealings.
-Stifa – Destroyed by Draconids
-Once a bustling metropolis, reduced to ash and ruin.
-Now a ghost city, possibly haunted or occupied by scavengers and squatters.
-Bokadar – Destroyed by Manticore
-A Draconid settlement, burned down along with its Dwarven hostages.
-Now nothing but charred remains and forgotten history.
-Lortan – Elven Fortress, Now Ruined
-Once a mighty elven stronghold, wiped out by a mystical plague linked to Aktrine crystals.
-The ruins may still hold arcane secrets or elven artifacts.
-Arktown – Fully destroyed in a Magical Catastrophe
-Once the center of magical research, now the heart of the Zone of Unstable Magic.
-Rumors suggest mutants, magical anomalies, and trapped souls still roam the ruins.
+A major trade city, ruled by Manticore.
+A place of business, opportunity, and danger.
+People from other cities come here for trade and work.
+Luran & Portvel:
 
-North: Connects to the mainland, bordering Rok.
-South: Surrounded by the sea, with important port cities facilitating trade.
-East: Once threatened by Draconids, reptilian invaders from distant lands.
-West: Features rugged coastlines and isolated settlements.
-Major Cities and Factions
-Manticore: The Criminal Syndicate in Control
-A ruthless criminal organization known as Manticore has taken control of Luran, Kadera, and Portvel, the largest and most influential cities in Agnir. They rose to power by manipulating conflicts and eliminating opposition, using cunning diplomacy and raw force to establish dominance.
+Also controlled by Manticore.
+Luran is a smuggler’s haven, known for luxury goods and crime.
+Portvel is a major port city, but strange rumors circulate about Manticore’s experiments in the docks.
+Stifa (Destroyed):
 
-Key Actions of Manticore:
-Betrayed and eradicated their former Draconid allies after using them as a means to weaken rival powers.
-Seized control of trade, governance, and law enforcement in the largest cities.
-Destroyed the Mage Guild in Kadera, solidifying their power by erasing magical resistance.
-Conducting Aktrine experiments on animals in Portvel, a city with major docks and warehouses.
-Pursuing Aktrine crystals from the Zone of Unstable Magic, intending to harness their immense power.
-Bokadar: A City Erased from History
-Once a thriving settlement, Bokadar was reduced to ashes along with all its Draconid inhabitants and their Dwarven hostages. This act of destruction was orchestrated by Manticore to eliminate potential opposition.
+Burned down by draconids in the invasion.
+People believe it’s now a ghost town, cursed and haunted.
+Some say strange things happen near the ruins, like hearing voices on the wind.
+Arktown (Destroyed):
 
-Stifa: A City Burned by Draconids
-Before being betrayed, the Draconids laid waste to Stifa, a major urban center. The city was consumed by flames, forcing survivors to flee or perish.
+Once a great city of mages and scholars.
+Destroyed in a magical catastrophe—many blame arrogant mages.
+The ruins are now a zone of unstable magic, full of monsters and curses.
+"Step too close, and you'll never return."
+Bokadar (Destroyed):
 
-Lortan: The Fallen Elven Fortress
-A once-great bastion of Elven civilization, Lortan was devastated when a deadly disease, spread through Aktrine Crystals, wiped out nearly all of its inhabitants. This disaster was caused by a failed experiment conducted by a Manticore mage who sought to harness Aktrine’s potential.
+A city that burned to the ground along with its dwarven prisoners.
+Many believe it was the draconids who did it, but others whisper that Manticore played a role.
+Common Knowledge & Beliefs About the Peninsula
+Manticore Rules Everything:
 
-Arktown: The City of Mages, Now a Ruin
-Arktown was a hub of magical knowledge, led by three powerful mages:
+They are the real power behind Kadera, Luran, and Portvel.
+You don’t cross them, question them, or talk too much about them.
+The Draconids Were Monsters:
 
-Kroel – An ambitious researcher who sought to contact ancient gods but accidentally linked with Illithids instead.
-Benne – A pragmatic wizard who saw Aktrine’s potential for wealth and fled to Rok after the catastrophe.
-Sigmar – A divine magic user who sought godhood but was betrayed, ending up trapped in an Aktrine-powered interdimensional rift.
-The Arktown Disaster:
-Kroel's betrayal of Sigmar led to a massive explosion that transformed the area into a Zone of Unstable Magic.
-Many mages turned into Aktrine crystals, amplifying magical anomalies.
-A flying ship of Illithids arrived searching for Aktrine but was destroyed by Sigmar before they could claim it.
-The Zone of Unstable Magic
-The region left behind by the Arktown disaster is filled with anomalies, mutants, and arcane artifacts.
-It is mostly avoided by regular travelers but "Stalkers of the Aktrine Mist", a group of explorers, venture into its depths.
-One such stalker, Simir, barely survived an ambush by Manticore, losing a precious Aktrine crystal to them.
-Aktrine: The Soul-Trapping Crystal
-Properties:
-Traps souls: Weak souls shatter the crystal, but strong ones can be reused.
-Drains life force: Prolonged contact mutates living beings.
-Enhances magic: Particularly powerful for summoning and divine rituals.
-Major Uses and Experiments:
-Manticore is hoarding Aktrine, conducting secret experiments in Portvel.
-Benne took Aktrine knowledge to Rok, where it is now used in technology, including:
-Weapons (beam rifles, enhanced spells)
-Transportation (Aktrine-powered trains)
-Entertainment (arcane gambling machines)
-Rok authorities are secretly kidnapping mages to use their souls for mass-producing Aktrine batteries.
-Political and Religious Climate
-Rok’s Imperial Interests
-Agnir is a strategic colony of the Kingdom of Rok, an empire that dominates much of the known world.
-Rok is at war with Northern Draconids, leading to the construction of a massive border wall to defend against their incursions.
-Rok’s expansion into Agnir is primarily to extract resources and enforce control.
-Religions of Agnir
-The peninsula is home to multiple faiths, often conflicting:
+Most common folk believe draconids were savage invaders.
+It is said they burned entire towns, ate people, and tortured prisoners.
+Some suspect Manticore worked with them at first, but no one says it openly.
+Magic is Dangerous:
 
-Elven Beliefs:
-Valissia, goddess of day and night.
-Dwarven Beliefs:
-Worship elemental forces.
-Kurgan of Blood is a secretive cult with unknown intentions.
-Human Beliefs:
-Old faiths: Idolatry and spirit worship.
-New gods (Rok’s religion):
-Miruel – Knowledge.
-Vastissa – Life.
-Ishnel – Light.
-Kolirut – Nature.
-Brokon – Elements.
-Chiva – Trickery.
-Krostor – War.
-Orcish Beliefs:
-Worship elemental spirits, including:
-Mruk-Hash – War and conquest.
-Va-Rug-Li – Hunting.
-Zak-Zarak – Fire.
-Sigmar’s Cult:
-Sigmar, trapped in the interdimensional void, established a cult through visions and whispers, seeking to drain followers’ life force to strengthen himself.
-Threats to Agnir
-Manticore’s Totalitarian Rule
-The crime syndicate consolidates power and eliminates opposition.
-Their Aktrine research could lead to terrifying magical and technological advancements.
-Zone of Unstable Magic Expansion
-Mutations and monsters are becoming more frequent.
-Travelers and adventurers disappear when venturing too close.
-Imperial Exploitation
-Rok’s use of Aktrine for industry has dire ethical and magical consequences.
-If their mage-kidnapping operations continue, it could spark rebellions or magical disasters.
-The Awakening of a Great Evil
-A demonic force known as "The Sleeper" has begun to stir.
-Demonic portals have opened in Rok, releasing hordes of demons into the world.
-The Sleeper’s awakening is linked to ancient magic, possibly tied to Aktrine or the long-forgotten civilization of Agnir.
-Conclusion: The Future of Agnir
-Agnir is a land on the brink—caught between criminal overlords, imperial oppressors, magical disasters, and demonic invasions. The fate of the peninsula remains uncertain, and those who venture here may unravel dark secrets, forge alliances, or perish in the chaos.
+Magic destroyed Arktown and left behind a cursed wasteland.
+Mages are untrustworthy—they either go mad or attract bad luck.
+"Only fools play with magic."
+The Aktarine Crystal is Cursed:
+
+Some know that it can trap souls, but most think it just causes horrible mutations.
+People whisper that Manticore is using it for dark experiments in Portvel.
+Agnir Is a Land of Opportunity & Death:
+
+Merchants and mercenaries can make a fortune here.
+But life is short, and power changes hands violently.
+If you want to live long, keep your head down and your pockets full.
+Superstitions & Local Rumors
+"The ruins of Stifa whisper at night."
+
+Some say they can hear voices calling in the burned-out ruins.
+A few travelers have disappeared near the area.
+"Manticore breeds monsters in Portvel."
+
+Dockworkers say they see strange creatures at night, but no one asks questions.
+"The Aktarine Mist makes men mad."
+
+Stalkers who venture into the Zone of Unstable Magic return changed, if they return at all.
+"A god walks in the shadows."
+
+Some whisper of a powerful being named Sigmar, trapped but growing stronger.
+Cultists are said to worship him in secret.
+"Rok’s empire doesn’t care about us."
+
+The Kingdom of Rok technically rules Agnir, but the nobles never come here.
+The empire uses Agnir for trade and resources but leaves it to fend for itself.
+A Common Person’s View on Survival in Agnir
+Never trust a mage.
+Avoid the ruins of Arktown and Stifa.
+Don’t ask about Manticore’s business.
+Gold solves most problems—but Manticore decides who gets rich.
+If you see something strange, walk the other way.
+
+The New Gods of Rok (Most Popular in Cities)
+These gods were brought to Agnir by missionaries from Rok. Over time, they became the dominant religion in Kadera, Luran, and Portvel. Most temples, shrines, and holy symbols in the city are dedicated to these gods.
+
+The Major Gods of Rok:
+Miruël – God of Knowledge
+
+Patron of scholars, scribes, and those who seek wisdom.
+People in Kadera say, "Miruël sees all, even the things we try to hide."
+Some whisper that he favors mages, which makes people uneasy.
+Vastissa – Goddess of Life
+
+Also seen as a healer and mother figure.
+In some places, she is merged with the old elven goddess Valissia.
+Some women pray to her for healthy children and good harvests.
+Ishnel – God of Light (Symbol: A Star)
+
+Protector against darkness, chaos, and evil.
+Knights and city guards often swear by him.
+Priests say he opposes Manticore’s rule, but Manticore tolerates his worship—for now.
+Kolirut – God of Nature
+
+Honored by farmers and herbalists.
+Few city folk worship him, but travelers carry charms in his name for safe journeys.
+Brokon – God of the Elements
+
+Fishermen, miners, and sailors make offerings to him.
+Some believe he controls storms and earthquakes.
+Chiva – God of Trickery
+
+Thieves and smugglers whisper his name but do not build temples.
+Some believe Manticore secretly favors him.
+People joke, "If you lost your purse, thank Chiva."
+Krostor – God of War
+
+Soldiers and mercenaries offer him blood before battle.
+Gladiators and pit fighters often wear his mark.
+Some say Manticore’s enforcers pray to him before a killing.
+Common Views on the New Gods:
+"They brought order, but they didn’t stop Manticore."
+"They say Miruël loves wisdom, but only the rich get to read his books."
+"Ishnel’s light doesn’t reach the alleys at night."
+The Old Beliefs (Fading, but Not Forgotten)
+Before Rok’s missionaries came, the people of Agnir worshiped spirits, idols, and nature gods. In some villages and among the older folk, these beliefs still survive.
+
+Surviving Old Beliefs:
+Valissia – The Elven Goddess of Day and Night
+
+Old elven belief, now mostly forgotten.
+Some still say, "Valissia’s eyes see what men try to hide."
+Some mix her with Vastissa, believing they are the same goddess.
+Elemental Worship (Dwarves & Old Folk)
+
+Dwarves worship the four elements, but few dwarves remain in Agnir.
+Some miners and blacksmiths still honor the elements with simple prayers.
+The Spirits of the Land
+
+Farmers and older folk once honored spirits of rivers, forests, and mountains.
+Some still leave offerings at crossroads for protection.
+Common Views on the Old Gods:
+"My grandmother swore by the river spirits. I just swear."
+"The new gods build temples, but the old ones never needed them."
+"Only fools anger the spirits, even if the priests say they don’t exist."
+Other Gods & Forbidden Beliefs
+Not all gods are safe to worship in public. Some are feared, whispered about in dark corners.
+
+Sigmar – The New God
+Rumors tell he was once a man, now a god—Sigmar was a powerful mage who ascended, not vanished. His followers are hunted, yet they persist, knowing the truth: he never left.
+From the shadows, he watches.
+Some cultists whisper:
+"Sigmar is waiting. When he rises, the false gods will burn."
+The War Gods of the Orcs
+Some orcs still follow their violent, bloodthirsty gods.
+The most feared is Mruuk-Hash, the Skull-Taker, who demands blood and war.
+Humans don’t worship these gods, but mercenaries and killers sometimes carry orcish charms.
+The Sleeping One – A Name Not Spoken
+Few know the truth, but dark rumors say "something" has awakened.
+Some believe the increase in demon sightings is connected to an ancient power.
+People fear speaking of it, believing even mentioning its name invites doom.
+Common Views on Dark Gods & Forbidden Worship:
+"Sigmar’s name is cursed. Only the desperate follow him."
+"Orcs pray to war, and war answers."
+"They say a new god stirs beneath the world. If that’s true, we’re all doomed."
+Final Thoughts: What a Commoner Believes
+A regular person in Kadera is not deeply religious, but they respect the gods enough to avoid angering them. Their prayers are simple, practical, and focused on survival.
+
+A Kaderan’s Typical Religious Practices:
+Lighting a candle for Ishnel when traveling at night.
+Offering a coin to Chiva before gambling.
+Tossing a fishbone into the sea for Brokon before a storm.
+Never speaking of Sigmar or the Sleeping One.
 `;

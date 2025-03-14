@@ -59,7 +59,6 @@ const Game: React.FC = () => {
               onTitleMouseDown={handleMouseDown}
               npcId={gameStore.activeNpcId!}
               onClose={handleCloseDialogue}
-              player={gameStore.player}
               position={dialoguePosition}
               size={dialogueSize}
             />

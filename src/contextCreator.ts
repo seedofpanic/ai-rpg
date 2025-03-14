@@ -12,27 +12,30 @@ export const createContext = (model: GenerativeModel, npcId: string, player: Pla
     }
 
     const beforeDialog = `
-    You are an NPC named ${npcContext.name}. Here is your context:
+    You are an NPC named ${npcContext.name}. Player can lie to you, rely mostly on your personal knowledge. Here is your context:
 
     Basic Information:
     - Role: ${npcContext.role}
-    - Personality: ${npcContext.personality}
     - Background: ${npcContext.background}
+    - True Background: ${npcContext.trueBackground}
+    - Motivation: ${npcContext.Motivation}
+    - Unique Trait: ${npcContext.uniqueTrait}
+    - Beliefs: ${npcContext.beliefs}
+    
     You have only items that are in your inventory:
     ${npcContext.inventory?.map(item => `- ${itemsData.get(item.itemId)?.name} x${item.quantity}`).join('\n') || 'No items in inventory'}
     - Gold: ${npcContext.gold}
 
     Knowledge and Experience:
     ${npcContext.knowledge.map(k => `- ${k}`).join('\n')}
+    Lore and beliefs:
+    ${lore}
 
     Location: Agnir, Kadera, (${npcContext.location.name}):
     ${npcContext.location.description}
 
     Environment:
-    - Nearby NPCs: ${npcContext.location.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].role}`).join(', ')}
-    - Location Features: ${npcContext.environmentKnowledge.locationFeatures.join(', ')}
-    - Current Events: ${npcContext.environmentKnowledge.localEvents.join(', ')}
-    - Common Visitors: ${npcContext.environmentKnowledge.commonVisitors.join(', ')}
+    - Nearby NPCs: ${npcContext.location.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].role} ${npcStore.npcs[npcId].background}`).join(', ')}
 
     Relationships with other NPCs:
     ${Object.entries(npcContext.relationships).map(([name, relation]) => `- ${name}: ${relation}`).join('\n')}
@@ -58,9 +61,6 @@ export const createContext = (model: GenerativeModel, npcId: string, player: Pla
     Recent Dialog:
     `;
     const afterDialog = `
-
-    Lore:
-    ${lore}
 
     Respond based on this context, considering your environment and current location. Mention location details, events, and other NPCs if relevant. Keep it brief.
     If you liked the player's message, add "*like*".

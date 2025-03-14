@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { makeAutoObservable } from 'mobx';
 import { itemsData } from './itemsData';
 import { Location } from './location'; // Import related types
+import { backgroundsData } from './backgroundsData';
 
 interface InventoryItem {
     itemId: string;
@@ -55,19 +56,18 @@ export class NPC {
     role: string;
     personality: string;
     knowledge: string[];
-    background: string;
     relationships: Record<string, string>;
     location: Location;
-    environmentKnowledge: {
-        localEvents: string[];
-        locationFeatures: string[];
-        commonVisitors: string[];
-    };
     dialogueHistory: Message[];
     state?: string;
     inventory?: InventoryItem[];
     gold: number;
     relation: number;
+    background: string;
+    trueBackground: string;
+    Motivation: string;
+    uniqueTrait: string;
+    beliefs: string;
 
     constructor(
         id: string,
@@ -78,13 +78,12 @@ export class NPC {
         personality: string,
         knowledge: string[],
         background: string,
+        trueBackground: string,
+        Motivation: string,
+        uniqueTrait: string,
+        beliefs: string,
         relationships: Record<string, string>,
         location: Location,
-        environmentKnowledge: {
-            localEvents: string[];
-            locationFeatures: string[];
-            commonVisitors: string[];
-        },
         dialogueHistory: Message[] = [],
         state?: string,
         inventory?: InventoryItem[],
@@ -99,9 +98,12 @@ export class NPC {
         this.personality = personality;
         this.knowledge = knowledge;
         this.background = background;
+        this.trueBackground = trueBackground;
+        this.Motivation = Motivation;
+        this.uniqueTrait = uniqueTrait;
+        this.beliefs = beliefs;
         this.relationships = relationships;
         this.location = location;
-        this.environmentKnowledge = environmentKnowledge;
         this.dialogueHistory = dialogueHistory;
         this.state = state;
         this.inventory = inventory;
@@ -112,7 +114,9 @@ export class NPC {
 
     static generateRandomNPC(locs: Location[]): NPC {
         const id = uuidv4();
-        const name = getRandomElement(names);
+        const backgroundIndex = Math.floor(Math.random() * backgroundsData.length);
+        const background = backgroundsData.splice(backgroundIndex, 1)[0];
+        const name = background?.name || getRandomElement(names);
         const role = getRandomElement(roles);
         const personality = getRandomElement(personalities);
         const knowledge = Array.from({ length: 3 }, () => getRandomElement(knowledgePool));
@@ -128,14 +132,13 @@ export class NPC {
             role,
             personality,
             knowledge,
-            "Random background",
+            background?.background || '',
+            background?.trueBackground || '',
+            background?.motivation || '',
+            background?.uniqueTrait || '',
+            background?.beliefs || '',
             {},
             location,
-            {
-                localEvents: ["Random event 1", "Random event 2"],
-                locationFeatures: ["Random feature 1", "Random feature 2"],
-                commonVisitors: ["Random visitor 1", "Random visitor 2"]
-            },
             [],
             undefined,
             generateRandomInventory(),
