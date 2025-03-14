@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { npcStore } from '../models/npcs';
 import { locations } from '../models/location'; // Import locations
 import { Player } from '../models/Player'; // Import Player
+import { t } from 'localization';
 
 const MapContainer = styled.div`
   width: 100%;
@@ -51,7 +52,7 @@ const Map: React.FC<MapProps> = ({ onNpcInteraction, player }) => {
       <PlayerView x={playerPosition.x} y={playerPosition.y} />
       {locations.map((location, index) => (
         <LocationContainer key={index} x={location.x} y={location.y} width={location.width} height={location.height}>
-          {location.name}
+          {t(location.name)}
         </LocationContainer>
       ))}
       {npcStore.npcIds.map((id) => (

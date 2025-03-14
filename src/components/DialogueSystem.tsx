@@ -5,6 +5,7 @@ import { npcStore } from '../models/npcs';
 import { observer } from 'mobx-react';
 import { gameStore } from '../models/gameStore'; // Import gameStore
 import { itemsData } from 'models/itemsData';
+import { t } from '../localization';
 
 interface DialogueSystemProps {
   npcId: string;
@@ -184,9 +185,9 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
         npcContext.removeItem(itemId);
         gameStore.player?.addItemToInventory({ itemId, quantity: 1 });
       }
-      console.log(`Bought ${item.name} for ${item.price} gold.`);
+      console.log(`${t("boughtItem", { itemName: item.name, itemPrice: item.price })}`);
     } else {
-      console.log('Not enough gold.');
+      console.log(t("notEnoughGold"));
     }
   };
 
@@ -217,7 +218,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
         npcContext.changeRelation(relationChange); // Change relation based on response
         npcContext.dialogueHistory.push({text: message, isPlayer: false, tokensCount, relationChange}); // Save to dialogue history
     } catch (error) {
-        console.error('Failed to send message:', error);
+        console.error(t("failedToSendMessage"), error);
     }
   };
 
@@ -231,7 +232,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
     <DialogueContainer
       style={{display: "flex", flexDirection: "column", width: size.width, height: size.height, top: position.top, left: position.left}}
     >
-      <CloseButton onClick={onClose}>×</CloseButton>
+      <CloseButton onClick={onClose}>{t("close")}</CloseButton>
       <NPCHeader onMouseDown={onTitleMouseDown}>{npcContext?.name} {npcContext.role} {npcContext.getPlayerRelation()} {npcContext.state}</NPCHeader>
       <BoxRow>
         <Box style={{flex: "60%"}}>
@@ -247,24 +248,24 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyPress}
-              placeholder="Enter a message..."
+              placeholder={t("enterMessage")}
             />
-            <Button onClick={handleSend}>Send</Button>
+            <Button onClick={handleSend}>{t("send")}</Button>
           </InputContainer>
         </Box>
         <Box style={{ flex: "40%", marginLeft: "20px" }}>
           <ShopContainer>
-            <h3>Shop</h3>
+            <h3>{t("shop")}</h3>
             {shopItems.length > 0 ? (
               shopItems.map((item, index) => (
                 <ShopItem key={index}>
                   <span>{item.name}</span>
-                  <span>{item.price} gold</span>
-                  <ShopButton onClick={() => handleBuyItem(item)}>Buy</ShopButton>
+                  <span>{item.price} {t("gold")}</span>
+                  <ShopButton onClick={() => handleBuyItem(item)}>{t("buy")}</ShopButton>
                 </ShopItem>
               ))
             ) : (
-              <p>No items available.</p>
+              <p>{t("noItemsAvailable")}</p>
             )}
           </ShopContainer>
         </Box>

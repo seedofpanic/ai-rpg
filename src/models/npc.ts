@@ -3,6 +3,7 @@ import { makeAutoObservable } from 'mobx';
 import { itemsData } from './itemsData';
 import { Location } from './location'; // Import related types
 import { backgroundsData } from './backgroundsData';
+import { t } from '../localization'; // Import localization function
 
 interface InventoryItem {
     itemId: string;
@@ -16,23 +17,10 @@ interface Message {
     relationChange?: number;
 }
 
-const names = ["Mikhail", "Vasily", "Peter", "Anna", "Ivan", "Alexey", "Dmitry", "Nikolay", "Elena", "Olga", "Maria", "Sergey", "Andrey", "Tatyana", "Yulia", "Alexander", "Vladimir", "Ekaterina", "Natalya", "Galina"];
-const roles = ["Merchant", "Alchemist", "Guard", "Baker", "Blacksmith", "Fisherman", "Hunter", "Farmer", "Tailor", "Jeweler"];
-const personalities = ["Friendly", "Eccentric", "Serious", "Cheerful", "Reserved", "Sociable", "Modest", "Ambitious"];
-const knowledgePool = [
-    "Knows everything about goods and prices in the city",
-    "Aware of the latest city events",
-    "Has connections with other merchants",
-    "Expert in potion making and alchemy",
-    "Knows many rare recipes",
-    "Studies the magical properties of plants",
-    "Master in blacksmithing",
-    "Knows the best fishing spots",
-    "Experienced hunter",
-    "Knows everything about agriculture",
-    "Master of sewing and tailoring",
-    "Expert in jewelry making"
-];
+const names = t('npc.names') as string[];
+const roles = t('npc.roles') as string[];
+const personalities = t('npc.personalities') as string[];
+const knowledgePool = t('npc.knowledgePool') as string[];
 
 function getRandomElement<T>(arr: T[]): T {
     return arr[Math.floor(Math.random() * arr.length)];
@@ -53,6 +41,7 @@ export class NPC {
     x: number;
     y: number;
     name: string;
+    race: string;
     role: string;
     personality: string;
     knowledge: string[];
@@ -74,6 +63,7 @@ export class NPC {
         x: number,
         y: number,
         name: string,
+        race: string,
         role: string,
         personality: string,
         knowledge: string[],
@@ -94,6 +84,7 @@ export class NPC {
         this.x = x;
         this.y = y;
         this.name = name;
+        this.race = race;
         this.role = role;
         this.personality = personality;
         this.knowledge = knowledge;
@@ -129,6 +120,7 @@ export class NPC {
             x,
             y,
             name,
+            background?.race,
             role,
             personality,
             knowledge,

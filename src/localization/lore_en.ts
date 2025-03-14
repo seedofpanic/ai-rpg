@@ -1,4 +1,4 @@
-export const lore = `
+export default `
 Basic Geography of Agnir (as Known by a Commoner)
 Kadera:
 
@@ -165,4 +165,4 @@ Lighting a candle for Ishnel when traveling at night.
 Offering a coin to Chiva before gambling.
 Tossing a fishbone into the sea for Brokon before a storm.
 Never speaking of Sigmar or the Sleeping One.
-`;
+`

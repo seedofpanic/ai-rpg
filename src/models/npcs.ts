@@ -1,8 +1,7 @@
-import { v4 as uuidv4 } from 'uuid';
 import { makeAutoObservable } from 'mobx';
-import { itemsData } from './itemsData'; // Import itemsData
 import { NPC } from './npc'; // Import NPC from npc.ts
 import { locations } from './location'; // Import locations from location.ts
+import { t } from '../localization'; // Import localization function
 
 class NPCStore {
     npcs: Record<string, NPC> = {};
@@ -24,7 +23,7 @@ class NPCStore {
     }
     getNpcGreating(npcId: string): string {
         const npc = this.npcs[npcId];
-        return `Hello, I am ${npc.name}, the ${npc.role}. How can I help you?`;
+        return t('npcGreeting', { name: npc.name, role: npc.role });
     }
 }
 

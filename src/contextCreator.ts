@@ -1,76 +1,71 @@
 import { npcStore } from './models/npcs';
 import { itemsData } from './models/itemsData';
-import { lore } from './models/loreBook';
 import { Player } from 'models/Player';
 import { GenerativeModel } from '@google/generative-ai';
+import { t } from './localization'; // Import localization
 
 export const createContext = (model: GenerativeModel, npcId: string, player: Player, message: string) => {
     const npcContext = npcStore.npcs[npcId];
 
     if (!npcContext) {
-        throw new Error('NPC not found');
+        throw new Error(t('contextCreator.npcNotFound')); // Localized text
     }
 
     const beforeDialog = `
-    You are an NPC named ${npcContext.name}. Player can lie to you, rely mostly on your personal knowledge. Here is your context:
+    ${t('contextCreator.npcIntroduction', { name: npcContext.name })}
 
-    Basic Information:
-    - Role: ${npcContext.role}
-    - Background: ${npcContext.background}
-    - True Background: ${npcContext.trueBackground}
-    - Motivation: ${npcContext.Motivation}
-    - Unique Trait: ${npcContext.uniqueTrait}
-    - Beliefs: ${npcContext.beliefs}
+    ${t('contextCreator.basicInformation')}:
+    - ${t('contextCreator.race')}: ${npcContext.race}
+    - ${t('contextCreator.role')}: ${npcContext.role}
+    - ${t('contextCreator.background')}: ${npcContext.background}
+    - ${t('contextCreator.trueBackground')}: ${npcContext.trueBackground}
+    - ${t('contextCreator.motivation')}: ${npcContext.Motivation}
+    - ${t('contextCreator.uniqueTrait')}: ${npcContext.uniqueTrait}
+    - ${t('contextCreator.beliefs')}: ${npcContext.beliefs}
     
-    You have only items that are in your inventory:
-    ${npcContext.inventory?.map(item => `- ${itemsData.get(item.itemId)?.name} x${item.quantity}`).join('\n') || 'No items in inventory'}
-    - Gold: ${npcContext.gold}
+    ${t('contextCreator.inventory')}:
+    ${npcContext.inventory?.map(item => `- ${itemsData.get(item.itemId)?.name} x${item.quantity}`).join('\n') || t('noItems')}
+    - ${t('contextCreator.gold')}: ${npcContext.gold}
 
-    Knowledge and Experience:
+    ${t('contextCreator.knowledgeAndExperience')}:
     ${npcContext.knowledge.map(k => `- ${k}`).join('\n')}
-    Lore and beliefs:
-    ${lore}
+    ${t('contextCreator.loreAndBeliefs')}:
+    ${t('lore')}
 
-    Location: Agnir, Kadera, (${npcContext.location.name}):
-    ${npcContext.location.description}
+    ${t('contextCreator.location')}: (${t(npcContext.location.name)}):
+    ${t(npcContext.location.description)}
 
-    Environment:
-    - Nearby NPCs: ${npcContext.location.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].role} ${npcStore.npcs[npcId].background}`).join(', ')}
+    ${t('contextCreator.environment')}:
+    - ${t('contextCreator.nearbyNpcs')}: ${npcContext.location.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].role} ${npcStore.npcs[npcId].background}`).join(', ')}
 
-    Relationships with other NPCs:
+    ${t('contextCreator.relationshipsWithOtherNpcs')}:
     ${Object.entries(npcContext.relationships).map(([name, relation]) => `- ${name}: ${relation}`).join('\n')}
     
-    Relationship with Player: ${npcContext.getPlayerRelation()}. Increase selling price if you don't like the player.
+    ${t('contextCreator.relationshipWithPlayer')}: ${npcContext.getPlayerRelation()}. ${t('contextCreator.increaseSellingPrice')}
 
-    Other Locations:
+    ${t('contextCreator.otherLocations')}:
     ${npcStore.locations.map(loc => {
-    const npcs = ` NPCs there: ${loc.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].role}`).join(', ')}`
+    const npcs = ` ${t('contextCreator.npcsThere')}: ${loc.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].role}`).join(', ')}`
 
     return `- ${loc.name}: ${loc.description}\n${loc.npcs.length ? npcs : ''}`
     }).join('\n')}
 
-    Player:
-    - Name: ${player.name}
-    - Gender: ${player.gender}
-    - Race: ${player.race}
-    - Class: ${player.class}
-    Players inventory:
-    ${player.inventory?.map(item => `- ${itemsData.get(item.itemId)?.name} x${item.quantity}`).join('\n') || 'No items in inventory'}
-    - Gold: ${player.gold}
+    ${t('contextCreator.player')}:
+    - ${t('contextCreator.name')}: ${player.name}
+    - ${t('contextCreator.gender')}: ${player.gender}
+    - ${t('contextCreator.race')}: ${player.race}
+    - ${t('contextCreator.class')}: ${player.class}
+    ${t('contextCreator.playersInventory')}:
+    ${player.inventory?.map(item => `- ${itemsData.get(item.itemId)?.name} x${item.quantity}`).join('\n') || t('contextCreator.noItems')}
+    - ${t('contextCreator.gold')}: ${player.gold}
 
-    Recent Dialog:
+    ${t('contextCreator.recentDialog')}:
     `;
     const afterDialog = `
 
-    Respond based on this context, considering your environment and current location. Mention location details, events, and other NPCs if relevant. Keep it brief.
-    If you liked the player's message, add "*like*".
-    If you found the player's message confusing, add "*confused*".
-    If you found the player's message offensive, add "*offensive*".
-    If you found the player's message interesting, add "*interesting*".
-    If you found the player's message unfriendly or hostile, add "*unfriendly*".
-    If you are talking about trade, add a list of items with prices wrapped in <sell></sell>. Example: <sell>Iron Sword,50;Red mask,34</sell>
+    ${t('contextCreator.responseInstructions')}
 
-    Player's message: ${message}`;
+    ${t('contextCreator.playersMessage')}: ${message}`;
 
     let tokensCount = 0;
     let dialogIndex = 0;
@@ -80,8 +75,7 @@ export const createContext = (model: GenerativeModel, npcId: string, player: Pla
         tokensCount += dialogItem.tokensCount || 20; // 20 for hello message
         dialogIndex++;
     }
-    const dialogContext = dialogIndex > 1 ? npcContext.dialogueHistory.slice(-dialogIndex + 1).map(d => `${d.isPlayer ? 'Player' : npcContext.name}: ${d.text}`).join('\n') : '';
-    console.log("Total dialog tokens count:", tokensCount);
+    const dialogContext = dialogIndex > 1 ? npcContext.dialogueHistory.slice(-dialogIndex + 1).map(d => `${d.isPlayer ? t('contextCreator.player') : npcContext.name}: ${d.text}`).join('\n') : '';
 
     return `${beforeDialog}${dialogContext}${afterDialog}`;
 };

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Player } from '../models/Player';
 import { observer } from 'mobx-react';
 import { itemsData } from 'models/itemsData';
+import { t } from '../localization';
 
 const InventoryContainer = styled.div`
   position: absolute;
@@ -26,10 +27,10 @@ interface PlayerInventoryProps {
 const PlayerInventory: React.FC<PlayerInventoryProps> = ({ player }) => {
   return (
     <InventoryContainer>
-      <h3>Inventory</h3>
-      <p>Gold: {player.gold}</p>
+      <h3>{t("inventory")}</h3>
+      <p>{t("gold")}: {player.gold}</p>
       {player.inventory.length > 0 ? (
-        player.inventory.map(({itemId}, index) => {
+        player.inventory.map(({ itemId }, index) => {
           const item = itemsData.get(itemId);
           if (!item) return null;
 
@@ -38,7 +39,7 @@ const PlayerInventory: React.FC<PlayerInventoryProps> = ({ player }) => {
           </InventoryItem>
         })
       ) : (
-        <p>No items in inventory.</p>
+        <p>{t("noItems")}</p>
       )}
     </InventoryContainer>
   );

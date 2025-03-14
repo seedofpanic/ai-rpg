@@ -1,7 +1,6 @@
 export interface Location {
     name: string;
     description: string;
-    nearbyNPCs: string[];
     x: number;
     y: number;
     width: number;
@@ -11,9 +10,8 @@ export interface Location {
 
 export const locations: Location[] = [
     {
-        name: "Market Square",
-        description: "A bustling trading square in the city center, surrounded by various shops and stores",
-        nearbyNPCs: ["Alchemist Vasily", "Guard Peter", "Baker Anna"],
+        name: "locations.marketSquare.name",
+        description: "locations.marketSquare.description",
         x: 100,
         y: 100,
         width: 500,
@@ -21,9 +19,8 @@ export const locations: Location[] = [
         npcs: []
     },
     {
-        name: "Alchemist's Shop",
-        description: "A small shop on the corner of the market square, filled with vials, herbs, and magical items",
-        nearbyNPCs: ["Merchant Mikhail", "Herbalist Maria"],
+        name: "locations.alchemistsShop.name",
+        description: "locations.alchemistsShop.description",
         x: 700,
         y: 100,
         width: 300,
@@ -31,9 +28,8 @@ export const locations: Location[] = [
         npcs: []
     },
     {
-        name: "Blacksmith's Forge",
-        description: "A hot and noisy forge where blacksmith Ivan forges weapons and armor",
-        nearbyNPCs: ["Blacksmith Ivan", "Fisherman Alexey"],
+        name: "locations.blacksmithsForge.name",
+        description: "locations.blacksmithsForge.description",
         x: 1100,
         y: 100,
         width: 400,
@@ -41,9 +37,8 @@ export const locations: Location[] = [
         npcs: []
     },
     {
-        name: "Fishing Village",
-        description: "A small village on the riverbank where fishermen live",
-        nearbyNPCs: ["Fisherman Alexey", "Hunter Dmitry"],
+        name: "locations.fishingVillage.name",
+        description: "locations.fishingVillage.description",
         x: 100,
         y: 700,
         width: 600,
@@ -51,9 +46,8 @@ export const locations: Location[] = [
         npcs: []
     },
     {
-        name: "Farm",
-        description: "A large farm outside the city where various crops are grown",
-        nearbyNPCs: ["Farmer Nikolay", "Tailor Elena"],
+        name: "locations.farm.name",
+        description: "locations.farm.description",
         x: 800,
         y: 700,
         width: 500,
@@ -61,9 +55,8 @@ export const locations: Location[] = [
         npcs: []
     },
     {
-        name: "Jeweler's Workshop",
-        description: "A workshop where jeweler Olga creates exquisite jewelry",
-        nearbyNPCs: ["Jeweler Olga", "Merchant Mikhail"],
+        name: "locations.jewelersWorkshop.name",
+        description: "locations.jewelersWorkshop.description",
         x: 1400,
         y: 700,
         width: 350,
