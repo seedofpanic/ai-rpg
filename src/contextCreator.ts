@@ -23,9 +23,9 @@ export const createContext = (model: GenerativeModel, npcId: string, player: Pla
     - Gold: ${npcContext.gold}
 
     Knowledge and Experience:
-    Agnir, Kaldera, ${npcContext.knowledge.map(k => `- ${k}`).join('\n')}
+    ${npcContext.knowledge.map(k => `- ${k}`).join('\n')}
 
-    Location (${npcContext.location.name}):
+    Location: Agnir, Kaldera, (${npcContext.location.name}):
     ${npcContext.location.description}
 
     Environment:
