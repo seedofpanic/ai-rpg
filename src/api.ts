@@ -19,7 +19,7 @@ export const sendMessage = async (
       throw new Error('Player not found');
     }
 
-    const prompt = createContext(model, npcId, player, message);
+    const prompt = createContext(npcId, player, message);
 
     const result = await model.generateContent(prompt);
     const response = await result.response;

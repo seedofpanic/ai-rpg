@@ -10,6 +10,7 @@ export const createContext = (
   message: string,
 ) => {
   const npcContext = npcStore.npcs[npcId];
+  console.log("id: " + npcId);
 
   if (!npcContext) {
     throw new Error('NPC not found');
