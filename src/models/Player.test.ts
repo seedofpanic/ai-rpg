@@ -80,7 +80,7 @@ describe('Player', () => {
   it('should move based on keys pressed', () => {
     const keysDown = new Set(['KeyW', 'KeyD']);
     const currentTime = Date.now() + 200; // Simulate time passed
-    player.doActions(keysDown, currentTime);
+    player.doActions(keysDown, currentTime, false);
     expect(player.position.x).toBeGreaterThan(50);
     expect(player.position.y).toBeLessThan(50);
   });
@@ -103,7 +103,7 @@ describe('Player', () => {
   it('should handle movement based on keys pressed', () => {
     const keysDown = new Set(['KeyW', 'KeyD']);
     const currentTime = Date.now() + 200; // Simulate time passed
-    player.doActions(keysDown, currentTime);
+    player.doActions(keysDown, currentTime, false);
     expect(player.position.x).toBeGreaterThan(50);
     expect(player.position.y).toBeLessThan(50);
   });
@@ -111,7 +111,14 @@ describe('Player', () => {
   it('should not move if no keys are pressed', () => {
     const keysDown = new Set<string>();
     const currentTime = Date.now() + 200; // Simulate time passed
-    player.doActions(keysDown, currentTime);
+    player.doActions(keysDown, currentTime, false);
+    expect(player.position).toEqual(new Vector2(50, 50));
+  });
+
+  it('should not move if dialog is open', () => {
+    const keysDown = new Set<string>(['KeyW', 'KeyD']);
+    const currentTime = Date.now() + 200; // Simulate time passed
+    player.doActions(keysDown, currentTime, true);
     expect(player.position).toEqual(new Vector2(50, 50));
   });
 });

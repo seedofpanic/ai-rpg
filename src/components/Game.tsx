@@ -17,7 +17,7 @@ const GameContainer = styled.div`
 `;
 
 const HelpButton = styled.button`
-  position: absolute;
+  position: fixed;
   top: 10px;
   left: 50%;
   transform: translateX(-50%);
@@ -57,6 +57,14 @@ const Overlay = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
+`;
+
+const PlayerMod = styled.div`
+  background: white;
+  padding: 5px;
+  position: fixed;
+  top: 0;
+  left: 0;
 `;
 
 const Game: React.FC = () => {
@@ -145,10 +153,6 @@ const Game: React.FC = () => {
         <PlayerCustomization />
       ) : (
         <>
-          <div>
-            {gameStore.player?.combatMode ? 'Combat Mode' : 'Exploration Mode'}{' '}
-            press &lsquo;C&rsquo; to switch
-          </div>
           <Map
             onNpcInteraction={handleNpcInteraction}
             player={gameStore.player}
@@ -167,6 +171,10 @@ const Game: React.FC = () => {
           <CombatLog />
         </>
       )}
+      <PlayerMod>
+        {gameStore.player?.combatMode ? 'Combat Mode' : 'Exploration Mode'}{' '}
+        press &lsquo;C&rsquo; to switch
+      </PlayerMod>
       <HelpButton onClick={toggleHelp}>Help</HelpButton>
       {isHelpOpen && (
         <>

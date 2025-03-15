@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import { itemsData } from 'models/itemsData';
 
 const InventoryContainer = styled.div`
-  position: absolute;
+  position: fixed;
   bottom: 20px;
   right: 20px;
   background-color: rgba(0, 0, 0, 0.7);

@@ -116,11 +116,21 @@ export class Player {
     this.combatMode = !this.combatMode;
   }
 
-  doActions(keysDown: Set<string>, currentTime: number) {
+  doActions(
+    keysDown: Set<string>,
+    currentTime: number,
+    dialogIsAcitve: boolean,
+  ) {
     const delta = currentTime - this.lastUpdateTime;
+
+    if (!dialogIsAcitve) {
+      this.updateMovement(keysDown, delta);
+    }
+  }
+
+  updateMovement(keysDown: Set<string>, delta: number) {
     let moveX = 0;
     let moveY = 0;
-
     if (delta >= 100) {
       if (keysDown.has('KeyW')) {
         moveY = -1;

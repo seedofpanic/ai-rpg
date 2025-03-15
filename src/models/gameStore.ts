@@ -28,7 +28,7 @@ class GameStore {
         npc.doActions(this.player, currentTime);
       }
 
-      this.player.doActions(keysDown, currentTime);
+      this.player.doActions(keysDown, currentTime, this.isDialogueOpen);
 
       if (!this.player.isAlive()) {
         this.over();
