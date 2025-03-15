@@ -75,10 +75,10 @@ export const gameStore = new GameStore();
 
 // Controls
 const handleKeyDown = (e: KeyboardEvent) => {
-  keysDown.add(e.key.toLowerCase());
+  keysDown.add(e.code);
 };
 const handleKeyUp = (e: KeyboardEvent) => {
-  keysDown.delete(e.key.toLowerCase());
+  keysDown.delete(e.code);
 };
 
 window.addEventListener('keydown', handleKeyDown);

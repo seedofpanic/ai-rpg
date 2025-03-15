@@ -122,19 +122,19 @@ export class Player {
     let moveY = 0;
 
     if (delta >= 100) {
-      if (keysDown.has('w')) {
+      if (keysDown.has('KeyW')) {
         moveY = -1;
       }
-      if (keysDown.has('a')) {
+      if (keysDown.has('KeyA')) {
         moveX = -1;
       }
-      if (keysDown.has('s')) {
+      if (keysDown.has('KeyS')) {
         moveY = 1;
       }
-      if (keysDown.has('d')) {
+      if (keysDown.has('KeyD')) {
         moveX = 1;
       }
-      if (keysDown.has('c')) {
+      if (keysDown.has('KeyC')) {
         this.toggleCombatMode();
       }
     }

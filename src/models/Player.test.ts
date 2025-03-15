@@ -78,7 +78,7 @@ describe('Player', () => {
   });
 
   it('should move based on keys pressed', () => {
-    const keysDown = new Set(['w', 'd']);
+    const keysDown = new Set(['KeyW', 'KeyD']);
     const currentTime = Date.now() + 200; // Simulate time passed
     player.doActions(keysDown, currentTime);
     expect(player.position.x).toBeGreaterThan(50);
@@ -101,7 +101,7 @@ describe('Player', () => {
   });
 
   it('should handle movement based on keys pressed', () => {
-    const keysDown = new Set(['w', 'd']);
+    const keysDown = new Set(['KeyW', 'KeyD']);
     const currentTime = Date.now() + 200; // Simulate time passed
     player.doActions(keysDown, currentTime);
     expect(player.position.x).toBeGreaterThan(50);
