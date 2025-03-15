@@ -56,6 +56,7 @@ describe('NPC', () => {
   });
 
   it('should take damage and reduce health', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.5);
     npc.takeDamage(20);
     expect(npc.health).toBe(85); // Considering default defense of 5
   });
