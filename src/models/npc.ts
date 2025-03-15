@@ -280,8 +280,8 @@ export class NPC {
     attack(target: { takeDamage: (damage: number) => void, name: string }) {
         const isCritical = Math.random() < this.criticalChance;
         const damage = isCritical ? this.attackPower * 2 : this.attackPower;
+        combatLogStore.push(`${this.name} attacked ${target.name}.`);
         target.takeDamage(damage);
-        combatLogStore.push(`${this.name} attacked ${target.name}.`)
     }
 
     takeDamage(amount: number) {

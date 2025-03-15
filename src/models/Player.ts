@@ -1,3 +1,4 @@
+import { combatLogStore } from "components/CombatLog";
 import { makeAutoObservable } from "mobx";
 import { Vector2 } from "utils/vector2";
 
@@ -74,15 +75,24 @@ export class Player {
 
     if (isDodged) {
       console.log(`${this.name} dodged the attack!`);
+      combatLogStore.push(`${this.name} dodged the attack!`);
       return;
     }
 
     const reducedDamage = Math.max(0, amount - this.defense);
     this.health = Math.max(0, this.health - reducedDamage);
     console.log(`${this.name} took ${reducedDamage} damage.`);
+    combatLogStore.push(`${this.name} took ${reducedDamage} damage.`);
   }
 
-  attack(target: { takeDamage: (damage: number) => void }) {
+  attack(target: { takeDamage: (damage: number) => void, position: Vector2 }) {
+    const distance = this.position.subtract(target.position).magnitude();
+    if (distance > 40) { // Assuming 100 is the maximum attack range
+      console.log(`${this.name} is too far away to attack.`);
+      combatLogStore.push(`${this.name} is too far away to attack.`);
+      return;
+    }
+
     const isCritical = Math.random() < this.criticalChance;
     const damage = isCritical ? this.attackPower * 2 : this.attackPower;
     target.takeDamage(damage);

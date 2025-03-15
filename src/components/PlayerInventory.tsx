@@ -26,6 +26,8 @@ interface PlayerInventoryProps {
 const PlayerInventory: React.FC<PlayerInventoryProps> = ({ player }) => {
   return (
     <InventoryContainer data-testid="player-inventory">
+      <h3>Player stats</h3>
+      <p>Life: {player.health}</p>
       <h3>Inventory</h3>
       <p>Gold: {player.gold}</p>
       {player.inventory.length > 0 ? (

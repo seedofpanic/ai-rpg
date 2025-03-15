@@ -26,10 +26,11 @@ const NPCContainer = styled.div<{ $isAlive: boolean }>`
   justify-content: center;
   cursor: pointer;
   transition: transform 0.2s, opacity 0.2s;
-  transform: translate3d(-50%, -50%, 0, 0);
+  transform: translate3d(-50%, -50%, 0);
 
   &:hover {
-    transform: scale(1.1);
+    width: 45px;
+    height: 45px;
     opacity: 0.9;
   }
 `;

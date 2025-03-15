@@ -1,12 +1,13 @@
-import { makeObservable } from 'mobx';
-import React, { useState } from 'react';
+import { makeAutoObservable } from 'mobx';
+import { observer } from 'mobx-react';
+import React from 'react';
 import styled from 'styled-components';
 
 const LogContainer = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 100%;
+  width: 50%;
   max-height: 200px;
   overflow-y: auto;
   background-color: rgba(0, 0, 0, 0.7);
@@ -18,16 +19,21 @@ const LogContainer = styled.div`
 interface CombatLogProps {
 }
 
-export const combatLogStore = makeObservable([] as string[]);
+export const combatLogStore = makeAutoObservable({
+    log: [] as string[],
+    push(msg: string) {
+        this.log.unshift(msg);
+    }
+});
 
 const CombatLog: React.FC<CombatLogProps> = () => {
   return (
     <LogContainer>
-      {combatLogStore.map((log, index) => (
+      {combatLogStore.log.map((log, index) => (
         <div key={index}>{log}</div>
       ))}
     </LogContainer>
   );
 };
 
-export default CombatLog;
+export default observer(CombatLog);
