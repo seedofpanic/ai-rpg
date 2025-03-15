@@ -124,6 +124,7 @@ export class NPC {
   defense: number; // New attribute
   criticalChance: number; // New attribute
   dodgeChance: number; // New attribute
+  aggroTimer?: ReturnType<typeof setTimeout>;
 
   // utils
   lastUpdateTime: number = Date.now();
@@ -282,7 +283,10 @@ export class NPC {
     this.relation = Math.min(100, Math.max(0, this.relation + relationChange));
 
     if (this.relation === 0) {
-      setTimeout(() => this.changeRelation(1), 10000);
+      if (this.aggroTimer) {
+        clearTimeout(this.aggroTimer);
+      }
+      this.aggroTimer = setTimeout(() => this.changeRelation(1), 10000);
     }
   }
 
