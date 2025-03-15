@@ -24,7 +24,7 @@ export const createContext = (model: GenerativeModel, npcId: string, player: Pla
     - Beliefs: ${npcContext.beliefs}
     
     You have only items that are in your inventory:
-    ${npcContext.inventory?.map(item => `- ${itemsData.get(item.itemId)?.name} x${item.quantity}`).join('\n') || 'No items in inventory'}
+    ${npcContext.inventory?.map(item => `- ${itemsData.get(item.itemId)?.name} x${item.quantity} cost ${itemsData.get(item.itemId)?.price} piece`).join('\n') || 'No items in inventory'}
     - Gold: ${npcContext.gold}
 
     Knowledge and Experience:
@@ -56,8 +56,8 @@ export const createContext = (model: GenerativeModel, npcId: string, player: Pla
     - Race: ${player.race}
     - Class: ${player.class}
     Players inventory:
-    ${player.inventory?.map(item => `- ${itemsData.get(item.itemId)?.name} x${item.quantity}`).join('\n') || 'No items in inventory'}
     - Gold: ${player.gold}
+    ${player.inventory?.map(item => `- ${itemsData.get(item.itemId)?.name} x${item.quantity} cost ${itemsData.get(item.itemId)?.price} piece`).join('\n') || 'No items in inventory'}
 
     Recent Dialog:
     `;

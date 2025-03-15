@@ -111,7 +111,7 @@ const PlayerCustomization: React.FC<PlayerCustomizationProps> = ({ onCustomize }
           <Input
             data-testid="api-key-input"
             required
-            type="text"
+            type="password"
             placeholder="Enter API Key"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
