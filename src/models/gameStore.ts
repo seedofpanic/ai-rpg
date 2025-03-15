@@ -8,7 +8,7 @@ const keysDown = new Set<string>();
 class GameStore {
     isDialogueOpen: boolean = false;
     activeNpcId: string | null = null;
-    player: Player | null = null;
+    player: Player = {} as Player;
     isOver = true;
 
     constructor() {
@@ -49,7 +49,7 @@ class GameStore {
 
     reset() {
         this.isOver = false;
-        combatLogStore.length = 0;
+        combatLogStore.log.length = 0;
     }
 
     openDialogue(npcId: string) {

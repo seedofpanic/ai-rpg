@@ -85,9 +85,14 @@ export class Player {
     combatLogStore.push(`${this.name} took ${reducedDamage} damage.`);
   }
 
+  isCloseTo(position: Vector2) {
+    const distance = this.position.subtract(position).magnitude();
+
+    return distance > 40
+  }
+
   attack(target: { takeDamage: (damage: number) => void, position: Vector2 }) {
-    const distance = this.position.subtract(target.position).magnitude();
-    if (distance > 40) { // Assuming 100 is the maximum attack range
+    if (this.isCloseTo(target.position)) { // Assuming 100 is the maximum attack range
       console.log(`${this.name} is too far away to attack.`);
       combatLogStore.push(`${this.name} is too far away to attack.`);
       return;

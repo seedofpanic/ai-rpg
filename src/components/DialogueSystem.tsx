@@ -15,15 +15,11 @@ interface DialogueSystemProps {
   onTitleMouseDown: (e: React.MouseEvent) => void;
 }
 
-const DialogueContainer = styled.div<{ width: number; height: number; top: number; left: number }>`
+const DialogueContainer = styled.div`
   position: absolute;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: ${props => props.width}px;
-  height: ${props => props.height}px;
-  top: ${props => props.top}px;
-  left: ${props => props.left}px;
   background-color: rgba(38, 70, 83, 0.95);
   border-radius: 8px;
   padding: 20px;
@@ -202,7 +198,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({ npcId, onClose, positio
         gameStore.player.gold -= item.price;
         setShopItems(shopItems.filter(i => i !== item));
       
-        npcContext.removeItem(itemId);
+        npcContext.removeItem({ itemId, quantity: 1});
         gameStore.player?.addItemToInventory({ itemId, quantity: 1 });
       }
       npcContext.addDialogHistory({text: `Player bought ${item.name} for ${item.price} gold from ${npcContext.name}`, type: MessageType.Action, tokensCount: 20}); // Save to dialogue history

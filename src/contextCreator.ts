@@ -22,7 +22,7 @@ export const createContext = (model: GenerativeModel, npcId: string, player: Pla
     - Motivation: ${npcContext.Motivation}
     - Unique Trait: ${npcContext.uniqueTrait}
     - Beliefs: ${npcContext.beliefs}
-    
+
     You have only items that are in your inventory:
     ${npcContext.inventory?.map(item => `- ${itemsData.get(item.itemId)?.name} x${item.quantity} cost ${itemsData.get(item.itemId)?.price} piece`).join('\n') || 'No items in inventory'}
     - Gold: ${npcContext.gold}

@@ -83,14 +83,18 @@ const Game: React.FC = () => {
   };
 
   const handleNpcInteraction = (npcId: string) => {
-    if (!npcStore.npcs[npcId].isAlive()) {
+    const npc = npcStore.npcs[npcId];
+
+    if (!npc.isAlive()) {
       return;
     }
 
     if (gameStore.player?.combatMode) {
       handleCombat(npcId);
     } else {
-      gameStore.openDialogue(npcId);
+      if (gameStore.player.isCloseTo(npc.position) && npc.relation) {
+        gameStore.openDialogue(npcId);
+      }
     }
   };
 
