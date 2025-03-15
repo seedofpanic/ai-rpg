@@ -6,7 +6,6 @@ import { backgroundsData } from './backgroundsData';
 import { Player } from './Player';
 import { Vector2 } from '../utils/vector2'; // Import Vector2
 import { combatLogStore } from 'components/CombatLog';
-import { gameStore } from './gameStore';
 
 interface InventoryItem {
   itemId: string;
@@ -283,7 +282,6 @@ export class NPC {
     this.relation = Math.min(100, Math.max(0, this.relation + relationChange));
 
     if (this.relation === 0) {
-      gameStore.closeDialogue(this.id);
       setTimeout(() => this.changeRelation(1), 10000);
     }
   }
@@ -299,7 +297,6 @@ export class NPC {
   }
 
   removeItem({ itemId, quantity }: InventoryItem) {
-    this.inventory = this.inventory?.filter((item) => item.itemId !== itemId);
     if (this.inventory) {
       const item = this.inventory.find((i) => i.itemId === itemId);
       if (item) {
@@ -346,6 +343,10 @@ export class NPC {
   }
 
   doActions(player: Player, currentTime: number) {
+    if (!this.isAlive()) {
+      return;
+    }
+
     // if a second passed since the last update
     const delta = currentTime - this.lastUpdateTime;
     if (delta >= 100) {

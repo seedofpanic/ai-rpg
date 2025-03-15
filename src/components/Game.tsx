@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Map from './Map';
 import DialogueSystem from './DialogueSystem';
@@ -125,13 +125,23 @@ const Game: React.FC = () => {
     setIsHelpOpen(!isHelpOpen);
   };
 
+  const npcContext = gameStore.activeNpcId
+    ? npcStore.npcs[gameStore.activeNpcId]
+    : null;
+
+  useEffect(() => {
+    if (npcContext?.relation === 0 && gameStore.isDialogueOpen) {
+      gameStore.closeDialogue();
+    }
+  }, [npcContext?.relation]);
+
   return (
     <GameContainer
       data-testid="game-container"
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >
-      {!gameStore.player ? (
+      {!gameStore.player || gameStore.isOver ? (
         <PlayerCustomization />
       ) : (
         <>

@@ -34,7 +34,7 @@ export class Player {
     this.class = playerClass;
     this.gold = 100; // Default gold amount
     this.health = 100; // Default health
-    this.attackPower = 10; // Default attack power
+    this.attackPower = 15; // Default attack power
     this.defense = 5; // Default defense
     this.criticalChance = 0.1; // 10% critical chance
     this.dodgeChance = 0.05; // 5% dodge chance
@@ -88,11 +88,11 @@ export class Player {
   isCloseTo(position: Vector2) {
     const distance = this.position.subtract(position).magnitude();
 
-    return distance > 40;
+    return distance <= 70;
   }
 
   attack(target: { takeDamage: (damage: number) => void; position: Vector2 }) {
-    if (this.isCloseTo(target.position)) {
+    if (!this.isCloseTo(target.position)) {
       // Assuming 100 is the maximum attack range
       console.log(`${this.name} is too far away to attack.`);
       combatLogStore.push(`${this.name} is too far away to attack.`);

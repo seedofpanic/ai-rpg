@@ -14,6 +14,12 @@ export default tseslint.config(
     ignores: ["node_modules/", "dist/"],
   },
   {
+    files: ["src/**/*.test.ts", "src/**/*.test.tsx"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
+  {
     files: ["src/**/*.ts", "src/**/*.tsx"],
     languageOptions: {
       ecmaVersion: "latest",

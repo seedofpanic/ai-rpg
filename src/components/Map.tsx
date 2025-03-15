@@ -62,13 +62,15 @@ const Map: React.FC<MapProps> = ({ onNpcInteraction, player }) => {
         return (
           <NPC
             isAlive={npc.isAlive()}
-            key={npcStore.npcs[id].id}
-            id={npcStore.npcs[id].id}
-            x={npcStore.npcs[id].position.x}
-            y={npcStore.npcs[id].position.y}
-            name={npcStore.npcs[id].name}
-            role={npcStore.npcs[id].role}
-            location={npcStore.npcs[id].location}
+            key={npc.id}
+            id={npc.id}
+            x={npc.position.x}
+            y={npc.position.y}
+            name={npc.name}
+            health={npc.health}
+            maxHealth={100}
+            role={npc.role}
+            location={npc.location}
             onClick={() => onNpcInteraction(id)}
           />
         );

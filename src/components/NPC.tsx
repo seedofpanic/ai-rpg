@@ -7,6 +7,8 @@ interface NPCProps {
   x: number;
   y: number;
   name: string;
+  health: number;
+  maxHealth: number;
   role: string;
   location: {
     name: string;
@@ -78,6 +80,8 @@ const NPC: React.FC<NPCProps> = ({
   x,
   y,
   name,
+  health,
+  maxHealth,
   role,
   location,
   onClick,
@@ -90,6 +94,30 @@ const NPC: React.FC<NPCProps> = ({
       onClick={onClick}
       $isAlive={isAlive}
     >
+      {health < maxHealth && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '-10px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '100%',
+            height: '5px',
+            backgroundColor: '#ccc',
+            borderRadius: '2px',
+            overflow: 'hidden',
+          }}
+        >
+          <div
+            style={{
+              width: `${(health / maxHealth) * 100}%`,
+              height: '100%',
+              backgroundColor: health > maxHealth * 0.3 ? '#2a9d8f' : '#e63946',
+              transition: 'width 0.2s',
+            }}
+          />
+        </div>
+      )}
       <NPCInfo>
         <NPCName>{name}</NPCName>
         <NPCRole>{role}</NPCRole>
