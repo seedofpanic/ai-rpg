@@ -19,13 +19,16 @@ const NPCContainer = styled.div<{ $isAlive: boolean }>`
   position: absolute;
   width: 40px;
   height: 40px;
-  background-color: ${props => props.$isAlive ? "#e76f51" : "rgba(50, 50, 50, 1)"};
+  background-color: ${(props) =>
+    props.$isAlive ? '#e76f51' : 'rgba(50, 50, 50, 1)'};
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.2s, opacity 0.2s;
+  transition:
+    transform 0.2s,
+    opacity 0.2s;
   transform: translate3d(-50%, -50%, 0);
 
   &:hover {
@@ -71,9 +74,22 @@ const NPCLocation = styled.div`
   color: #aaa;
 `;
 
-const NPC: React.FC<NPCProps> = ({ id, x, y, name, role, location, onClick, isAlive }) => {
+const NPC: React.FC<NPCProps> = ({
+  x,
+  y,
+  name,
+  role,
+  location,
+  onClick,
+  isAlive,
+}) => {
   return (
-    <NPCContainer data-testid="npc-view" style={{left: x, top: y}} onClick={onClick} $isAlive={isAlive}>
+    <NPCContainer
+      data-testid="npc-view"
+      style={{ left: x, top: y }}
+      onClick={onClick}
+      $isAlive={isAlive}
+    >
       <NPCInfo>
         <NPCName>{name}</NPCName>
         <NPCRole>{role}</NPCRole>

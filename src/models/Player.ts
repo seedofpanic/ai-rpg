@@ -1,6 +1,6 @@
-import { combatLogStore } from "components/CombatLog";
-import { makeAutoObservable } from "mobx";
-import { Vector2 } from "utils/vector2";
+import { combatLogStore } from 'components/CombatLog';
+import { makeAutoObservable } from 'mobx';
+import { Vector2 } from 'utils/vector2';
 
 interface InventorySlot {
   itemId: string;
@@ -88,11 +88,12 @@ export class Player {
   isCloseTo(position: Vector2) {
     const distance = this.position.subtract(position).magnitude();
 
-    return distance > 40
+    return distance > 40;
   }
 
-  attack(target: { takeDamage: (damage: number) => void, position: Vector2 }) {
-    if (this.isCloseTo(target.position)) { // Assuming 100 is the maximum attack range
+  attack(target: { takeDamage: (damage: number) => void; position: Vector2 }) {
+    if (this.isCloseTo(target.position)) {
+      // Assuming 100 is the maximum attack range
       console.log(`${this.name} is too far away to attack.`);
       combatLogStore.push(`${this.name} is too far away to attack.`);
       return;
@@ -107,7 +108,7 @@ export class Player {
     return this.health > 0;
   }
 
-  setPosition({x, y}: { x: number; y: number; }) {
+  setPosition({ x, y }: { x: number; y: number }) {
     this.position = new Vector2(x, y);
   }
 
@@ -122,24 +123,26 @@ export class Player {
 
     if (delta >= 100) {
       if (keysDown.has('w')) {
-          moveY = -1;
+        moveY = -1;
       }
       if (keysDown.has('a')) {
-          moveX = -1;
+        moveX = -1;
       }
       if (keysDown.has('s')) {
-          moveY = 1;
+        moveY = 1;
       }
       if (keysDown.has('d')) {
-          moveX = 1;
+        moveX = 1;
       }
       if (keysDown.has('c')) {
-          this.toggleCombatMode();
+        this.toggleCombatMode();
       }
     }
 
     if (moveX || moveY) {
-      this.position = this.position.add((new Vector2(moveX, moveY)).normalize().multiply(this.speed))
+      this.position = this.position.add(
+        new Vector2(moveX, moveY).normalize().multiply(this.speed),
+      );
     }
   }
 }

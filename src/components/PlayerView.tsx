@@ -17,7 +17,9 @@ const PlayerContainer = styled.div`
 `;
 
 const PlayerView: React.FC<PlayerProps> = ({ x, y }) => {
-  return <PlayerContainer data-testid="player-view" style={{left: x, top: y}} />;
+  return (
+    <PlayerContainer data-testid="player-view" style={{ left: x, top: y }} />
+  );
 };
 
-export default PlayerView; 
+export default PlayerView;

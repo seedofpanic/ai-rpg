@@ -6,80 +6,80 @@ import { combatLogStore } from 'components/CombatLog';
 const keysDown = new Set<string>();
 
 class GameStore {
-    isDialogueOpen: boolean = false;
-    activeNpcId: string | null = null;
-    player: Player = {} as Player;
-    isOver = true;
+  isDialogueOpen: boolean = false;
+  activeNpcId: string | null = null;
+  player: Player = {} as Player;
+  isOver = true;
 
-    constructor() {
-        makeAutoObservable(this);
+  constructor() {
+    makeAutoObservable(this);
+  }
+
+  startGameActions() {
+    if (this.isOver) {
+      return;
     }
 
-    startGameActions() {
-        if (this.isOver) {
-            return;
-        }
+    if (this.player) {
+      const currentTime = Date.now();
+      for (const id of npcStore.npcIds) {
+        const npc = npcStore.npcs[id];
 
-        if (this.player) {
-            const currentTime = Date.now();
-            for (const id of npcStore.npcIds) {
-                const npc = npcStore.npcs[id];
-                
-                npc.doActions(this.player, currentTime);
-            }
+        npc.doActions(this.player, currentTime);
+      }
 
-            this.player.doActions(keysDown, currentTime)
-            
-            if (!this.player.isAlive()) {
-                this.over();
-                return;
-            }
-        }
+      this.player.doActions(keysDown, currentTime);
 
-        setTimeout(() => {
-           this.startGameActions();   
-        }, 100);
+      if (!this.player.isAlive()) {
+        this.over();
+        return;
+      }
     }
 
-    startGame(player: Player) {
-        this.player = player;
-        this.reset();
-        this.startGameActions();
-    }
+    setTimeout(() => {
+      this.startGameActions();
+    }, 100);
+  }
 
-    reset() {
-        this.isOver = false;
-        combatLogStore.log.length = 0;
-    }
+  startGame(player: Player) {
+    this.player = player;
+    this.reset();
+    this.startGameActions();
+  }
 
-    openDialogue(npcId: string) {
-        this.isDialogueOpen = true;
-        this.activeNpcId = npcId;
-    }
+  reset() {
+    this.isOver = false;
+    combatLogStore.log.length = 0;
+  }
 
-    closeDialogue(npcId?: string) {
-        if (!npcId || this.activeNpcId == npcId) {
-            this.isDialogueOpen = false;
-            this.activeNpcId = null;
-        }
-    }
+  openDialogue(npcId: string) {
+    this.isDialogueOpen = true;
+    this.activeNpcId = npcId;
+  }
 
-    over() {
-        this.isOver = true;
-        alert('YOU DIED');
-        window.location.reload();
+  closeDialogue(npcId?: string) {
+    if (!npcId || this.activeNpcId == npcId) {
+      this.isDialogueOpen = false;
+      this.activeNpcId = null;
     }
+  }
+
+  over() {
+    this.isOver = true;
+    alert('YOU DIED');
+    window.location.reload();
+  }
 }
 
 export const gameStore = new GameStore();
 
 // Controls
 const handleKeyDown = (e: KeyboardEvent) => {
-    keysDown.add(e.key.toLowerCase());
+  keysDown.add(e.key.toLowerCase());
 };
 const handleKeyUp = (e: KeyboardEvent) => {
-    keysDown.delete(e.key.toLowerCase());
-}
+  keysDown.delete(e.key.toLowerCase());
+};
 
 window.addEventListener('keydown', handleKeyDown);
 window.addEventListener('keyup', handleKeyUp);

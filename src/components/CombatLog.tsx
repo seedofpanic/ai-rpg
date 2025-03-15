@@ -16,17 +16,14 @@ const LogContainer = styled.div`
   font-size: 14px;
 `;
 
-interface CombatLogProps {
-}
-
 export const combatLogStore = makeAutoObservable({
-    log: [] as string[],
-    push(msg: string) {
-        this.log.unshift(msg);
-    }
+  log: [] as string[],
+  push(msg: string) {
+    this.log.unshift(msg);
+  },
 });
 
-const CombatLog: React.FC<CombatLogProps> = () => {
+const CombatLog: React.FC = () => {
   return (
     <LogContainer>
       {combatLogStore.log.map((log, index) => (

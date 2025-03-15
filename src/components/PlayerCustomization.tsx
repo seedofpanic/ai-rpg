@@ -45,10 +45,7 @@ const Button = styled.button`
   }
 `;
 
-interface PlayerCustomizationProps {
-}
-
-const PlayerCustomization: React.FC<PlayerCustomizationProps> = () => {
+const PlayerCustomization: React.FC = () => {
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
   const [race, setRace] = useState('');
@@ -104,7 +101,15 @@ const PlayerCustomization: React.FC<PlayerCustomizationProps> = () => {
       {!import.meta.env.VITE_GEMINI_API_KEY && (
         <>
           <p>
-            You can acquire an API key <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">here</a>.
+            You can acquire an API key{' '}
+            <a
+              href="https://aistudio.google.com/apikey"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              here
+            </a>
+            .
           </p>
           <Input
             data-testid="api-key-input"
@@ -114,11 +119,13 @@ const PlayerCustomization: React.FC<PlayerCustomizationProps> = () => {
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
           />
-          <Button onClick={handleApiKeySave}>Save API Key to local storage</Button>
+          <Button onClick={handleApiKeySave}>
+            Save API Key to local storage
+          </Button>
         </>
       )}
       <h1>Character Customization</h1>
-      
+
       <Input
         type="text"
         placeholder="Name"
@@ -137,7 +144,10 @@ const PlayerCustomization: React.FC<PlayerCustomizationProps> = () => {
         <option value="Orc">Orc</option>
         <option value="Dwarf">Dwarf</option>
       </Select>
-      <Select value={playerClass} onChange={(e) => setPlayerClass(e.target.value)}>
+      <Select
+        value={playerClass}
+        onChange={(e) => setPlayerClass(e.target.value)}
+      >
         <option value="">Class</option>
         <option value="Warrior">Warrior</option>
         <option value="Mage">Mage</option>

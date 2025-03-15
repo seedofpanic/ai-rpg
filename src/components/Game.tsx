@@ -60,12 +60,15 @@ const Overlay = styled.div`
 `;
 
 const Game: React.FC = () => {
-  const [dialoguePosition, setDialoguePosition] = useState({ top: 50, left: 550 });
-  const [dialogueSize, setDialogueSize] = useState({ width: 900, height: 600 });
+  const [dialoguePosition, setDialoguePosition] = useState({
+    top: 50,
+    left: 550,
+  });
+  const [dialogueSize] = useState({ width: 900, height: 600 });
   const [isDragging, setIsDragging] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = () => {
     setIsDragging(true);
   };
 
@@ -129,11 +132,17 @@ const Game: React.FC = () => {
       onMouseUp={handleMouseUp}
     >
       {!gameStore.player ? (
-        <PlayerCustomization/>
+        <PlayerCustomization />
       ) : (
         <>
-          <div>{gameStore.player?.combatMode ? 'Combat Mode' : 'Exploration Mode'} press 'C' to switch</div>
-          <Map onNpcInteraction={handleNpcInteraction} player={gameStore.player} />
+          <div>
+            {gameStore.player?.combatMode ? 'Combat Mode' : 'Exploration Mode'}{' '}
+            press &lsquo;C&rsquo; to switch
+          </div>
+          <Map
+            onNpcInteraction={handleNpcInteraction}
+            player={gameStore.player}
+          />
           {gameStore.isDialogueOpen && (
             <DialogueSystem
               onTitleMouseDown={handleMouseDown}
@@ -143,8 +152,9 @@ const Game: React.FC = () => {
               size={dialogueSize}
             />
           )}
-          <PlayerInventory player={gameStore.player} /> {/* Add PlayerInventory */}
-          <CombatLog/>
+          <PlayerInventory player={gameStore.player} />{' '}
+          {/* Add PlayerInventory */}
+          <CombatLog />
         </>
       )}
       <HelpButton onClick={toggleHelp}>Help</HelpButton>
@@ -153,12 +163,35 @@ const Game: React.FC = () => {
           <Overlay onClick={toggleHelp} />
           <HelpDialog>
             <h2>Game Help</h2>
-            <p><strong>W/A/S/D:</strong> Move the player.</p>
-            <p><strong>C:</strong> Toggle combat mode.</p>
-            <p><strong>Click NPC:</strong> Interact or attack (in combat mode).</p>
-            <p><strong>Inventory:</strong> Manage your items.</p>
-            <p><strong>Dialogue:</strong> Communicate with NPCs.</p>
-            <button onClick={toggleHelp} style={{ marginTop: '10px', padding: '8px 16px', backgroundColor: '#e76f51', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
+            <p>
+              <strong>W/A/S/D:</strong> Move the player.
+            </p>
+            <p>
+              <strong>C:</strong> Toggle combat mode.
+            </p>
+            <p>
+              <strong>Click NPC:</strong> Interact or attack (in combat mode).
+            </p>
+            <p>
+              <strong>Inventory:</strong> Manage your items.
+            </p>
+            <p>
+              <strong>Dialogue:</strong> Communicate with NPCs.
+            </p>
+            <button
+              onClick={toggleHelp}
+              style={{
+                marginTop: '10px',
+                padding: '8px 16px',
+                backgroundColor: '#e76f51',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+            >
+              Close
+            </button>
           </HelpDialog>
         </>
       )}

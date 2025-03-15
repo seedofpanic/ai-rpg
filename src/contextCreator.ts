@@ -2,17 +2,20 @@ import { npcStore } from './models/npcs';
 import { itemsData } from './models/itemsData';
 import { lore } from './models/loreBook';
 import { Player } from 'models/Player';
-import { GenerativeModel } from '@google/generative-ai';
 import { MessageType } from 'models/npc';
 
-export const createContext = (model: GenerativeModel, npcId: string, player: Player, message: string) => {
-    const npcContext = npcStore.npcs[npcId];
+export const createContext = (
+  npcId: string,
+  player: Player,
+  message: string,
+) => {
+  const npcContext = npcStore.npcs[npcId];
 
-    if (!npcContext) {
-        throw new Error('NPC not found');
-    }
+  if (!npcContext) {
+    throw new Error('NPC not found');
+  }
 
-    const beforeDialog = `
+  const beforeDialog = `
     You are an NPC named ${npcContext.name}. Player can lie to you, rely mostly on your personal knowledge. Here is your context:
 
     Basic Information:
@@ -24,11 +27,11 @@ export const createContext = (model: GenerativeModel, npcId: string, player: Pla
     - Beliefs: ${npcContext.beliefs}
 
     You have only items that are in your inventory:
-    ${npcContext.inventory?.map(item => `- ${itemsData.get(item.itemId)?.name} x${item.quantity} cost ${itemsData.get(item.itemId)?.price} piece`).join('\n') || 'No items in inventory'}
+    ${npcContext.inventory?.map((item) => `- ${itemsData.get(item.itemId)?.name} x${item.quantity} cost ${itemsData.get(item.itemId)?.price} piece`).join('\n') || 'No items in inventory'}
     - Gold: ${npcContext.gold}
 
     Knowledge and Experience:
-    ${npcContext.knowledge.map(k => `- ${k}`).join('\n')}
+    ${npcContext.knowledge.map((k) => `- ${k}`).join('\n')}
     Lore and beliefs:
     ${lore}
 
@@ -36,19 +39,23 @@ export const createContext = (model: GenerativeModel, npcId: string, player: Pla
     ${npcContext.location.description}
 
     Environment:
-    - Nearby NPCs: ${npcContext.location.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].race} ${npcStore.npcs[npcId].role} ${npcStore.npcs[npcId].background}`).join(', ')}
+    - Nearby NPCs: ${npcContext.location.npcs.map((npcId) => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].race} ${npcStore.npcs[npcId].role} ${npcStore.npcs[npcId].background}`).join(', ')}
 
     Relationships with other NPCs:
-    ${Object.entries(npcContext.relationships).map(([name, relation]) => `- ${name}: ${relation}`).join('\n')}
+    ${Object.entries(npcContext.relationships)
+      .map(([name, relation]) => `- ${name}: ${relation}`)
+      .join('\n')}
     
     Relationship with Player: ${npcContext.getPlayerRelation()}. Increase selling price if you don't like the player.
 
     Other Locations:
-    ${npcStore.locations.map(loc => {
-    const npcs = ` NPCs there: ${loc.npcs.map(npcId => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].role}`).join(', ')}`
+    ${npcStore.locations
+      .map((loc) => {
+        const npcs = ` NPCs there: ${loc.npcs.map((npcId) => `${npcStore.npcs[npcId].name} ${npcStore.npcs[npcId].role}`).join(', ')}`;
 
-    return `- ${loc.name}: ${loc.description}\n${loc.npcs.length ? npcs : ''}`
-    }).join('\n')}
+        return `- ${loc.name}: ${loc.description}\n${loc.npcs.length ? npcs : ''}`;
+      })
+      .join('\n')}
 
     Player:
     - Name: ${player.name}
@@ -57,11 +64,11 @@ export const createContext = (model: GenerativeModel, npcId: string, player: Pla
     - Class: ${player.class}
     Players inventory:
     - Gold: ${player.gold}
-    ${player.inventory?.map(item => `- ${itemsData.get(item.itemId)?.name} x${item.quantity} cost ${itemsData.get(item.itemId)?.price} piece`).join('\n') || 'No items in inventory'}
+    ${player.inventory?.map((item) => `- ${itemsData.get(item.itemId)?.name} x${item.quantity} cost ${itemsData.get(item.itemId)?.price} piece`).join('\n') || 'No items in inventory'}
 
     Recent Dialog:
     `;
-    const afterDialog = `
+  const afterDialog = `
 
     Respond based on this context, considering your environment and current location. Mention location details, events, and other NPCs if relevant. Keep it brief.
     If you liked the player's message, add "*like*".
@@ -74,28 +81,35 @@ export const createContext = (model: GenerativeModel, npcId: string, player: Pla
 
     Player's message: ${message}`;
 
-    let tokensCount = 0;
-    let dialogIndex = 0;
+  let tokensCount = 0;
+  let dialogIndex = 0;
 
-    while (tokensCount < 500000 && dialogIndex < npcContext.dialogueHistory.length) {
-        const dialogItem = npcContext.dialogueHistory[dialogIndex];
-        tokensCount += dialogItem.tokensCount || 20; // 20 for hello message
-        dialogIndex++;
-    }
-    const dialogContext = dialogIndex > 1 
-        ? npcContext.dialogueHistory.slice(-dialogIndex + 1).map(d => {
-            let prefix = "";
+  while (
+    tokensCount < 500000 &&
+    dialogIndex < npcContext.dialogueHistory.length
+  ) {
+    const dialogItem = npcContext.dialogueHistory[dialogIndex];
+    tokensCount += dialogItem.tokensCount || 20; // 20 for hello message
+    dialogIndex++;
+  }
+  const dialogContext =
+    dialogIndex > 1
+      ? npcContext.dialogueHistory
+          .slice(-dialogIndex + 1)
+          .map((d) => {
+            let prefix = '';
             if (d.type === MessageType.Player) {
-                prefix = "Player: ";
+              prefix = 'Player: ';
             } else if (d.type === MessageType.Action) {
-                prefix = "";
+              prefix = '';
             } else {
-                prefix = `${npcContext.name}: `;
+              prefix = `${npcContext.name}: `;
             }
             return `${prefix}${d.text}`;
-        }).join('\n') 
-        : '';
-    console.log("Total dialog tokens count:", tokensCount);
+          })
+          .join('\n')
+      : '';
+  console.log('Total dialog tokens count:', tokensCount);
 
-    return `${beforeDialog}${dialogContext}${afterDialog}`;
+  return `${beforeDialog}${dialogContext}${afterDialog}`;
 };

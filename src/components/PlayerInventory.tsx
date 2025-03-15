@@ -31,13 +31,15 @@ const PlayerInventory: React.FC<PlayerInventoryProps> = ({ player }) => {
       <h3>Inventory</h3>
       <p>Gold: {player.gold}</p>
       {player.inventory.length > 0 ? (
-        player.inventory.map(({itemId}, index) => {
+        player.inventory.map(({ itemId }, index) => {
           const item = itemsData.get(itemId);
           if (!item) return null;
 
-          return <InventoryItem data-testid="item-veiw" key={index}>
-            {item.name} - {item.description}
-          </InventoryItem>
+          return (
+            <InventoryItem data-testid="item-veiw" key={index}>
+              {item.name} - {item.description}
+            </InventoryItem>
+          );
         })
       ) : (
         <p>No items in inventory.</p>
