@@ -23,21 +23,47 @@ const HelpButton = styled.button`
   transform: translateX(-50%);
   padding: 10px 20px;
   font-size: 18px;
-  background-color:rgb(141, 103, 0);
+  background-color: #e76f51;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 
   &:hover {
-    background-color:rgb(167, 179, 0);
+    background-color: #e76f51;
   }
+`;
+
+const HelpDialog = styled.div`
+  line-height: 2rem;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: rgba(38, 70, 83, 0.95);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+`;
+
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
 `;
 
 const Game: React.FC = () => {
   const [dialoguePosition, setDialoguePosition] = useState({ top: 50, left: 550 });
   const [dialogueSize, setDialogueSize] = useState({ width: 900, height: 600 });
   const [isDragging, setIsDragging] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
@@ -88,6 +114,10 @@ const Game: React.FC = () => {
     }
   };
 
+  const toggleHelp = () => {
+    setIsHelpOpen(!isHelpOpen);
+  };
+
   return (
     <GameContainer
       data-testid="game-container"
@@ -113,7 +143,21 @@ const Game: React.FC = () => {
           <CombatLog/>
         </>
       )}
-      <HelpButton>Help</HelpButton> {/* Add Help button */}
+      <HelpButton onClick={toggleHelp}>Help</HelpButton>
+      {isHelpOpen && (
+        <>
+          <Overlay onClick={toggleHelp} />
+          <HelpDialog>
+            <h2>Game Help</h2>
+            <p><strong>W/A/S/D:</strong> Move the player.</p>
+            <p><strong>C:</strong> Toggle combat mode.</p>
+            <p><strong>Click NPC:</strong> Interact or attack (in combat mode).</p>
+            <p><strong>Inventory:</strong> Manage your items.</p>
+            <p><strong>Dialogue:</strong> Communicate with NPCs.</p>
+            <button onClick={toggleHelp} style={{ marginTop: '10px', padding: '8px 16px', backgroundColor: '#e76f51', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
+          </HelpDialog>
+        </>
+      )}
     </GameContainer>
   );
 };
