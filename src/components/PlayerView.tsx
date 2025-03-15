@@ -6,10 +6,8 @@ interface PlayerProps {
   y: number;
 }
 
-const PlayerContainer = styled.div<PlayerProps>`
+const PlayerContainer = styled.div`
   position: absolute;
-  left: ${props => props.x}px;
-  top: ${props => props.y}px;
   width: 30px;
   height: 30px;
   background-color: #264653;
@@ -19,7 +17,7 @@ const PlayerContainer = styled.div<PlayerProps>`
 `;
 
 const PlayerView: React.FC<PlayerProps> = ({ x, y }) => {
-  return <PlayerContainer data-testid="player-view" x={x} y={y} />;
+  return <PlayerContainer data-testid="player-view" style={{left: x, top: y}} />;
 };
 
 export default PlayerView; 

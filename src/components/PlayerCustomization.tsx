@@ -46,10 +46,9 @@ const Button = styled.button`
 `;
 
 interface PlayerCustomizationProps {
-  onCustomize: (player: Player) => void;
 }
 
-const PlayerCustomization: React.FC<PlayerCustomizationProps> = ({ onCustomize }) => {
+const PlayerCustomization: React.FC<PlayerCustomizationProps> = () => {
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
   const [race, setRace] = useState('');
@@ -96,8 +95,7 @@ const PlayerCustomization: React.FC<PlayerCustomizationProps> = ({ onCustomize }
       localStorage.setItem('playerClass', playerClass);
 
       const player = new Player(name, gender, race, playerClass);
-      gameStore.setPlayer(player); // Set player in gameStore
-      onCustomize(player);
+      gameStore.startGame(player); // Set player in gameStore
     }
   };
 

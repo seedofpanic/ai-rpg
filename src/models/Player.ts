@@ -1,4 +1,5 @@
-import { makeAutoObservable, makeObservable } from "mobx";
+import { makeAutoObservable } from "mobx";
+import { Vector2 } from "utils/vector2";
 
 interface InventorySlot {
   itemId: string;
@@ -6,19 +7,36 @@ interface InventorySlot {
 }
 
 export class Player {
+  speed = 20;
+  position: Vector2;
   name: string;
   gender: string;
   race: string;
   class: string;
   gold: number;
   inventory: InventorySlot[] = [];
+  health: number;
+  attackPower: number;
+  defense: number; // New attribute
+  criticalChance: number; // New attribute
+  dodgeChance: number; // New attribute
+
+  // utils
+  lastUpdateTime = Date.now();
+  combatMode = false;
 
   constructor(name: string, gender: string, race: string, playerClass: string) {
+    this.position = new Vector2(50, 50);
     this.name = name;
     this.gender = gender;
     this.race = race;
     this.class = playerClass;
     this.gold = 100; // Default gold amount
+    this.health = 100; // Default health
+    this.attackPower = 10; // Default attack power
+    this.defense = 5; // Default defense
+    this.criticalChance = 0.1; // 10% critical chance
+    this.dodgeChance = 0.05; // 5% dodge chance
     makeAutoObservable(this);
   }
 
@@ -40,7 +58,6 @@ export class Player {
       }
     }
   }
-    
 
   spendGold(amount: number) {
     if (this.gold >= amount) {
@@ -50,5 +67,64 @@ export class Player {
 
   earnGold(amount: number) {
     this.gold += amount;
+  }
+
+  takeDamage(amount: number) {
+    const isDodged = Math.random() < this.dodgeChance;
+
+    if (isDodged) {
+      console.log(`${this.name} dodged the attack!`);
+      return;
+    }
+
+    const reducedDamage = Math.max(0, amount - this.defense);
+    this.health = Math.max(0, this.health - reducedDamage);
+    console.log(`${this.name} took ${reducedDamage} damage.`);
+  }
+
+  attack(target: { takeDamage: (damage: number) => void }) {
+    const isCritical = Math.random() < this.criticalChance;
+    const damage = isCritical ? this.attackPower * 2 : this.attackPower;
+    target.takeDamage(damage);
+  }
+
+  isAlive(): boolean {
+    return this.health > 0;
+  }
+
+  setPosition({x, y}: { x: number; y: number; }) {
+    this.position = new Vector2(x, y);
+  }
+
+  toggleCombatMode() {
+    this.combatMode = !this.combatMode;
+  }
+
+  doActions(keysDown: Set<string>, currentTime: number) {
+    const delta = currentTime - this.lastUpdateTime;
+    let moveX = 0;
+    let moveY = 0;
+
+    if (delta >= 100) {
+      if (keysDown.has('w')) {
+          moveY = -1;
+      }
+      if (keysDown.has('a')) {
+          moveX = -1;
+      }
+      if (keysDown.has('s')) {
+          moveY = 1;
+      }
+      if (keysDown.has('d')) {
+          moveX = 1;
+      }
+      if (keysDown.has('c')) {
+          this.toggleCombatMode();
+      }
+    }
+
+    if (moveX || moveY) {
+      this.position = this.position.add((new Vector2(moveX, moveY)).normalize().multiply(this.speed))
+    }
   }
 }

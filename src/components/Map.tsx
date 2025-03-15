@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import NPC from './NPC';
 import PlayerView from './PlayerView';
@@ -37,35 +37,29 @@ interface MapProps {
 }
 
 const Map: React.FC<MapProps> = ({ onNpcInteraction, player }) => {
-  const [playerPosition, setPlayerPosition] = useState({ x: 300, y: 300 });
-
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    setPlayerPosition({ x, y });
-  };
-
   return (
-    <MapContainer onClick={handleClick}>
-      <PlayerView x={playerPosition.x} y={playerPosition.y} />
+    <MapContainer>
       {locations.map((location, index) => (
         <LocationContainer key={index} x={location.x} y={location.y} width={location.width} height={location.height}>
           {location.name}
         </LocationContainer>
       ))}
-      {npcStore.npcIds.map((id) => (
-        <NPC
+      <PlayerView x={player.position.x} y={player.position.y} />
+      {npcStore.npcIds.map((id) => {
+        const npc = npcStore.npcs[id];
+
+        return <NPC
+          isAlive={npc.isAlive()}
           key={npcStore.npcs[id].id}
           id={npcStore.npcs[id].id}
-          x={npcStore.npcs[id].x}
-          y={npcStore.npcs[id].y}
+          x={npcStore.npcs[id].position.x}
+          y={npcStore.npcs[id].position.y}
           name={npcStore.npcs[id].name}
           role={npcStore.npcs[id].role}
           location={npcStore.npcs[id].location}
           onClick={() => onNpcInteraction(id)}
         />
-      ))}
+    })}
     </MapContainer>
   );
 };

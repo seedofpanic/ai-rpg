@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 interface NPCProps {
+  isAlive: boolean;
   id: string;
   x: number;
   y: number;
@@ -14,19 +15,18 @@ interface NPCProps {
   onClick: () => void;
 }
 
-const NPCContainer = styled.div<{ x: number; y: number }>`
+const NPCContainer = styled.div<{ $isAlive: boolean }>`
   position: absolute;
-  left: ${props => props.x}px;
-  top: ${props => props.y}px;
   width: 40px;
   height: 40px;
-  background-color: #e76f51;
+  background-color: ${props => props.$isAlive ? "#e76f51" : "rgba(50, 50, 50, 1)"};
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: transform 0.2s, opacity 0.2s;
+  transform: translate3d(-50%, -50%, 0, 0);
 
   &:hover {
     transform: scale(1.1);
@@ -70,9 +70,9 @@ const NPCLocation = styled.div`
   color: #aaa;
 `;
 
-const NPC: React.FC<NPCProps> = ({ id, x, y, name, role, location, onClick }) => {
+const NPC: React.FC<NPCProps> = ({ id, x, y, name, role, location, onClick, isAlive }) => {
   return (
-    <NPCContainer data-testid="npc-view" x={x} y={y} onClick={onClick}>
+    <NPCContainer data-testid="npc-view" style={{left: x, top: y}} onClick={onClick} $isAlive={isAlive}>
       <NPCInfo>
         <NPCName>{name}</NPCName>
         <NPCRole>{role}</NPCRole>
@@ -82,4 +82,4 @@ const NPC: React.FC<NPCProps> = ({ id, x, y, name, role, location, onClick }) =>
   );
 };
 
-export default NPC; 
+export default NPC;

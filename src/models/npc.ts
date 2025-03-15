@@ -3,6 +3,10 @@ import { makeAutoObservable } from 'mobx';
 import { itemsData } from './itemsData';
 import { Location } from './location'; // Import related types
 import { backgroundsData } from './backgroundsData';
+import { Player } from './Player';
+import { Vector2 } from '../utils/vector2'; // Import Vector2
+import { combatLogStore } from 'components/CombatLog';
+import { gameStore } from './gameStore';
 
 interface InventoryItem {
     itemId: string;
@@ -56,9 +60,9 @@ function generateRandomInventory(): InventoryItem[] {
 
 export class NPC {
     id: string;
-    x: number;
-    y: number;
+    position: Vector2;
     name: string;
+    speed = 10;
     race: string;
     role: string;
     personality: string;
@@ -75,6 +79,15 @@ export class NPC {
     Motivation: string;
     uniqueTrait: string;
     beliefs: string;
+    health: number;
+    attackPower: number;
+    defense: number; // New attribute
+    criticalChance: number; // New attribute
+    dodgeChance: number; // New attribute
+
+    // utils
+    lastUpdateTime: number = Date.now();
+    attackReady = 0;
 
     constructor(
         id: string,
@@ -96,11 +109,15 @@ export class NPC {
         state?: string,
         inventory?: InventoryItem[],
         gold: number = 0,
-        relation: number = 0
+        relation: number = 0,
+        health: number = 100,
+        attackPower: number = 10,
+        defense: number = 5,
+        criticalChance: number = 0.1,
+        dodgeChance: number = 0.05
     ) {
         this.id = id;
-        this.x = x;
-        this.y = y;
+        this.position = new Vector2(x, y);
         this.name = name;
         this.race = race;
         this.role = role;
@@ -118,6 +135,11 @@ export class NPC {
         this.inventory = inventory;
         this.gold = gold;
         this.relation = relation;
+        this.health = health;
+        this.attackPower = attackPower;
+        this.defense = defense;
+        this.criticalChance = criticalChance;
+        this.dodgeChance = dodgeChance;
         makeAutoObservable(this);
     }
 
@@ -154,7 +176,7 @@ export class NPC {
             undefined,
             generateRandomInventory(),
             Math.floor(Math.random() * 200),
-            Math.floor(Math.random() * 101)
+            Math.floor(Math.random() * 100) + 1
         );
 
         location.npcs.push(npc.id);
@@ -176,6 +198,8 @@ export class NPC {
             return 'Unfriendly';
         } else if (this.relation > 15) {
             return 'Very Unfriendly';
+        } else if (this.relation > 0) {
+            return 'Hateful';
         } else {
             return 'Hostile';
         }
@@ -214,6 +238,11 @@ export class NPC {
 
     changeRelation(relationChange: number) {
         this.relation = Math.min(100, Math.max(0, this.relation + relationChange));
+
+        if (this.relation === 0) {
+            gameStore.closeDialogue(this.id);
+            setTimeout(() => this.changeRelation(1), 10000);
+        }
     }
 
     setState(newState: string | undefined) {
@@ -245,6 +274,63 @@ export class NPC {
             item.quantity += quantity;
         } else {
             this.inventory?.push({ itemId, quantity });
+        }
+    }
+
+    attack(target: { takeDamage: (damage: number) => void, name: string }) {
+        const isCritical = Math.random() < this.criticalChance;
+        const damage = isCritical ? this.attackPower * 2 : this.attackPower;
+        target.takeDamage(damage);
+        combatLogStore.push(`${this.name} attacked ${target.name}.`)
+    }
+
+    takeDamage(amount: number) {
+        this.changeRelation(-50);
+        const isDodged = Math.random() < this.dodgeChance;
+        if (isDodged) {
+            console.log(`${this.name} dodged the attack!`);
+            combatLogStore.push(`${this.name} dodged the attack!`);
+            return;
+        }
+        const reducedDamage = Math.max(0, amount - this.defense);
+        this.health = Math.max(0, this.health - reducedDamage);
+        console.log(`${this.name} took ${reducedDamage} damage.`);
+        combatLogStore.push(`${this.name} took ${reducedDamage} damage.`);
+    }
+
+    isAlive() {
+        return this.health > 0;
+    }
+
+    doActions(player: Player, currentTime: number) {
+        // if a second passed since the last update
+        const delta = currentTime - this.lastUpdateTime;
+        if (delta >= 100) {
+            this.lastUpdateTime += 100;
+
+            if (this.relation === 0) {
+                // Calculate direction towards the player
+                const distance = player.position.subtract(this.position);
+                const magnitude = distance.magnitude();
+
+                if (magnitude > 40) {
+                    const direction = distance.normalize();
+
+                    // Move NPC in the direction of the player
+                    const movement = direction.multiply(this.speed);
+                    this.position = this.position.add(movement);
+                }
+
+                if (this.attackReady === 0) {
+                    if (magnitude <= 50) {       
+                        this.attack(player);
+                        this.attackReady = 5;
+                    }
+                } else {
+                    this.attackReady--;
+                }
+                return;
+            }
         }
     }
 }
