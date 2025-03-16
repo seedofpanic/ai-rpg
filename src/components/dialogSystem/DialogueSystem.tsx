@@ -185,6 +185,28 @@ const BoxRow = styled.div`
   width: 100%;
 `;
 
+const LoadingDots = styled.div`
+  display: inline-block;
+  &:after {
+    content: '.';
+    animation: dots 1.5s steps(5, end) infinite;
+  }
+
+  @keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60% { content: '...'; }
+    80%, 100% { content: ''; }
+  }
+`;
+
+const LoadingMessage = styled(Message)`
+  background-color: #2a9d8f;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
 const DialogueSystem: React.FC<DialogueSystemProps> = ({
   npcId,
   onClose,
@@ -194,6 +216,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
 }) => {
   const npcContext = npcStore.npcs[npcId] as NPC;
   const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const messageLogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -268,29 +291,37 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
   };
 
   const handleSend = async () => {
-    if (input.trim() === '') return;
+    if (input.trim() === '' || isLoading) return;
 
-    // TODO: Will need to calculate tokens count based on the message
-    npcContext.addDialogHistory({
-      text: input,
-      type: MessageType.Player,
-      tokensCount: 30,
-    }); // Save to dialogue history
+    setIsLoading(true);
+    const userMessage = input;
     setInput('');
 
     // Send message to API with NPC context
     try {
-      const response = await sendMessage(input, npcId);
+      npcContext.addDialogHistory({
+        text: userMessage,
+        type: MessageType.Player,
+        tokensCount: 30,
+      }); // Save to dialogue history
+
+      const response = await sendMessage(userMessage, npcId);
 
       if (!response) {
         return;
       }
 
       const { text, tokensCount } = response;
-
       parseNpcMessage(text, tokensCount, npcContext);
     } catch (error) {
       console.error('Failed to send message:', error);
+      npcContext.addDialogHistory({
+        text: "Sorry, I couldn't process that message. Please try again.",
+        type: MessageType.NPC,
+        tokensCount: 20,
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -325,6 +356,12 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
                 {message.text}
               </Message>
             ))}
+            {isLoading && (
+              <LoadingMessage>
+                <span>{npcContext.name} is thinking</span>
+                <LoadingDots />
+              </LoadingMessage>
+            )}
           </MessageLog>
           <InputContainer>
             <Input
@@ -333,9 +370,15 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="Enter a message..."
+              disabled={isLoading}
             />
-            <Button data-testid="send-message" onClick={handleSend}>
-              Send
+            <Button 
+              data-testid="send-message" 
+              onClick={handleSend}
+              disabled={isLoading}
+              style={{ opacity: isLoading ? 0.7 : 1 }}
+            >
+              {isLoading ? 'Sending...' : 'Send'}
             </Button>
           </InputContainer>
         </Box>
@@ -365,8 +408,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
               {npcContext.buyingItems.length ? (
                 npcContext.buyingItems.map((item, index) => {
                   const hasItem = gameStore.player?.inventory.some(
-                    (invItem) =>
-                      invItem.itemId === item.itemId && invItem.quantity > 0,
+                    (invItem) => invItem.itemId === item.itemId && invItem.quantity > 0
                   );
                   return (
                     <ShopItem key={index}>
@@ -376,10 +418,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
                         data-testid="sell-item"
                         onClick={() => handleSellItem(item)}
                         disabled={!hasItem}
-                        style={{
-                          opacity: hasItem ? 1 : 0.5,
-                          cursor: hasItem ? 'pointer' : 'not-allowed',
-                        }}
+                        style={{ opacity: hasItem ? 1 : 0.5, cursor: hasItem ? 'pointer' : 'not-allowed' }}
                       >
                         Sell
                       </ShopButton>
@@ -393,32 +432,26 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
             <QuestSection>
               <h3>Available Quests</h3>
               {gameStore.questLog
-                .filter(
-                  (quest) => quest.questGiverId === npcId && !quest.completed,
-                )
-                .map((quest) => (
+                .filter(quest => quest.questGiverId === npcId && !quest.completed)
+                .map(quest => (
                   <QuestItem key={quest.id}>
                     <QuestTitle>{quest.title}</QuestTitle>
                     <QuestDescription>{quest.description}</QuestDescription>
                     {quest.rewards && (
                       <QuestReward>
-                        Rewards:{' '}
+                        Rewards: {' '}
                         {quest.rewards.gold && `${quest.rewards.gold} gold`}
-                        {quest.rewards.items &&
-                          quest.rewards.items.length > 0 &&
+                        {quest.rewards.items && quest.rewards.items.length > 0 && 
                           ` • ${quest.rewards.items.join(', ')}`}
-                        {quest.rewards.experience &&
-                          ` • ${quest.rewards.experience} XP`}
+                        {quest.rewards.experience && ` • ${quest.rewards.experience} XP`}
                       </QuestReward>
                     )}
                   </QuestItem>
                 ))}
               <h3>Completed Quests</h3>
               {gameStore.questLog
-                .filter(
-                  (quest) => quest.questGiverId === npcId && quest.completed,
-                )
-                .map((quest) => (
+                .filter(quest => quest.questGiverId === npcId && quest.completed)
+                .map(quest => (
                   <QuestItem key={quest.id}>
                     <QuestTitle>{quest.title} (Completed)</QuestTitle>
                   </QuestItem>

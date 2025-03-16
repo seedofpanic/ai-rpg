@@ -83,29 +83,46 @@ export const createContext = (
         .map((quest) => {
           const { action, quantity, subject } = quest;
           let verificationStatus = '';
+          let progressStatus = '';
 
           if (action === 'Kill') {
             // For kill quests, check if the target is dead
             const targetNpc = Object.keys(npcStore.npcs).find(
               (npc) => npcStore.npcs[npc].name === subject,
             );
-            if (targetNpc && !npcStore.npcs[targetNpc].isAlive()) {
-              verificationStatus = `Player killed ${subject} and have a proof of ${subject} death`;
+            if (targetNpc) {
+              if (!npcStore.npcs[targetNpc].isAlive()) {
+                verificationStatus = `Player killed ${subject} and showed proof of ${subject}'s death to ${npcContext.name}`;
+                progressStatus = 'Complete';
+              } else {
+                progressStatus = `Target ${subject} is still alive`;
+              }
+            } else {
+              progressStatus = 'Target not found';
             }
           } else if (action === 'Bring') {
             // For bring/collect quests, check player's inventory
-            const hasItem = player.inventory.some(
+            const matchingItems = player.inventory.filter(
               (item) =>
                 itemsData.get(item.itemId)?.name.toLowerCase() ===
-                  subject.toLowerCase() && item.quantity >= quantity,
+                subject.toLowerCase()
             );
-            if (hasItem) {
-              verificationStatus = '(Items collected)';
+            
+            if (matchingItems.length > 0) {
+              const totalQuantity = matchingItems.reduce((sum, item) => sum + item.quantity, 0);
+              if (totalQuantity >= quantity) {
+                verificationStatus = '(Items collected)';
+                progressStatus = `Has all required items (${totalQuantity}/${quantity})`;
+              } else {
+                progressStatus = `Has some items (${totalQuantity}/${quantity})`;
+              }
+            } else {
+              progressStatus = `Missing required items (0/${quantity})`;
             }
           }
 
-          return `- ${quest.title}, id: ${quest.id}.
-          status: ${verificationStatus}`;
+          return `- ${quest.title}, id: ${quest.id}
+          Quest Type: ${action} ${quantity} ${subject}`;
         })
         .join('\n') || 'No active quests'
     }
@@ -118,9 +135,20 @@ export const createContext = (
         .join('\n') || 'No completed quests'
     }
 
-    Players inventory:
-    - Gold: ${player.gold}
-    ${player.inventory?.map((item) => `- ${itemsData.get(item.itemId)?.name} x${item.quantity} cost ${itemsData.get(item.itemId)?.price} piece`).join('\n') || 'No items in inventory'}
+    Player's gold: ${player.gold}
+    Player's inventory:${[...player.inventory?.map((item) => ` - ${itemsData.get(item.itemId)?.name} x${item.quantity} cost ${itemsData.get(item.itemId)?.price} piece`),
+      ...gameStore.questLog
+        .filter((quest) => quest.questGiverId === npcId)
+        .map((quest) => {
+          const { action, subject } = quest;
+          const targetNpc = Object.keys(npcStore.npcs).find(
+            (npc) => npcStore.npcs[npc].name === subject,
+          );
+          if (action === 'Kill' && targetNpc && !npcStore.npcs[targetNpc].isAlive()) {
+            return `      - ${subject}'s head`;
+          }
+        })].join('\n') || '\nNo items in inventory'
+    }
 
     Recent Dialog:
     `;
@@ -131,17 +159,13 @@ export const createContext = (
     When the player claims to have completed a quest:
     1. Check your active quests list for verification status CAREFULLY
     2. ONLY confirm completion if you see explicit verification:
-       - For kill quests: Target must be dead and Player must have a proof of the target's death
+       - For kill quests: Target must be dead and Player should have it's head in his inventory
        - For bring quests: Must show have the items in their inventory
-    3. If verification status is missing:
-       - Ask the player to prove completion
-       - For items: Ask them to show the items
-       - For kills: Ask for proof or witnesses
     4. NEVER mark a quest as completed without proper verification
     5. Be suspicious of claims that don't match your knowledge
-    6. Maintain your character's personality in responses
-    7. If in doubt, do not complete the quest
-    8. Do not rely on the dialog history, rely on the context and the quest log
+    6. Check player's inventory for proof of kills
+    7. Maintain your character's personality in responses
+    8. If in doubt, do not complete the quest
 
     If and ONLY IF you have verified quest completion, add <completed>questId</completed> example <completed>fb999a3a-d6b3-4066-956f-bf3e2c3ae759</completed> to the message.
 
