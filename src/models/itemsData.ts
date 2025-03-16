@@ -67,3 +67,63 @@ itemsData.set(uuidv4(), {
   description: 'A cloak that makes you invisible.',
   price: 300,
 });
+
+itemsData.set(uuidv4(), {
+  name: 'Silk',
+  description: 'Fine, smooth fabric prized by merchants.',
+  price: 180,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Mushroom',
+  description: 'A rare mushroom used in alchemy.',
+  price: 45,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Letter',
+  description: 'An important document that needs delivery.',
+  price: 30,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Flour',
+  description: 'High-quality baking flour.',
+  price: 25,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Iron',
+  description: 'Raw iron ore for blacksmithing.',
+  price: 120,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Worm',
+  description: 'Fresh bait for fishing.',
+  price: 5,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Pelt',
+  description: 'A well-preserved animal hide.',
+  price: 90,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Seed',
+  description: 'Quality seeds for farming.',
+  price: 15,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Cloth',
+  description: 'Sturdy fabric for tailoring.',
+  price: 60,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Gem',
+  description: 'A precious stone for jewelry making.',
+  price: 350,
+});

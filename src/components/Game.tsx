@@ -4,6 +4,7 @@ import Map from './Map';
 import DialogueSystem from './dialogSystem/DialogueSystem';
 import PlayerCustomization from './PlayerCustomization';
 import PlayerInventory from './PlayerInventory'; // Import PlayerInventory
+import QuestLog from './QuestLog';
 import { observer } from 'mobx-react-lite';
 import { gameStore } from '../models/gameStore'; // Import gameStore
 import CombatLog, { combatLogStore } from './CombatLog'; // Import CombatLog
@@ -169,6 +170,7 @@ const Game: React.FC = () => {
           <PlayerInventory player={gameStore.player} />{' '}
           {/* Add PlayerInventory */}
           <CombatLog />
+          <QuestLog />
         </>
       )}
       <PlayerMod>

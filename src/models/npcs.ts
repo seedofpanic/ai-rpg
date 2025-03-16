@@ -3,6 +3,10 @@ import { NPC } from './npc'; // Import NPC from npc.ts
 import { locations } from './location'; // Import locations from location.ts
 import { Vector2 } from 'utils/vector2';
 
+const getRandomElement = <T>(arr: T[]): T => {
+  return arr[Math.floor(Math.random() * arr.length)];
+};
+
 class NPCStore {
   npcs: Record<string, NPC> = {};
   npcIds: string[] = [];
@@ -26,7 +30,23 @@ class NPCStore {
       }
     }
     this.npcIds = Object.keys(this.npcs);
+
+    // After all NPCs are created, assign kill needs
+    this.assignKillNeeds();
   }
+
+  assignKillNeeds() {
+    const npcArray = Object.values(this.npcs);
+    for (const npc of npcArray) {
+      // Get a random NPC that isn't the current one
+      const otherNpcs = npcArray.filter((other) => other.id !== npc.id);
+      if (otherNpcs.length > 0) {
+        const targetNpc = getRandomElement(otherNpcs);
+        npc.addKillNeed(targetNpc.name);
+      }
+    }
+  }
+
   getNpcGreating(npcId: string): string {
     const npc = this.npcs[npcId];
     return `Hello, I am ${npc.name}, the ${npc.role}. How can I help you?`;

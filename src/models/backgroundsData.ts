@@ -1,5 +1,6 @@
 interface BackgroundTemplate {
   name: string;
+  title: string;
   race: string;
   background: string;
   trueBackground: string;
@@ -10,7 +11,8 @@ interface BackgroundTemplate {
 
 export const backgroundsData: BackgroundTemplate[] = [
   {
-    name: 'Daeven "The Ashborn"',
+    name: 'Daeven',
+    title: 'The Ashborn',
     race: 'Human',
     background:
       'A burned survivor of Bokadar, Daeven is a vengeful warrior known for his ruthless strikes against Manticore.',
@@ -24,7 +26,8 @@ export const backgroundsData: BackgroundTemplate[] = [
       'Justice is a lie; only vengeance is real. The strong must protect the weak, or they are no better than monsters.',
   },
   {
-    name: 'Ilysha "The Tidemarked"',
+    name: 'Ilysha',
+    title: 'The Tidemarked',
     race: 'Elf',
     background:
       'A merchant specializing in illicit magical artifacts, Ilysha is known for her ability to smuggle even the rarest contraband through Portvel’s docks.',
@@ -38,7 +41,8 @@ export const backgroundsData: BackgroundTemplate[] = [
       'Magic is both a gift and a curse. The old ways must be preserved, even if it means working in the shadows.',
   },
   {
-    name: 'Ogrith "The Hollow Monk"',
+    name: 'Ogrith',
+    title: 'The Hollow Monk',
     race: 'Dwarf',
     background:
       'A nomadic healer traveling across Agnir, offering aid to the sick and wounded while seeking redemption for an unspoken sin.',
@@ -52,7 +56,8 @@ export const backgroundsData: BackgroundTemplate[] = [
       'Blood magic is an abomination. All debts must be repaid, even if it takes a lifetime.',
   },
   {
-    name: 'Varros "The Stormtamer"',
+    name: 'Varros',
+    title: 'The Stormtamer',
     race: 'Half-Orc',
     background:
       'A legendary explorer and survivalist, said to have survived deep within the Zone of Unstable Magic longer than any other.',
@@ -65,7 +70,8 @@ export const backgroundsData: BackgroundTemplate[] = [
     beliefs: 'Nature always finds a way. Adaptation is the key to survival.',
   },
   {
-    name: 'Seline "The Weeping Oracle"',
+    name: 'Seline',
+    title: 'The Weeping Oracle',
     race: 'Human',
     background:
       'A blind seer in Kadera, known for her cryptic prophecies and hauntingly accurate visions. People come from all over Agnir to hear her wisdom.',
@@ -79,7 +85,8 @@ export const backgroundsData: BackgroundTemplate[] = [
       'Fate is not fixed; it is written and rewritten by those who dare to act.',
   },
   {
-    name: 'Tharos "The Wretched Scholar"',
+    name: 'Tharos',
+    title: 'The Wretched Scholar',
     race: 'Human',
     background:
       'A disgraced academic in Stifa, obsessed with forbidden knowledge and the fall of Arktown. Considered a madman by most, he claims that something far worse than Manticore is coming.',
@@ -93,7 +100,8 @@ export const backgroundsData: BackgroundTemplate[] = [
       'Truth is a curse, but ignorance is death. Better to go mad knowing than to die blind.',
   },
   {
-    name: 'Velka "The Grave Dancer"',
+    name: 'Velka',
+    title: 'The Grave Dancer',
     race: 'Half-Elf',
     background:
       'A mysterious bard and storyteller who appears at battlefields and tragedy-stricken towns, singing eerily accurate songs about recent horrors.',
@@ -106,7 +114,8 @@ export const backgroundsData: BackgroundTemplate[] = [
     beliefs: 'No one truly dies as long as their story is told.',
   },
   {
-    name: 'Jerak "The Rust Baron"',
+    name: 'Jerak',
+    title: 'The Rust Baron',
     race: 'Dwarf',
     background:
       'A successful weaponsmith in Portvel, known for supplying elite mercenaries and bounty hunters with high-quality enchanted gear.',
@@ -120,7 +129,8 @@ export const backgroundsData: BackgroundTemplate[] = [
       'A weapon is only as strong as the will of its wielder. True power is forged, not inherited.',
   },
   {
-    name: 'Maelis "The Silver Whisper"',
+    name: 'Maelis',
+    title: 'The Forger',
     race: 'Elf',
     background:
       'A master forger in Luran, known for crafting the finest counterfeit documents and seals, making even the most illegal transactions seem legitimate.',
@@ -134,7 +144,8 @@ export const backgroundsData: BackgroundTemplate[] = [
       'Laws exist to protect the powerful, not the just. True freedom is written in deception.',
   },
   {
-    name: 'Gorvuk "The Red-Eyed"',
+    name: 'Gorvuk',
+    title: 'The Pit Fighter',
     race: 'Orc',
     background:
       'A brutal pit fighter and gladiator from Kadera, undefeated in the underground arenas.',
@@ -148,7 +159,8 @@ export const backgroundsData: BackgroundTemplate[] = [
       'A warrior’s worth is measured by the blood they spill, not the words they speak.',
   },
   {
-    name: 'Elnara "The Shadowed Ember"',
+    name: 'Elnara',
+    title: 'The Pyromancer',
     race: 'Half-Elf',
     background:
       'An arsonist and saboteur in Portvel, responsible for mysterious fires that always seem to target Manticore’s enemies.',
@@ -162,7 +174,8 @@ export const backgroundsData: BackgroundTemplate[] = [
       'Fire purifies, and only through destruction can something truly be reborn.',
   },
   {
-    name: 'Bram "The Hollow King"',
+    name: 'Bram',
+    title: 'The Divine',
     race: 'Human',
     background:
       'A self-proclaimed prophet in Stifa, gathering a growing cult of desperate refugees and outcasts.',
@@ -175,7 +188,8 @@ export const backgroundsData: BackgroundTemplate[] = [
     beliefs: 'A god is not born but made. Worship is the currency of divinity.',
   },
   {
-    name: 'Haskir "The Iron Tactician"',
+    name: 'Haskir',
+    title: 'The Strategist',
     race: 'Lizardfolk',
     background:
       'A wandering strategist and sellsword, offering his tactical genius to the highest bidder.',
@@ -188,7 +202,8 @@ export const backgroundsData: BackgroundTemplate[] = [
     beliefs: 'Loyalty is an illusion; only the strong decide their fate.',
   },
   {
-    name: 'Nerissa "The Laughing Specter"',
+    name: 'Nerissa',
+    title: 'The Ghost',
     race: 'Undead (Former Human)',
     background:
       'A ghostly figure seen on the outskirts of the Zone of Unstable Magic, laughing in the wind.',
@@ -201,7 +216,8 @@ export const backgroundsData: BackgroundTemplate[] = [
     beliefs: 'Death is a prison. I refuse to be locked inside.',
   },
   {
-    name: 'Darrik "The Black Feather"',
+    name: 'Darrik',
+    title: 'The Master of Deception',
     race: 'Kenku',
     background:
       'A wandering spy and master of deception, gathering information for an unknown benefactor.',
@@ -215,7 +231,8 @@ export const backgroundsData: BackgroundTemplate[] = [
       'A whisper is deadlier than a blade. The world belongs to those who listen.',
   },
   {
-    name: 'Torvald "The Rust-Clad"',
+    name: 'Torvald',
+    title: 'The Master of Deception',
     race: 'Dwarf',
     background:
       'A wandering knight in corroded armor, still seeking his last battle.',
@@ -227,7 +244,8 @@ export const backgroundsData: BackgroundTemplate[] = [
     beliefs: 'A warrior’s final breath is his greatest gift to the world.',
   },
   {
-    name: 'Vala "The Unseeing Blade"',
+    name: 'Vala',
+    title: 'The Blind Assassin',
     race: 'Tiefling',
     background:
       'A blind assassin who never misses her target, feared across Agnir.',
@@ -241,7 +259,8 @@ export const backgroundsData: BackgroundTemplate[] = [
       'Vision is a weakness. Only by relying on instinct can one be truly free.',
   },
   {
-    name: 'Mira "The Lotus Keeper"',
+    name: 'Mira',
+    title: 'The Herbalist',
     race: 'Human',
     background:
       'A mysterious herbalist living deep in the swamps, rumored to know the cure to any poison or disease.',

@@ -6,7 +6,7 @@ describe('GameStore', () => {
   let player: Player;
 
   beforeEach(() => {
-    player = new Player('TestPlayer', 'Male', 'Human', 'Warrior');
+    player = new Player('TestPlayer', 'Human', 'Warrior');
     gameStore.startGame(player);
   });
 

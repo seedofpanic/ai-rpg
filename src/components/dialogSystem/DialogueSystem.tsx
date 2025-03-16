@@ -121,6 +121,35 @@ const ShopContainer = styled.div`
   overflow-y: auto;
 `;
 
+const QuestSection = styled.div`
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+`;
+
+const QuestItem = styled.div`
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: rgba(42, 157, 143, 0.5);
+  border-radius: 4px;
+`;
+
+const QuestTitle = styled.div`
+  font-weight: bold;
+  color: #e76f51;
+  margin-bottom: 5px;
+`;
+
+const QuestDescription = styled.div`
+  font-size: 0.9em;
+  margin-bottom: 5px;
+`;
+
+const QuestReward = styled.div`
+  font-size: 0.8em;
+  color: #ffd700;
+`;
+
 const ShopItem = styled.div`
   margin-bottom: 10px;
   padding: 10px;
@@ -331,24 +360,70 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
                 <p>No items available.</p>
               )}
             </div>
-            <div data-testid="items-to-buy"></div>
-            <h3>Sell</h3>
-            {npcContext.buyingItems.length ? (
-              npcContext.buyingItems.map((item, index) => (
-                <ShopItem key={index}>
-                  <span>{itemsData.get(item.itemId)?.name}</span>
-                  <span>{item.price} gold</span>
-                  <ShopButton
-                    data-testid="sell-item"
-                    onClick={() => handleSellItem(item)}
-                  >
-                    Sell
-                  </ShopButton>
-                </ShopItem>
-              ))
-            ) : (
-              <p>No items available to sell.</p>
-            )}
+            <div data-testid="items-to-buy">
+              <h3>Sell</h3>
+              {npcContext.buyingItems.length ? (
+                npcContext.buyingItems.map((item, index) => {
+                  const hasItem = gameStore.player?.inventory.some(
+                    (invItem) =>
+                      invItem.itemId === item.itemId && invItem.quantity > 0,
+                  );
+                  return (
+                    <ShopItem key={index}>
+                      <span>{itemsData.get(item.itemId)?.name}</span>
+                      <span>{item.price} gold</span>
+                      <ShopButton
+                        data-testid="sell-item"
+                        onClick={() => handleSellItem(item)}
+                        disabled={!hasItem}
+                        style={{
+                          opacity: hasItem ? 1 : 0.5,
+                          cursor: hasItem ? 'pointer' : 'not-allowed',
+                        }}
+                      >
+                        Sell
+                      </ShopButton>
+                    </ShopItem>
+                  );
+                })
+              ) : (
+                <p>No items available to sell.</p>
+              )}
+            </div>
+            <QuestSection>
+              <h3>Available Quests</h3>
+              {gameStore.questLog
+                .filter(
+                  (quest) => quest.questGiverId === npcId && !quest.completed,
+                )
+                .map((quest) => (
+                  <QuestItem key={quest.id}>
+                    <QuestTitle>{quest.title}</QuestTitle>
+                    <QuestDescription>{quest.description}</QuestDescription>
+                    {quest.rewards && (
+                      <QuestReward>
+                        Rewards:{' '}
+                        {quest.rewards.gold && `${quest.rewards.gold} gold`}
+                        {quest.rewards.items &&
+                          quest.rewards.items.length > 0 &&
+                          ` • ${quest.rewards.items.join(', ')}`}
+                        {quest.rewards.experience &&
+                          ` • ${quest.rewards.experience} XP`}
+                      </QuestReward>
+                    )}
+                  </QuestItem>
+                ))}
+              <h3>Completed Quests</h3>
+              {gameStore.questLog
+                .filter(
+                  (quest) => quest.questGiverId === npcId && quest.completed,
+                )
+                .map((quest) => (
+                  <QuestItem key={quest.id}>
+                    <QuestTitle>{quest.title} (Completed)</QuestTitle>
+                  </QuestItem>
+                ))}
+            </QuestSection>
           </ShopContainer>
         </Box>
       </BoxRow>

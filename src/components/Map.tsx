@@ -71,6 +71,9 @@ const Map: React.FC<MapProps> = ({ onNpcInteraction, player }) => {
             maxHealth={100}
             role={npc.role}
             location={npc.location}
+            race={npc.race}
+            personality={npc.personality}
+            relation={npc.relation}
             onClick={() => onNpcInteraction(id)}
           />
         );

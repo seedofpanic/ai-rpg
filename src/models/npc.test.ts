@@ -11,7 +11,6 @@ describe('NPC', () => {
     location = {
       name: 'Market Square',
       description: 'A bustling trading square in the city center.',
-      nearbyNPCs: [],
       x: 100,
       y: 100,
       width: 500,

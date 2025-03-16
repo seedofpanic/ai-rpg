@@ -25,8 +25,11 @@ export const sendMessage = async (
     const response = await result.response;
     return {
       text: response.text(), // Ensure <sell></sell> tags are preserved
-      tokensCount:
-        response.usageMetadata.candidatesTokensDetails[0].tokensCount,
+      tokensCount: (
+        response as unknown as {
+          usageMetadata: { candidatesTokensDetails: { tokensCount: number }[] };
+        }
+      ).usageMetadata.candidatesTokensDetails[0].tokensCount,
     };
   } catch (error) {
     console.error('Error calling Gemini API:', error);

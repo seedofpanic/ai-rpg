@@ -12,6 +12,12 @@ interface InventoryItem {
   quantity: number;
 }
 
+interface Need {
+  type: string;
+  priority: number;
+  subject: string;
+}
+
 export interface TradeItem {
   itemId: string;
   price: number;
@@ -130,6 +136,7 @@ export class NPC {
   criticalChance: number; // New attribute
   dodgeChance: number; // New attribute
   aggroTimer?: ReturnType<typeof setTimeout>;
+  needs: Need[];
 
   // utils
   lastUpdateTime: number = Date.now();
@@ -163,6 +170,7 @@ export class NPC {
     defense: number = 5,
     criticalChance: number = 0.1,
     dodgeChance: number = 0.05,
+    needs: Need[] = [],
   ) {
     this.id = id;
     this.position = new Vector2(x, y);
@@ -188,6 +196,7 @@ export class NPC {
     this.defense = defense;
     this.criticalChance = criticalChance;
     this.dodgeChance = dodgeChance;
+    this.needs = needs;
     makeAutoObservable(this);
   }
 
@@ -205,6 +214,44 @@ export class NPC {
     const location = getRandomElement(locs);
     const x = location.x + Math.floor(Math.random() * (location.width - 40));
     const y = location.y + Math.floor(Math.random() * (location.height - 40));
+
+    // Role-specific needs with only bring types initially
+    const roleNeeds: Record<string, Need[]> = {
+      Merchant: [
+        { type: 'bring', priority: 7 + Math.random() * 3, subject: 'silk' },
+      ],
+      Alchemist: [
+        { type: 'bring', priority: 8 + Math.random() * 2, subject: 'mushroom' },
+      ],
+      Guard: [
+        { type: 'bring', priority: 7 + Math.random() * 3, subject: 'letter' },
+      ],
+      Baker: [
+        { type: 'bring', priority: 8 + Math.random() * 2, subject: 'flour' },
+      ],
+      Blacksmith: [
+        { type: 'bring', priority: 8 + Math.random() * 2, subject: 'iron' },
+      ],
+      Fisherman: [
+        { type: 'bring', priority: 8 + Math.random() * 2, subject: 'worm' },
+      ],
+      Hunter: [
+        { type: 'bring', priority: 8 + Math.random() * 2, subject: 'pelt' },
+      ],
+      Farmer: [
+        { type: 'bring', priority: 8 + Math.random() * 2, subject: 'seed' },
+      ],
+      Tailor: [
+        { type: 'bring', priority: 8 + Math.random() * 2, subject: 'cloth' },
+      ],
+      Jeweler: [
+        { type: 'bring', priority: 8 + Math.random() * 2, subject: 'gem' },
+      ],
+    };
+
+    const randomNeeds = roleNeeds[role] || [
+      { type: 'bring', priority: 7 + Math.random() * 3, subject: 'supply' },
+    ];
 
     const npc = new NPC(
       id,
@@ -227,6 +274,12 @@ export class NPC {
       generateRandomInventory(),
       Math.floor(Math.random() * 200),
       Math.floor(Math.random() * 100) + 1,
+      100,
+      10,
+      5,
+      0.1,
+      0.05,
+      randomNeeds,
     );
 
     location.npcs.push(npc.id);
@@ -358,7 +411,6 @@ export class NPC {
       return;
     }
 
-    // if a second passed since the last update
     const delta = currentTime - this.lastUpdateTime;
     if (delta >= 100) {
       this.lastUpdateTime += 100;
@@ -399,5 +451,28 @@ export class NPC {
 
   updateGold(price: number) {
     this.gold += price;
+  }
+
+  // Add new method to set kill need
+  addKillNeed(targetNpcName: string) {
+    const killPriorities: Record<string, number> = {
+      Merchant: 6,
+      Alchemist: 7,
+      Guard: 9,
+      Baker: 7,
+      Blacksmith: 7,
+      Fisherman: 7,
+      Hunter: 8,
+      Farmer: 7,
+      Tailor: 7,
+      Jeweler: 7,
+    };
+
+    const basePriority = killPriorities[this.role] || 7;
+    this.needs.push({
+      type: 'kill',
+      priority: basePriority + Math.random() * 3,
+      subject: targetNpcName,
+    });
   }
 }

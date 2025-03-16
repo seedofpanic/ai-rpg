@@ -5,14 +5,52 @@ import { combatLogStore } from 'components/CombatLog';
 
 const keysDown = new Set<string>();
 
+export interface Quest {
+  id: string;
+  title: string;
+  description: string;
+  subject: string;
+  quantity: number;
+  action: string;
+  completed: boolean;
+  questGiverId: string;
+  rewards?: {
+    gold?: number;
+    items?: string[];
+    experience?: number;
+  };
+}
+
 class GameStore {
   isDialogueOpen: boolean = false;
   activeNpcId: string | null = null;
   player: Player = {} as Player;
   isOver = true;
+  questLog: Quest[] = [];
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  addQuest(quest: Quest) {
+    this.questLog.push(quest);
+  }
+
+  completeQuest(questId: string) {
+    const quest = this.questLog.find((q) => q.id === questId);
+    if (quest && !quest.completed) {
+      quest.completed = true;
+      if (quest.rewards) {
+        if (quest.rewards.gold) {
+          this.player.updateGold(quest.rewards.gold);
+        }
+        if (quest.rewards.items) {
+          quest.rewards.items.forEach((itemId) => {
+            this.player.addItemToInventory({ itemId, quantity: 1 });
+          });
+        }
+      }
+    }
   }
 
   startGameActions() {
