@@ -127,3 +127,9 @@ itemsData.set(uuidv4(), {
   description: 'A precious stone for jewelry making.',
   price: 350,
 });
+
+itemsData.set(uuidv4(), {
+  name: 'Letter',
+  description: 'A letter from a friend.',
+  price: 1,
+});

@@ -172,7 +172,7 @@ export const createContext = (
     Add your mood towards the player's message using <mood>like</mood> or <mood>unfriendly</mood>. Valid moods are: like, confused, offensive, interesting, unfriendly.
     If you want to sell something to the player, add a list of items with prices wrapped in <sell></sell>. Example: <sell>Iron Sword,50;Red mask,34</sell>
     If you want to buy something from the player, add a list of items with prices wrapped in <buy></buy>. Example: <buy>Iron Sword,50;Red mask,34</buy>
-    You can give quests to the player, if you do so add <quest></quest>. Example:
+    If you give a quest, or ask for somethig, or command player to do something wrap it in to <quest></quest>. Example:
     <quest>
     [
       {
@@ -191,7 +191,15 @@ export const createContext = (
       }
     ]
     </quest>
-    Don't give quests if the relation with the player is low or depending on your personality.
+
+    Quests rules:
+    Don't promise gold or items that you don't have.
+    Don't give quests if the relation with the player is low or if it doesn't make sense with your background.
+  
+    Communication rules:
+    If player message doesn't make much sense just ignore it and stay silent.
+    If player is repeating himself, ignore it.
+    If you don't have much new to say *Silently looking at ${player.name} with a blank expression*.
 
     Player's message: ${message}`;
 
