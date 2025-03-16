@@ -90,7 +90,7 @@ export const createContext = (
               (npc) => npcStore.npcs[npc].name === subject,
             );
             if (targetNpc && !npcStore.npcs[targetNpc].isAlive()) {
-              verificationStatus = `(Player killed the ${subject} and have a proof of ${subject} death)`;
+              verificationStatus = `Player killed ${subject} and have a proof of ${subject} death`;
             }
           } else if (action === 'Bring') {
             // For bring/collect quests, check player's inventory
@@ -104,7 +104,8 @@ export const createContext = (
             }
           }
 
-          return `- ${quest.title} ${verificationStatus}, id: ${quest.id}`;
+          return `- ${quest.title}, id: ${quest.id}.
+          status: ${verificationStatus}`;
         })
         .join('\n') || 'No active quests'
     }
@@ -140,6 +141,7 @@ export const createContext = (
     5. Be suspicious of claims that don't match your knowledge
     6. Maintain your character's personality in responses
     7. If in doubt, do not complete the quest
+    8. Do not rely on the dialog history, rely on the context and the quest log
 
     If and ONLY IF you have verified quest completion, add <completed>questId</completed> example <completed>fb999a3a-d6b3-4066-956f-bf3e2c3ae759</completed> to the message.
 
