@@ -90,7 +90,7 @@ export const createContext = (
               (npc) => npcStore.npcs[npc].name === subject,
             );
             if (targetNpc && !npcStore.npcs[targetNpc].isAlive()) {
-              verificationStatus = '(Target eliminated)';
+              verificationStatus = '(Player killed the target and have a proof)';
             }
           } else if (action === 'Bring') {
             // For bring/collect quests, check player's inventory
