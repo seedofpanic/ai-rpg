@@ -47,7 +47,6 @@ const Button = styled.button`
 
 const PlayerCustomization: React.FC = () => {
   const [name, setName] = useState('');
-  const [gender, setGender] = useState('');
   const [race, setRace] = useState('');
   const [playerClass, setPlayerClass] = useState('');
   const [apiKey, setApiKey] = useState(apiConfig.apiKey);
@@ -62,12 +61,10 @@ const PlayerCustomization: React.FC = () => {
     }
 
     const savedName = localStorage.getItem('playerName');
-    const savedGender = localStorage.getItem('playerGender');
     const savedRace = localStorage.getItem('playerRace');
     const savedClass = localStorage.getItem('playerClass');
 
     if (savedName) setName(savedName);
-    if (savedGender) setGender(savedGender);
     if (savedRace) setRace(savedRace);
     if (savedClass) setPlayerClass(savedClass);
   }, []);
@@ -83,15 +80,14 @@ const PlayerCustomization: React.FC = () => {
       alert('Please provide a valid API key.');
       return;
     }
-    if (name && gender && race && playerClass) {
+    if (name && race && playerClass) {
       apiConfig.apiKey = apiKey; // Set API key in apiConfig
       // Save settings to localStorage
       localStorage.setItem('playerName', name);
-      localStorage.setItem('playerGender', gender);
       localStorage.setItem('playerRace', race);
       localStorage.setItem('playerClass', playerClass);
 
-      const player = new Player(name, gender, race, playerClass);
+      const player = new Player(name, race, playerClass);
       gameStore.startGame(player); // Set player in gameStore
     }
   };
@@ -132,11 +128,6 @@ const PlayerCustomization: React.FC = () => {
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
-      <Select value={gender} onChange={(e) => setGender(e.target.value)}>
-        <option value="">Gender</option>
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-      </Select>
       <Select value={race} onChange={(e) => setRace(e.target.value)}>
         <option value="">Race</option>
         <option value="Human">Human</option>

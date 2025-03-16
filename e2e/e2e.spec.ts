@@ -63,7 +63,7 @@ test.beforeEach(async ({ page }) => {
     },
   );
 
-  await page.goto("http://localhost:3000");
+  await page.goto("http://localhost:3030");
 
   // Customize character
   await page.waitForSelector('input[placeholder="Name"]', { state: "visible" });
@@ -73,7 +73,6 @@ test.beforeEach(async ({ page }) => {
   }
 
   await page.fill('input[placeholder="Name"]', "TestPlayer");
-  await page.selectOption('select:has-text("Gender")', "Male");
   await page.selectOption('select:has-text("Race")', "Human");
   await page.selectOption('select:has-text("Class")', "Warrior");
   await page.click('button:has-text("Start Game")');

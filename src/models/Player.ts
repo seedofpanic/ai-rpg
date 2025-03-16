@@ -11,7 +11,6 @@ export class Player {
   speed = 20;
   position: Vector2;
   name: string;
-  gender: string;
   race: string;
   class: string;
   gold: number;
@@ -26,10 +25,9 @@ export class Player {
   lastUpdateTime = Date.now();
   combatMode = false;
 
-  constructor(name: string, gender: string, race: string, playerClass: string) {
+  constructor(name: string, race: string, playerClass: string) {
     this.position = new Vector2(50, 50);
     this.name = name;
-    this.gender = gender;
     this.race = race;
     this.class = playerClass;
     this.gold = 100; // Default gold amount

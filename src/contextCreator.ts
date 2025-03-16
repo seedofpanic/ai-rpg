@@ -10,7 +10,6 @@ export const createContext = (
   message: string,
 ) => {
   const npcContext = npcStore.npcs[npcId];
-  console.log("id: " + npcId);
 
   if (!npcContext) {
     throw new Error('NPC not found');
@@ -60,7 +59,6 @@ export const createContext = (
 
     Player:
     - Name: ${player.name}
-    - Gender: ${player.gender}
     - Race: ${player.race}
     - Class: ${player.class}
     Players inventory:

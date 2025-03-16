@@ -6,12 +6,11 @@ describe('Player', () => {
   let player: Player;
 
   beforeEach(() => {
-    player = new Player('TestPlayer', 'Male', 'Human', 'Warrior');
+    player = new Player('TestPlayer', 'Human', 'Warrior');
   });
 
   it('should initialize with default values', () => {
     expect(player.name).toBe('TestPlayer');
-    expect(player.gender).toBe('Male');
     expect(player.race).toBe('Human');
     expect(player.class).toBe('Warrior');
     expect(player.health).toBe(100);

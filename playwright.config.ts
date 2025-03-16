@@ -35,8 +35,8 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm start",
-    port: 3000,
+    command: "cross-env VITE_CI=true npm start -- --port 3030",
+    port: 3030,
     reuseExistingServer: !!process.env.LOCAL,
     stdout: "ignore",
     stderr: "pipe",
