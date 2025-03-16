@@ -127,12 +127,13 @@ export const parseNpcMessage = (
   if (questData) {
     const quests = parseQuests(questData, message, npcContext.id);
     quests.forEach((quest) => {
-      gameStore.addQuest(quest);
-      npcContext.addDialogHistory({
-        text: `New quest received: ${quest.title}`,
-        type: MessageType.Action,
-        tokensCount: 10,
-      });
+      if (gameStore.addQuest(quest)) {
+        npcContext.addDialogHistory({
+          text: `New quest received: ${quest.title}`,
+          type: MessageType.Action,
+          tokensCount: 10,
+        });
+      }
     });
   }
 

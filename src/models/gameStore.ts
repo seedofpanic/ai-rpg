@@ -34,7 +34,12 @@ export class GameStore {
   }
 
   addQuest(quest: Quest) {
+    if (this.questLog.find((q) => q.title === quest.title)) {
+      return false;
+    }
+
     this.questLog.push(quest);
+    return true;
   }
 
   completeQuest(questId: string) {

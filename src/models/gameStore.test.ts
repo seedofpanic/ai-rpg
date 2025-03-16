@@ -47,6 +47,22 @@ describe('GameStore', () => {
     expect(gameStore.questLog).toContainEqual(quest);
   });
 
+  it('should not add a quest to the quest log if it already exists', () => {
+    const quest = {
+      id: 'quest-1',
+      title: 'Test Quest',
+      description: 'A test quest',
+      subject: 'test-item',
+      quantity: 1,
+      action: 'bring',
+      completed: false,
+      questGiverId: 'npc-1'
+    };
+    gameStore.addQuest(quest);
+    gameStore.addQuest(quest);
+    expect(gameStore.questLog.length).toBe(1);
+  });
+  
   it('should complete a bring quest and handle rewards correctly', () => {
     // Setup player inventory
     player.addItemToInventory({ itemId: 'test-item', quantity: 1 });
