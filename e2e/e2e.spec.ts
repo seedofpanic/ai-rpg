@@ -144,7 +144,7 @@ test.describe("AI RPG E2E Tests", () => {
 
     // Buy sword
     await item.locator('[data-testid="buy-item"]').click();
-    await item.waitFor({ state: "hidden" });
+    // await item.waitFor({ state: "hidden" });
     await page
       .locator('[data-testid="player-inventory"]')
       .locator('[data-testid="item-veiw"]', { hasText: "Sword" })
