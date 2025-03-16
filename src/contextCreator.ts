@@ -191,6 +191,7 @@ export const createContext = (
       }
     ]
     </quest>
+    Don't give quests if the relation with the player is low or depending on your personality.
 
     Player's message: ${message}`;
 
