@@ -12,6 +12,11 @@ interface InventoryItem {
   quantity: number;
 }
 
+export interface TradeItem {
+  itemId: string;
+  price: number;
+}
+
 export enum MessageType {
   Player,
   NPC,
@@ -129,6 +134,8 @@ export class NPC {
   // utils
   lastUpdateTime: number = Date.now();
   attackReady = 0;
+  sellingItems: TradeItem[] = [];
+  buyingItems: TradeItem[] = [];
 
   constructor(
     id: string,
@@ -380,5 +387,17 @@ export class NPC {
         return;
       }
     }
+  }
+
+  setShopItems(items: TradeItem[]) {
+    this.sellingItems = items;
+  }
+
+  setBuyItems(items: TradeItem[]) {
+    this.buyingItems = items;
+  }
+
+  updateGold(price: number) {
+    this.gold += price;
   }
 }

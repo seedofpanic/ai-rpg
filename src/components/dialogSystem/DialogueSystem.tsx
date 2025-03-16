@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import { sendMessage } from '../api';
-import { npcStore } from '../models/npcs';
+import { sendMessage } from '../../api';
+import { npcStore } from '../../models/npcs';
 import { observer } from 'mobx-react';
-import { gameStore } from '../models/gameStore'; // Import gameStore
-import { itemsData } from 'models/itemsData';
-import { MessageType } from 'models/npc';
+import { gameStore } from '../../models/gameStore'; // Import gameStore
+import { itemsData } from '../../models/itemsData';
+import { MessageType, NPC, TradeItem } from '../../models/npc';
+import { parseNpcMessage } from './parseNpcMessage';
 
 interface DialogueSystemProps {
   npcId: string;
@@ -162,15 +163,9 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
   size,
   onTitleMouseDown,
 }) => {
-  const npcContext = npcStore.npcs[npcId];
+  const npcContext = npcStore.npcs[npcId] as NPC;
   const [input, setInput] = useState('');
   const messageLogRef = useRef<HTMLDivElement>(null);
-  const [shopItems, setShopItems] = useState<{ name: string; price: number }[]>(
-    [],
-  );
-  const [buyItems, setBuyItems] = useState<{ name: string; price: number }[]>(
-    [],
-  );
 
   useEffect(() => {
     if (!npcContext.dialogueHistory.length) {
@@ -188,76 +183,66 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
     }
   }, [npcId]);
 
-  const parseItems = (message: string, tag: 'sell' | 'buy') => {
-    const items: { name: string; price: number }[] = [];
-    const regex = new RegExp(`<${tag}>(.*?)</${tag}>`);
-    const match = message.match(regex);
-    if (match && match[1]) {
-      const itemsMatch = match[1].split(';');
-      for (const item of itemsMatch) {
-        const [name, price] = item.split(',');
-        if (
-          itemsData
-            .entries()
-            .find(([_, itemData]) => itemData.name === name.trim())
-        ) {
-          items.push({ name: name.trim(), price: parseFloat(price.trim()) });
-        }
-      }
-    }
-    return items;
-  };
-
-  const parseShopItems = (message: string) => parseItems(message, 'sell');
-
-  const parseBuyItems = (message: string) => parseItems(message, 'buy');
-
-  const handleBuyItem = (item: { name: string; price: number }) => {
+  const handleBuyItem = (item: TradeItem) => {
     if (gameStore.player.gold >= item.price) {
-      const itemId = itemsData
-        .keys()
-        .find((id) => itemsData.get(id)?.name === item.name);
-      if (itemId) {
-        gameStore.player.gold -= item.price;
-        setShopItems(shopItems.filter((i) => i !== item));
+      const itemData = itemsData.get(item.itemId);
 
-        npcContext.removeItem({ itemId, quantity: 1 });
-        gameStore.player?.addItemToInventory({ itemId, quantity: 1 });
+      if (!itemData) {
+        return;
       }
+
+      gameStore.player.updateGold(-item.price);
+      npcContext.updateGold(item.price);
+      npcContext.setShopItems(
+        npcContext.sellingItems.filter((i) => i !== item),
+      );
+
+      npcContext.removeItem({ itemId: item.itemId, quantity: 1 });
+      gameStore.player?.addItemToInventory({
+        itemId: item.itemId,
+        quantity: 1,
+      });
       npcContext.addDialogHistory({
-        text: `Player bought ${item.name} for ${item.price} gold from ${npcContext.name}`,
+        text: `Player bought ${itemData.name} for ${item.price} gold from ${npcContext.name}`,
         type: MessageType.Action,
         tokensCount: 20,
       }); // Save to dialogue history
-      console.log(`Bought ${item.name} for ${item.price} gold.`);
+      console.log(`Bought ${itemData.name} for ${item.price} gold.`);
     } else {
       console.log('Not enough gold.');
     }
   };
 
-  const handleSellItem = (item: { name: string; price: number }) => {
-    const itemId = itemsData
-      .keys()
-      .find((id) => itemsData.get(id)?.name === item.name);
-    if (itemId) {
-      gameStore.player.gold += item.price;
-      setBuyItems(buyItems.filter((i) => i !== item));
-      gameStore.player?.removeItemFromInventory({ itemId, quantity: 1 });
-      npcContext.addItem({ itemId, quantity: 1 });
+  const handleSellItem = (item: TradeItem) => {
+    if (npcContext.gold >= item.price) {
+      const itemData = itemsData.get(item.itemId);
+
+      if (!itemData) {
+        return;
+      }
+
+      gameStore.player.updateGold(item.price);
+      npcContext.updateGold(-item.price);
+      npcContext.setBuyItems(npcContext.buyingItems.filter((i) => i !== item));
+      gameStore.player?.removeItemFromInventory({
+        itemId: item.itemId,
+        quantity: 1,
+      });
+      npcContext.addItem({ itemId: item.itemId, quantity: 1 });
+      npcContext.addDialogHistory({
+        text: `Player sold ${itemData.name} for ${item.price} gold to ${npcContext.name}`,
+        type: MessageType.Action,
+        tokensCount: 20,
+      }); // Save to dialogue history
+      console.log(`Sold ${itemData.name} for ${item.price} gold.`);
     }
-    npcContext.addDialogHistory({
-      text: `Player sold ${item.name} for ${item.price} gold to ${npcContext.name}`,
-      type: MessageType.Action,
-      tokensCount: 20,
-    }); // Save to dialogue history
-    console.log(`Sold ${item.name} for ${item.price} gold.`);
   };
 
   const handleSend = async () => {
     if (input.trim() === '') return;
 
     // TODO: Will need to calculate tokens count based on the message
-    npcContext.dialogueHistory.push({
+    npcContext.addDialogHistory({
       text: input,
       type: MessageType.Player,
       tokensCount: 30,
@@ -274,25 +259,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
 
       const { text, tokensCount } = response;
 
-      npcContext.setState(text.match(/\*(.*?)\*/)?.[1] || npcContext.state);
-      // Parse shop items from the response
-      const items = parseShopItems(text);
-      const buyItems = parseBuyItems(text);
-      setBuyItems(buyItems);
-      setShopItems(items);
-      const message = text
-        .replace(/\*(.*?)\*/g, '')
-        .replace(/<sell>.*?<\/sell>/, '')
-        .replace(/<buy>.*?<\/buy>/, ''); // Remove state from response
-
-      const relationChange = npcContext.getRelationChange(npcContext.state);
-      npcContext.changeRelation(relationChange); // Change relation based on response
-      npcContext.dialogueHistory.push({
-        text: message,
-        type: MessageType.NPC,
-        tokensCount,
-        relationChange,
-      }); // Save to dialogue history
+      parseNpcMessage(text, tokensCount, npcContext);
     } catch (error) {
       console.error('Failed to send message:', error);
     }
@@ -347,10 +314,10 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
           <ShopContainer>
             <div data-testid="items-to-sell">
               <h3>Shop</h3>
-              {shopItems.length ? (
-                shopItems.map((item, index) => (
+              {npcContext.sellingItems.length ? (
+                npcContext.sellingItems.map((item, index) => (
                   <ShopItem data-testid="trade-item" key={index}>
-                    <span>{item.name}</span>
+                    <span>{itemsData.get(item.itemId)?.name}</span>
                     <span>{item.price} gold</span>
                     <ShopButton
                       data-testid="buy-item"
@@ -366,10 +333,10 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
             </div>
             <div data-testid="items-to-buy"></div>
             <h3>Sell</h3>
-            {buyItems.length ? (
-              buyItems.map((item, index) => (
+            {npcContext.buyingItems.length ? (
+              npcContext.buyingItems.map((item, index) => (
                 <ShopItem key={index}>
-                  <span>{item.name}</span>
+                  <span>{itemsData.get(item.itemId)?.name}</span>
                   <span>{item.price} gold</span>
                   <ShopButton
                     data-testid="sell-item"

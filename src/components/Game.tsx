@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Map from './Map';
-import DialogueSystem from './DialogueSystem';
+import DialogueSystem from './dialogSystem/DialogueSystem';
 import PlayerCustomization from './PlayerCustomization';
 import PlayerInventory from './PlayerInventory'; // Import PlayerInventory
 import { observer } from 'mobx-react-lite';

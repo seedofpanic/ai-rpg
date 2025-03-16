@@ -153,4 +153,8 @@ export class Player {
       );
     }
   }
+
+  updateGold(price: number) {
+    this.gold += price;
+  }
 }
