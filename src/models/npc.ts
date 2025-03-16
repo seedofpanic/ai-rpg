@@ -457,6 +457,7 @@ export class NPC {
       if (existingItem) {
         existingItem.price = item.price;
       } else {
+        makeAutoObservable(item);
         this.sellingItems.push(item);
       }
     }
@@ -471,6 +472,7 @@ export class NPC {
       if (existingItem) {
         existingItem.price = item.price;
       } else {
+        makeAutoObservable(item);
         this.buyingItems.push(item);
       }
     }
