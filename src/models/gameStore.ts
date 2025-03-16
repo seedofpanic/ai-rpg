@@ -2,6 +2,7 @@ import { Player } from 'models/Player'; // Import Player from the new file
 import { makeAutoObservable } from 'mobx';
 import { npcStore } from './npcs';
 import { combatLogStore } from 'components/CombatLog';
+import { itemsData } from './itemsData';
 
 const keysDown = new Set<string>();
 
@@ -21,7 +22,7 @@ export interface Quest {
   };
 }
 
-class GameStore {
+export class GameStore {
   isDialogueOpen: boolean = false;
   activeNpcId: string | null = null;
   player: Player = {} as Player;
@@ -39,6 +40,24 @@ class GameStore {
   completeQuest(questId: string) {
     const quest = this.questLog.find((q) => q.id === questId);
     if (quest && !quest.completed) {
+      if (quest.action.toLowerCase() === 'bring') {
+          const itemId = itemsData.keys().find(id => itemsData.get(id)?.name.toLowerCase() === quest.subject.toLowerCase());
+          if (itemId) {
+          this.player.removeItemFromInventory({
+            itemId: itemId || quest.subject,
+            quantity: quest.quantity
+          });
+          // add this item to the quest giver inventory
+          const questGiver = npcStore.npcs[quest.questGiverId];
+          if (questGiver) {
+            questGiver.addItem({
+              itemId: quest.subject,
+              quantity: quest.quantity
+            });
+          }
+        }
+      }
+      
       quest.completed = true;
       if (quest.rewards) {
         if (quest.rewards.gold) {
