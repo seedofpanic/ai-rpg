@@ -6,16 +6,19 @@ import { backgroundsData } from './backgroundsData';
 import { Player } from './Player';
 import { Vector2 } from '../utils/vector2'; // Import Vector2
 import { combatLogStore } from 'components/CombatLog';
+import { roleSpecificItems } from './roleItems';
+import { roleSpecificNeeds } from './roleNeeds';
 
-interface InventoryItem {
+export interface InventoryItem {
   itemId: string;
   quantity: number;
 }
 
-interface Need {
+export interface Need {
   type: string;
   priority: number;
   subject: string;
+  potentialGoldReward: number;
 }
 
 export interface TradeItem {
@@ -99,14 +102,44 @@ function getRandomElement<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function generateRandomInventory(): InventoryItem[] {
-  const inventorySize = Math.floor(Math.random() * 5) + 1;
-  const itemKeys = Array.from(itemsData.keys());
-  const inventory = new Set<InventoryItem>();
-  while (inventory.size < inventorySize) {
-    inventory.add({ itemId: getRandomElement(itemKeys), quantity: 1 });
+function generateRoleSpecificInventory(role: string): InventoryItem[] {
+  const inventory: InventoryItem[] = [];
+  const itemEntries = Array.from(itemsData.entries());
+
+  // Helper function to add an item by name
+  const addItemByName = (name: string, quantity: number = 1) => {
+    const itemEntry = itemEntries.find(([_, item]) => item.name === name);
+    if (itemEntry) {
+      inventory.push({ itemId: itemEntry[0], quantity });
+    }
+  };
+
+  const roleConfig = roleSpecificItems[role];
+  if (roleConfig) {
+    for (const item of roleConfig.items) {
+      let quantity = 1;
+      if (item.quantity) {
+        const [min, max] = item.quantity;
+        quantity = Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      addItemByName(item.name, quantity);
+    }
+    // add random items from itemsData
+    const baseSize = Math.floor(Math.random() * 3) + 2;
+    for (let i = 0; i < baseSize; i++) {
+      const randomItem = getRandomElement(itemEntries);
+      inventory.push({ itemId: randomItem[0], quantity: 1 });
+    }
+  } else {
+    // Random inventory for unknown roles
+    const baseSize = Math.floor(Math.random() * 3) + 2;
+    for (let i = 0; i < baseSize; i++) {
+      const randomItem = getRandomElement(itemEntries);
+      inventory.push({ itemId: randomItem[0], quantity: 1 });
+    }
   }
-  return Array.from(inventory);
+
+  return inventory;
 }
 
 export class NPC {
@@ -215,43 +248,17 @@ export class NPC {
     const x = location.x + Math.floor(Math.random() * (location.width - 40));
     const y = location.y + Math.floor(Math.random() * (location.height - 40));
 
-    // Role-specific needs with only bring types initially
-    const roleNeeds: Record<string, Need[]> = {
-      Merchant: [
-        { type: 'bring', priority: 7 + Math.random() * 3, subject: 'silk' },
-      ],
-      Alchemist: [
-        { type: 'bring', priority: 8 + Math.random() * 2, subject: 'mushroom' },
-      ],
-      Guard: [
-        { type: 'bring', priority: 7 + Math.random() * 3, subject: 'letter' },
-      ],
-      Baker: [
-        { type: 'bring', priority: 8 + Math.random() * 2, subject: 'flour' },
-      ],
-      Blacksmith: [
-        { type: 'bring', priority: 8 + Math.random() * 2, subject: 'iron' },
-      ],
-      Fisherman: [
-        { type: 'bring', priority: 8 + Math.random() * 2, subject: 'worm' },
-      ],
-      Hunter: [
-        { type: 'bring', priority: 8 + Math.random() * 2, subject: 'pelt' },
-      ],
-      Farmer: [
-        { type: 'bring', priority: 8 + Math.random() * 2, subject: 'seed' },
-      ],
-      Tailor: [
-        { type: 'bring', priority: 8 + Math.random() * 2, subject: 'cloth' },
-      ],
-      Jeweler: [
-        { type: 'bring', priority: 8 + Math.random() * 2, subject: 'gem' },
-      ],
-    };
-
-    const randomNeeds = roleNeeds[role] || [
-      { type: 'bring', priority: 7 + Math.random() * 3, subject: 'supply' },
+    // Generate role-specific needs
+    const roleNeeds = roleSpecificNeeds[role] || [
+      { type: 'bring', subject: 'supply', basePriority: 7, randomRange: 3 }
     ];
+    
+    const needs = roleNeeds.map(needConfig => ({
+      type: needConfig.type,
+      subject: needConfig.subject,
+      priority: needConfig.basePriority + Math.random() * needConfig.randomRange,
+      potentialGoldReward: needConfig.potentialGoldReward
+    }));
 
     const npc = new NPC(
       id,
@@ -271,15 +278,15 @@ export class NPC {
       location,
       [],
       undefined,
-      generateRandomInventory(),
-      Math.floor(Math.random() * 200),
+      generateRoleSpecificInventory(role),
+      Math.floor(Math.random() * 3000) + 2000,
       Math.floor(Math.random() * 100) + 1,
       100,
       10,
       5,
       0.1,
       0.05,
-      randomNeeds,
+      needs,
     );
 
     location.npcs.push(npc.id);
@@ -442,11 +449,31 @@ export class NPC {
   }
 
   setShopItems(items: TradeItem[]) {
-    this.sellingItems = items;
+    for (const item of items) {
+      const existingItem = this.sellingItems.find(
+        (i) => i.itemId === item.itemId,
+      );
+
+      if (existingItem) {
+        existingItem.price = item.price;
+      } else {
+        this.sellingItems.push(item);
+      }
+    }
   }
 
   setBuyItems(items: TradeItem[]) {
-    this.buyingItems = items;
+    for (const item of items) {
+      const existingItem = this.buyingItems.find(
+        (i) => i.itemId === item.itemId,
+      );
+
+      if (existingItem) {
+        existingItem.price = item.price;
+      } else {
+        this.buyingItems.push(item);
+      }
+    }
   }
 
   updateGold(price: number) {
@@ -473,6 +500,7 @@ export class NPC {
       type: 'kill',
       priority: basePriority + Math.random() * 3,
       subject: targetNpcName,
+      potentialGoldReward: 200,
     });
   }
 }

@@ -17,7 +17,7 @@ export const createContext = (
   }
 
   const beforeDialog = `
-    You are an NPC named ${npcContext.name}. Player can lie to you. Here is your context:
+    You are an NPC named ${npcContext.name}. Player some times lie to you decide to believe him or not depending on your background and relation with the player. Here is your context:
 
     Basic Information:
     - Role: ${npcContext.role}
@@ -28,7 +28,7 @@ export const createContext = (
     - Beliefs: ${npcContext.beliefs}
 
     Current Needs:
-    ${npcContext.needs.map((need) => `- ${need.type}: ${need.subject} (Priority: ${need.priority.toFixed(1)})`).join('\n')}
+    ${npcContext.needs.map((need) => `- ${need.type}: ${need.subject} ${need.potentialGoldReward ? `(Potential base Gold Reward: ${need.potentialGoldReward})` : ''} (Priority: ${need.priority.toFixed(1)})`).join('\n')}
 
     You have only items that are in your inventory:
     ${npcContext.inventory?.map((item) => `- ${itemsData.get(item.itemId)?.name} x${item.quantity} cost ${itemsData.get(item.itemId)?.price} piece`).join('\n') || 'No items in inventory'}
@@ -82,44 +82,6 @@ export const createContext = (
         .filter((quest) => !quest.completed && quest.questGiverId === npcId)
         .map((quest) => {
           const { action, quantity, subject } = quest;
-          let verificationStatus = '';
-          let progressStatus = '';
-
-          if (action === 'Kill') {
-            // For kill quests, check if the target is dead
-            const targetNpc = Object.keys(npcStore.npcs).find(
-              (npc) => npcStore.npcs[npc].name === subject,
-            );
-            if (targetNpc) {
-              if (!npcStore.npcs[targetNpc].isAlive()) {
-                verificationStatus = `Player killed ${subject} and showed proof of ${subject}'s death to ${npcContext.name}`;
-                progressStatus = 'Complete';
-              } else {
-                progressStatus = `Target ${subject} is still alive`;
-              }
-            } else {
-              progressStatus = 'Target not found';
-            }
-          } else if (action === 'Bring') {
-            // For bring/collect quests, check player's inventory
-            const matchingItems = player.inventory.filter(
-              (item) =>
-                itemsData.get(item.itemId)?.name.toLowerCase() ===
-                subject.toLowerCase()
-            );
-            
-            if (matchingItems.length > 0) {
-              const totalQuantity = matchingItems.reduce((sum, item) => sum + item.quantity, 0);
-              if (totalQuantity >= quantity) {
-                verificationStatus = '(Items collected)';
-                progressStatus = `Has all required items (${totalQuantity}/${quantity})`;
-              } else {
-                progressStatus = `Has some items (${totalQuantity}/${quantity})`;
-              }
-            } else {
-              progressStatus = `Missing required items (0/${quantity})`;
-            }
-          }
 
           return `- ${quest.title}, id: ${quest.id}
           Quest Type: ${action} ${quantity} ${subject}`;
@@ -135,19 +97,35 @@ export const createContext = (
         .join('\n') || 'No completed quests'
     }
 
+    ${npcContext.name} currently sells:
+    ${npcContext.sellingItems.map((item) => `- ${itemsData.get(item.itemId)?.name} cost ${itemsData.get(item.itemId)?.price} piece`).join('\n')}
+
+    ${npcContext.name} currently buys:
+    ${npcContext.buyingItems.map((item) => `- ${itemsData.get(item.itemId)?.name} cost ${itemsData.get(item.itemId)?.price} piece`).join('\n')}
+
     Player's gold: ${player.gold}
-    Player's inventory:${[...player.inventory?.map((item) => ` - ${itemsData.get(item.itemId)?.name} x${item.quantity} cost ${itemsData.get(item.itemId)?.price} piece`),
-      ...gameStore.questLog
-        .filter((quest) => quest.questGiverId === npcId)
-        .map((quest) => {
-          const { action, subject } = quest;
-          const targetNpc = Object.keys(npcStore.npcs).find(
-            (npc) => npcStore.npcs[npc].name === subject,
-          );
-          if (action === 'Kill' && targetNpc && !npcStore.npcs[targetNpc].isAlive()) {
-            return `      - ${subject}'s head`;
-          }
-        })].join('\n') || '\nNo items in inventory'
+    Player's inventory:${
+      [
+        ...player.inventory?.map(
+          (item) =>
+            ` - ${itemsData.get(item.itemId)?.name} x${item.quantity} cost ${itemsData.get(item.itemId)?.price} piece`,
+        ),
+        ...gameStore.questLog
+          .filter((quest) => quest.questGiverId === npcId)
+          .map((quest) => {
+            const { action, subject } = quest;
+            const targetNpc = Object.keys(npcStore.npcs).find(
+              (npc) => npcStore.npcs[npc].name === subject,
+            );
+            if (
+              action === 'Kill' &&
+              targetNpc &&
+              !npcStore.npcs[targetNpc].isAlive()
+            ) {
+              return `      - ${subject}'s head`;
+            }
+          }),
+      ].join('\n') || '\nNo items in inventory'
     }
 
     Recent Dialog:
@@ -193,6 +171,7 @@ export const createContext = (
     </quest>
 
     Quests rules:
+    Scale reward based on your relation with the player.
     Don't promise gold or items that you don't have.
     Don't give quests if the relation with the player is low or if it doesn't make sense with your background.
   

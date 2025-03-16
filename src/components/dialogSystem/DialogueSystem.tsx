@@ -193,10 +193,20 @@ const LoadingDots = styled.div`
   }
 
   @keyframes dots {
-    0%, 20% { content: '.'; }
-    40% { content: '..'; }
-    60% { content: '...'; }
-    80%, 100% { content: ''; }
+    0%,
+    20% {
+      content: '.';
+    }
+    40% {
+      content: '..';
+    }
+    60% {
+      content: '...';
+    }
+    80%,
+    100% {
+      content: '';
+    }
   }
 `;
 
@@ -372,8 +382,8 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
               placeholder="Enter a message..."
               disabled={isLoading}
             />
-            <Button 
-              data-testid="send-message" 
+            <Button
+              data-testid="send-message"
               onClick={handleSend}
               disabled={isLoading}
               style={{ opacity: isLoading ? 0.7 : 1 }}
@@ -408,7 +418,8 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
               {npcContext.buyingItems.length ? (
                 npcContext.buyingItems.map((item, index) => {
                   const hasItem = gameStore.player?.inventory.some(
-                    (invItem) => invItem.itemId === item.itemId && invItem.quantity > 0
+                    (invItem) =>
+                      invItem.itemId === item.itemId && invItem.quantity > 0,
                   );
                   return (
                     <ShopItem key={index}>
@@ -418,7 +429,10 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
                         data-testid="sell-item"
                         onClick={() => handleSellItem(item)}
                         disabled={!hasItem}
-                        style={{ opacity: hasItem ? 1 : 0.5, cursor: hasItem ? 'pointer' : 'not-allowed' }}
+                        style={{
+                          opacity: hasItem ? 1 : 0.5,
+                          cursor: hasItem ? 'pointer' : 'not-allowed',
+                        }}
                       >
                         Sell
                       </ShopButton>
@@ -432,26 +446,32 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
             <QuestSection>
               <h3>Available Quests</h3>
               {gameStore.questLog
-                .filter(quest => quest.questGiverId === npcId && !quest.completed)
-                .map(quest => (
+                .filter(
+                  (quest) => quest.questGiverId === npcId && !quest.completed,
+                )
+                .map((quest) => (
                   <QuestItem key={quest.id}>
                     <QuestTitle>{quest.title}</QuestTitle>
                     <QuestDescription>{quest.description}</QuestDescription>
                     {quest.rewards && (
                       <QuestReward>
-                        Rewards: {' '}
+                        Rewards:{' '}
                         {quest.rewards.gold && `${quest.rewards.gold} gold`}
-                        {quest.rewards.items && quest.rewards.items.length > 0 && 
+                        {quest.rewards.items &&
+                          quest.rewards.items.length > 0 &&
                           ` • ${quest.rewards.items.join(', ')}`}
-                        {quest.rewards.experience && ` • ${quest.rewards.experience} XP`}
+                        {quest.rewards.experience &&
+                          ` • ${quest.rewards.experience} XP`}
                       </QuestReward>
                     )}
                   </QuestItem>
                 ))}
               <h3>Completed Quests</h3>
               {gameStore.questLog
-                .filter(quest => quest.questGiverId === npcId && quest.completed)
-                .map(quest => (
+                .filter(
+                  (quest) => quest.questGiverId === npcId && quest.completed,
+                )
+                .map((quest) => (
                   <QuestItem key={quest.id}>
                     <QuestTitle>{quest.title} (Completed)</QuestTitle>
                   </QuestItem>

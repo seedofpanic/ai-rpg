@@ -46,8 +46,8 @@ export class GameStore {
     const quest = this.questLog.find((q) => q.id === questId);
     if (quest && !quest.completed) {
       if (quest.action.toLowerCase() === 'bring') {
-          const itemId = itemsData.keys().find(id => itemsData.get(id)?.name.toLowerCase() === quest.subject.toLowerCase());
-          if (itemId) {
+        const itemId = itemsData.keys().find(id => itemsData.get(id)?.name.toLowerCase() === quest.subject.toLowerCase());
+        if (itemId) {
           this.player.removeItemFromInventory({
             itemId: itemId || quest.subject,
             quantity: quest.quantity
