@@ -90,7 +90,7 @@ export const createContext = (
               (npc) => npcStore.npcs[npc].name === subject,
             );
             if (targetNpc && !npcStore.npcs[targetNpc].isAlive()) {
-              verificationStatus = '(Player killed the target and have a proof)';
+              verificationStatus = `(Player killed the ${subject} and have a proof of ${subject} death)`;
             }
           } else if (action === 'Bring') {
             // For bring/collect quests, check player's inventory
@@ -130,7 +130,7 @@ export const createContext = (
     When the player claims to have completed a quest:
     1. Check your active quests list for verification status CAREFULLY
     2. ONLY confirm completion if you see explicit verification:
-       - For kill quests: Must show "(Target eliminated)"
+       - For kill quests: Target must be dead and Player must have a proof of the target's death
        - For bring quests: Must show have the items in their inventory
     3. If verification status is missing:
        - Ask the player to prove completion

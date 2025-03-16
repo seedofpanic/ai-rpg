@@ -43,7 +43,7 @@ const parseQuests = (data: string, description: string, npcId: string) => {
         title: `${questData.action} ${questData.quantity} ${questData.subject}`,
         description: description.trim(),
         subject: questData.subject,
-        quantity: questData.quantity,
+        quantity: questData.quantity || 1,
         action: questData.action,
         completed: false,
         questGiverId: npcId,
