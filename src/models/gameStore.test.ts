@@ -7,32 +7,39 @@ describe('GameStore', () => {
   let player: Player;
 
   beforeEach(() => {
+    // Initialize a fresh game store and player for each test
     gameStore = new GameStore();
     player = new Player('TestPlayer', 'Human', 'Warrior');
     gameStore.startGame(player);
   });
 
   it('should initialize the game correctly', () => {
+    // Verify initial game state
     expect(gameStore.player).toBe(player);
     expect(gameStore.isOver).toBe(false);
   });
 
   it('should open and close dialogue correctly', () => {
+    // Open dialogue with an NPC
     gameStore.openDialogue('npc-1');
     expect(gameStore.isDialogueOpen).toBe(true);
     expect(gameStore.activeNpcId).toBe('npc-1');
-    gameStore.closeDialogue('npc-1');
+    
+    // Close dialogue - no need to specify NPC ID
+    gameStore.closeDialogue();
     expect(gameStore.isDialogueOpen).toBe(false);
     expect(gameStore.activeNpcId).toBeNull();
   });
 
   it('should end the game when the player dies', () => {
+    // Simulate player death
     player.health = 0;
     gameStore.startGameActions();
     expect(gameStore.isOver).toBe(true);
   });
 
   it('should add a quest to the quest log', () => {
+    // Create a sample quest
     const quest = {
       id: 'quest-1',
       title: 'Test Quest',
@@ -43,11 +50,13 @@ describe('GameStore', () => {
       completed: false,
       questGiverId: 'npc-1',
     };
+    // Add quest and verify it's in the log
     gameStore.addQuest(quest);
     expect(gameStore.questLog).toContainEqual(quest);
   });
 
   it('should not add a quest to the quest log if it already exists', () => {
+    // Create a sample quest
     const quest = {
       id: 'quest-1',
       title: 'Test Quest',
@@ -58,8 +67,10 @@ describe('GameStore', () => {
       completed: false,
       questGiverId: 'npc-1',
     };
+    // Try to add the same quest twice
     gameStore.addQuest(quest);
     gameStore.addQuest(quest);
+    // Verify quest was only added once
     expect(gameStore.questLog.length).toBe(1);
   });
 
@@ -68,6 +79,7 @@ describe('GameStore', () => {
     player.addItemToInventory({ itemId: 'test-item', quantity: 1 });
     const initialGold = player.gold;
 
+    // Create a quest with rewards
     const quest = {
       id: 'quest-1',
       title: 'Bring Quest',
@@ -83,17 +95,18 @@ describe('GameStore', () => {
       },
     };
 
+    // Add and complete the quest
     gameStore.addQuest(quest);
     gameStore.completeQuest('quest-1');
 
+    // Verify quest completion and rewards
     expect(gameStore.questLog[0].completed).toBe(true);
     expect(player.gold).toBe(initialGold + 100);
-    expect(player.inventory.some((item) => item.itemId === 'reward-item')).toBe(
-      true,
-    );
+    expect(player.inventory.some((item) => item.itemId === 'reward-item')).toBe(true);
   });
 
   it('should not complete an already completed quest', () => {
+    // Create a completed quest
     const quest = {
       id: 'quest-1',
       title: 'Test Quest',
@@ -108,9 +121,11 @@ describe('GameStore', () => {
       },
     };
 
+    // Try to complete an already completed quest
     const initialGold = player.gold;
     gameStore.addQuest(quest);
     gameStore.completeQuest('quest-1');
+    // Verify no rewards were given
     expect(player.gold).toBe(initialGold);
   });
 
@@ -139,36 +154,34 @@ describe('GameStore', () => {
   });
 
   it('should handle dialogue with multiple NPCs correctly', () => {
+    // Open dialogue with first NPC
     gameStore.openDialogue('npc-1');
     expect(gameStore.activeNpcId).toBe('npc-1');
 
     // Opening dialogue with another NPC while one is active
     gameStore.openDialogue('npc-2');
     expect(gameStore.activeNpcId).toBe('npc-2');
-
-    // Closing dialogue with wrong NPC ID should not close current dialogue
-    gameStore.closeDialogue('npc-1');
-    expect(gameStore.isDialogueOpen).toBe(true);
-    expect(gameStore.activeNpcId).toBe('npc-2');
-
-    // Closing dialogue with correct NPC ID should work
-    gameStore.closeDialogue('npc-2');
+    
+    // Closing dialogue should work correctly
+    gameStore.closeDialogue();
     expect(gameStore.isDialogueOpen).toBe(false);
     expect(gameStore.activeNpcId).toBeNull();
   });
 
   it('should handle game over correctly', () => {
+    // Mock window.alert and location.reload
     const alertMock = vi.spyOn(window, 'alert').mockImplementation(() => {});
-    const reloadMock = vi
-      .spyOn(window.location, 'reload')
-      .mockImplementation(() => {});
+    const reloadMock = vi.spyOn(window.location, 'reload').mockImplementation(() => {});
 
+    // Trigger game over
     gameStore.over();
 
+    // Verify game over behavior
     expect(gameStore.isOver).toBe(true);
     expect(alertMock).toHaveBeenCalledWith('YOU DIED');
     expect(reloadMock).toHaveBeenCalled();
 
+    // Clean up mocks
     alertMock.mockRestore();
     reloadMock.mockRestore();
   });

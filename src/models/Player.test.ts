@@ -70,12 +70,6 @@ describe('Player', () => {
     expect(target.health).toBe(85); // Default attackPower is 10
   });
 
-  it('should toggle combat mode', () => {
-    expect(player.combatMode).toBe(false);
-    player.toggleCombatMode();
-    expect(player.combatMode).toBe(true);
-  });
-
   it('should move based on keys pressed', () => {
     const keysDown = new Set(['KeyW', 'KeyD']);
     const currentTime = Date.now() + 200; // Simulate time passed
@@ -93,9 +87,9 @@ describe('Player', () => {
 
   it('should toggle combat mode correctly', () => {
     expect(player.combatMode).toBe(false);
-    player.toggleCombatMode();
+    player.setCombatMode(true);
     expect(player.combatMode).toBe(true);
-    player.toggleCombatMode();
+    player.setCombatMode(false);
     expect(player.combatMode).toBe(false);
   });
 
