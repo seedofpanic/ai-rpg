@@ -4,6 +4,7 @@ import { lore } from './models/loreBook';
 import { Player } from 'models/Player';
 import { MessageType } from 'models/npc';
 import { gameStore } from './models/gameStore';
+import { mobStore } from './models/mobStore';
 
 export const createContext = (
   npcId: string,
@@ -56,6 +57,14 @@ export const createContext = (
       .join('\n')}
     
     Relationship with Player: ${npcContext.getPlayerRelation()}. Increase selling price if you don't like the player.
+
+    Mobs in the Environment:
+    ${Object.values(mobStore.mobs)
+      .filter(mob => mob.location.name === npcContext.location.name)
+      .map(mob => 
+        `- ${mob.name} (${mob.mobType}): Health ${mob.health}/${mob.maxHealth}, ${mob.isAggressive ? 'Aggressive' : 'Patrolling'}, ${mob.isAlive() ? 'Alive' : 'Dead'}
+         Carrying: ${mob.inventory.map(item => `${itemsData.get(item.itemId)?.name} x${item.quantity}`).join(', ') || 'Nothing'}`
+      ).join('\n') || 'No mobs in this location'}
 
     Other Locations:
     ${npcStore.locations

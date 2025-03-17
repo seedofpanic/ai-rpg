@@ -20,7 +20,6 @@ const MOB_LOOT: Record<MobType, Array<{
     { itemName: 'Leather', chance: 0.4, quantity: [1, 2] }
   ],
   bandit: [
-    { itemName: 'Gold Coin', chance: 1.0, quantity: [10, 50] },
     { itemName: 'Dagger', chance: 0.4, quantity: [1, 1] },
     { itemName: 'Leather Armor', chance: 0.3, quantity: [1, 1] },
     { itemName: 'Health Potion', chance: 0.5, quantity: [1, 2] },

@@ -223,8 +223,7 @@ const Game: React.FC = () => {
         </>
       )}
       <PlayerMod>
-        {gameStore.player?.combatMode ? 'Combat Mode' : 'Exploration Mode'}{' '}
-        press &lsquo;C&rsquo; to switch
+        {gameStore.player?.combatMode ? 'Combat Mode press &lsquo;E&rsquo; to switch' : 'Exploration Mode press &lsquo;C&rsquo; to switch'}
       </PlayerMod>
       <HelpButton onClick={toggleHelp}>Help</HelpButton>
       {isHelpOpen && (
