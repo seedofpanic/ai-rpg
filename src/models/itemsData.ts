@@ -532,3 +532,76 @@ itemsData.set(uuidv4(), {
   price: 175,
 });
 
+// Mob Drop Items
+itemsData.set(uuidv4(), {
+  name: 'Wolf Pelt',
+  description: 'A thick, warm pelt from a wolf.',
+  price: 120,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Wolf Fang',
+  description: 'A sharp fang from a fierce wolf.',
+  price: 85,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Raw Meat',
+  description: 'Fresh meat from a hunted animal.',
+  price: 45,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Gold Coin',
+  description: 'A shiny gold coin, accepted everywhere.',
+  price: 1,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Health Potion',
+  description: 'A red potion that restores health.',
+  price: 100,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Stolen Goods',
+  description: 'Various items of questionable origin.',
+  price: 75,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Rotten Flesh',
+  description: 'Decaying flesh from a zombie.',
+  price: 15,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Tattered Cloth',
+  description: 'Worn and torn pieces of cloth.',
+  price: 25,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Bone',
+  description: 'A sturdy bone that could be crafted into tools.',
+  price: 35,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Ancient Coin',
+  description: 'A mysterious coin from a forgotten era.',
+  price: 150,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Arrow',
+  description: 'A sharp arrow for ranged combat.',
+  price: 5,
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Bow',
+  description: 'A well-crafted bow for hunting and combat.',
+  price: 150,
+});
+

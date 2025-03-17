@@ -1,11 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import NPC from './NPC';
+import Mob from './Mob';
 import PlayerView from './PlayerView';
 import { observer } from 'mobx-react-lite';
 import { npcStore } from '../models/npcs';
+import { mobStore } from '../models/mobStore';
 import { locations } from '../models/location'; // Import locations
 import { Player } from '../models/Player'; // Import Player
+import { MOB_STATS } from '../models/mob';
 
 const MapContainer = styled.div`
   width: 2000px;
@@ -74,6 +77,25 @@ const Map: React.FC<MapProps> = ({ onNpcInteraction, player }) => {
             race={npc.race}
             personality={npc.personality}
             relation={npc.relation}
+            onClick={() => onNpcInteraction(id)}
+          />
+        );
+      })}
+      {mobStore.mobIds.map((id) => {
+        const mob = mobStore.mobs[id];
+
+        return (
+          <Mob
+            key={mob.id}
+            id={mob.id}
+            x={mob.position.x}
+            y={mob.position.y}
+            name={mob.name}
+            mobType={mob.mobType}
+            health={mob.health}
+            maxHealth={MOB_STATS[mob.mobType].health}
+            isAggressive={mob.isAggressive}
+            isAlive={mob.isAlive()}
             onClick={() => onNpcInteraction(id)}
           />
         );

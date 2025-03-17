@@ -110,8 +110,8 @@ export class Player {
     this.position = new Vector2(x, y);
   }
 
-  toggleCombatMode() {
-    this.combatMode = !this.combatMode;
+  setCombatMode(combatMode: boolean) {
+    this.combatMode = combatMode;
   }
 
   doActions(
@@ -143,7 +143,10 @@ export class Player {
         moveX = 1;
       }
       if (keysDown.has('KeyC')) {
-        this.toggleCombatMode();
+        this.setCombatMode(true);
+      }
+      if (keysDown.has('KeyE')) {
+        this.setCombatMode(false);
       }
     }
 

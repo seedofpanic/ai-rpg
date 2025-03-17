@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { NPC } from '../models/npc';
+import { Mob } from '../models/mob';
 import { Player } from '../models/Player';
 import { observer } from 'mobx-react';
 import { itemsData } from 'models/itemsData';
@@ -71,34 +72,34 @@ const CloseButton = styled.button`
 `;
 
 interface LootDialogProps {
-  npc: NPC;
+  target: NPC | Mob;
   player: Player;
   onClose: () => void;
 }
 
-const LootDialog: React.FC<LootDialogProps> = observer(({ npc, player, onClose }) => {
+const LootDialog: React.FC<LootDialogProps> = observer(({ target, player, onClose }) => {
   const handleLootItem = (itemId: string, quantity: number) => {
-    // Transfer item from NPC to player
-    npc.removeItem({ itemId, quantity });
+    // Transfer item from target to player
+    target.removeItem({ itemId, quantity });
     player.addItemToInventory({ itemId, quantity });
   };
 
   const handleLootAll = () => {
-    // Transfer all items from NPC to player
-    npc.inventory?.forEach(item => {
+    // Transfer all items from target to player
+    target.inventory?.forEach(item => {
       player.addItemToInventory({ itemId: item.itemId, quantity: item.quantity });
     });
-    npc.inventory = [];
+    target.inventory = [];
   };
 
   return (
     <DialogContainer data-testid="loot-dialog">
-      <Title>{npc.name}'s Inventory</Title>
+      <Title>{target.name}'s Loot</Title>
       <CloseButton onClick={onClose}>&times;</CloseButton>
       
       <ItemList>
-        {npc.inventory && npc.inventory.length > 0 ? (
-          npc.inventory.map((item, index) => {
+        {target.inventory && target.inventory.length > 0 ? (
+          target.inventory.map((item, index) => {
             const itemData = itemsData.get(item.itemId);
             return (
               <ItemRow key={index}>
@@ -117,7 +118,7 @@ const LootDialog: React.FC<LootDialogProps> = observer(({ npc, player, onClose }
         )}
       </ItemList>
 
-      {npc.inventory && npc.inventory.length > 0 && (
+      {target.inventory && target.inventory.length > 0 && (
         <LootButton
           onClick={handleLootAll}
           style={{ width: '100%', marginTop: '10px' }}

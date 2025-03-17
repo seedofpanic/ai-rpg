@@ -10,6 +10,7 @@ import { gameStore } from '../models/gameStore'; // Import gameStore
 import CombatLog, { combatLogStore } from './CombatLog'; // Import CombatLog
 import { npcStore } from 'models/npcs';
 import LootDialog from './LootDialog';
+import { mobStore } from '../models/mobStore';
 
 const GameContainer = styled.div`
   width: 100vw;
@@ -98,19 +99,32 @@ const Game: React.FC = () => {
 
   const handleNpcInteraction = (npcId: string) => {
     const npc = npcStore.npcs[npcId];
+    const mob = mobStore.mobs[npcId];
 
-    if (!npc.isAlive()) {
-      setLootingNpcId(npcId);
-      return;
+    if (mob) {
+      if (!mob.isAlive()) {
+        setLootingNpcId(npcId);
+        return;
+      }
+
+      if (gameStore.player?.combatMode) {
+        handleCombat(npcId);
+        return;
+      }
+    } else if (npc) {
+      if (!npc.isAlive()) {
+        setLootingNpcId(npcId);
+        return;
+      }
+
+      if (gameStore.player?.combatMode) {
+        handleCombat(npcId);
+        return;
+      }
+
+      gameStore.setDialogueOpen(true);
+      gameStore.setCurrentNpcId(npcId);
     }
-
-    if (gameStore.player?.combatMode) {
-      handleCombat(npcId);
-      return;
-    }
-
-    gameStore.setDialogueOpen(true);
-    gameStore.setCurrentNpcId(npcId);
   };
 
   const handleCloseDialogue = () => {
@@ -121,19 +135,31 @@ const Game: React.FC = () => {
     setLootingNpcId(null);
   };
 
-  const handleCombat = (npcId: string) => {
-    const npc = npcStore.npcs[npcId];
+  const handleCombat = (targetId: string) => {
+    const npc = npcStore.npcs[targetId];
+    const mob = mobStore.mobs[targetId];
     const player = gameStore.player;
 
-    if (!player || !npc) return;
+    if (!player) return;
 
-    // Player attacks NPC
-    player.attack(npc);
-    combatLogStore.push(`${player.name} attacked ${npc.name}.`);
+    if (mob) {
+      // Player attacks mob
+      player.attack(mob);
+      combatLogStore.push(`${player.name} attacked ${mob.name}.`);
 
-    if (!npc.isAlive()) {
-      combatLogStore.push(`${npc.name} has been defeated!`);
-      return;
+      if (!mob.isAlive()) {
+        combatLogStore.push(`${mob.name} has been defeated!`);
+        return;
+      }
+    } else if (npc) {
+      // Player attacks NPC
+      player.attack(npc);
+      combatLogStore.push(`${player.name} attacked ${npc.name}.`);
+
+      if (!npc.isAlive()) {
+        combatLogStore.push(`${npc.name} has been defeated!`);
+        return;
+      }
     }
   };
 
@@ -150,6 +176,15 @@ const Game: React.FC = () => {
       gameStore.closeDialogue();
     }
   }, [npcContext?.relation]);
+
+  // Add mob respawn effect
+  useEffect(() => {
+    const respawnInterval = setInterval(() => {
+      mobStore.respawnMobs();
+    }, 30000); // Check for respawns every 30 seconds
+
+    return () => clearInterval(respawnInterval);
+  }, []);
 
   return (
     <GameContainer
@@ -180,7 +215,7 @@ const Game: React.FC = () => {
           <QuestLog />
           {lootingNpcId && (
             <LootDialog
-              npc={npcStore.npcs[lootingNpcId]}
+              target={mobStore.mobs[lootingNpcId] || npcStore.npcs[lootingNpcId]}
               player={gameStore.player}
               onClose={handleCloseLoot}
             />
@@ -198,12 +233,11 @@ const Game: React.FC = () => {
           <HelpDialog>
             <h2>Controls:</h2>
             <p>WASD or Arrow Keys - Move character</p>
+            <p>C - Enable combat mode</p>
+            <p>E - Return to exploration mode</p>
             <p>Click on NPCs to interact with them</p>
-            <p>Click on dead NPCs to loot their inventory</p>
-            <p>
-              When talking to NPCs, you can ask them about their background,
-              knowledge, or try to trade items
-            </p>
+            <p>Click on dead NPCs or mobs to loot their inventory</p>
+            <p>When talking to NPCs, you can ask them about their background, knowledge, or try to trade items</p>
           </HelpDialog>
         </>
       )}

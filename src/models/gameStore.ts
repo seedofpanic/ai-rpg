@@ -1,10 +1,10 @@
-import { Player } from 'models/Player'; // Import Player from the new file
+import { Player } from './Player';
 import { makeAutoObservable } from 'mobx';
 import { npcStore } from './npcs';
 import { combatLogStore } from 'components/CombatLog';
 import { itemsData } from './itemsData';
-
-const keysDown = new Set<string>();
+import { mobStore } from './mobStore';
+import { keysDown } from 'utils/keyboard';
 
 export interface Quest {
   id: string;
@@ -85,12 +85,20 @@ export class GameStore {
 
     if (this.player) {
       const currentTime = Date.now();
+      
+      // Process NPC actions
       for (const id of npcStore.npcIds) {
         const npc = npcStore.npcs[id];
-
         npc.doActions(this.player, currentTime);
       }
 
+      // Process mob actions
+      for (const id of mobStore.mobIds) {
+        const mob = mobStore.mobs[id];
+        mob.doActions(this.player, currentTime);
+      }
+
+      // Process player actions
       this.player.doActions(keysDown, currentTime, this.isDialogueOpen);
 
       if (!this.player.isAlive()) {
@@ -143,14 +151,3 @@ export class GameStore {
 }
 
 export const gameStore = new GameStore();
-
-// Controls
-const handleKeyDown = (e: KeyboardEvent) => {
-  keysDown.add(e.code);
-};
-const handleKeyUp = (e: KeyboardEvent) => {
-  keysDown.delete(e.code);
-};
-
-window.addEventListener('keydown', handleKeyDown);
-window.addEventListener('keyup', handleKeyUp);
