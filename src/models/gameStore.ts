@@ -25,6 +25,7 @@ export interface Quest {
 export class GameStore {
   isDialogueOpen: boolean = false;
   activeNpcId: string | null = null;
+  currentNpcId: string | null = null;
   player: Player = {} as Player;
   isOver = true;
   questLog: Quest[] = [];
@@ -114,16 +115,24 @@ export class GameStore {
     combatLogStore.log.length = 0;
   }
 
+  setDialogueOpen(isOpen: boolean) {
+    this.isDialogueOpen = isOpen;
+  }
+
+  setCurrentNpcId(npcId: string | null) {
+    this.currentNpcId = npcId;
+  }
+
   openDialogue(npcId: string) {
     this.isDialogueOpen = true;
+    this.currentNpcId = npcId;
     this.activeNpcId = npcId;
   }
 
-  closeDialogue(npcId?: string) {
-    if (!npcId || this.activeNpcId == npcId) {
-      this.isDialogueOpen = false;
-      this.activeNpcId = null;
-    }
+  closeDialogue() {
+    this.isDialogueOpen = false;
+    this.currentNpcId = null;
+    this.activeNpcId = null;
   }
 
   over() {

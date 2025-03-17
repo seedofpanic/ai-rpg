@@ -9,6 +9,7 @@ import { observer } from 'mobx-react-lite';
 import { gameStore } from '../models/gameStore'; // Import gameStore
 import CombatLog, { combatLogStore } from './CombatLog'; // Import CombatLog
 import { npcStore } from 'models/npcs';
+import LootDialog from './LootDialog';
 
 const GameContainer = styled.div`
   width: 100vw;
@@ -76,6 +77,7 @@ const Game: React.FC = () => {
   const [dialogueSize] = useState({ width: 900, height: 600 });
   const [isDragging, setIsDragging] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [lootingNpcId, setLootingNpcId] = useState<string | null>(null);
 
   const handleMouseDown = () => {
     setIsDragging(true);
@@ -98,20 +100,25 @@ const Game: React.FC = () => {
     const npc = npcStore.npcs[npcId];
 
     if (!npc.isAlive()) {
+      setLootingNpcId(npcId);
       return;
     }
 
     if (gameStore.player?.combatMode) {
       handleCombat(npcId);
-    } else {
-      if (gameStore.player.isCloseTo(npc.position) && npc.relation) {
-        gameStore.openDialogue(npcId);
-      }
+      return;
     }
+
+    gameStore.setDialogueOpen(true);
+    gameStore.setCurrentNpcId(npcId);
   };
 
   const handleCloseDialogue = () => {
     gameStore.closeDialogue();
+  };
+
+  const handleCloseLoot = () => {
+    setLootingNpcId(null);
   };
 
   const handleCombat = (npcId: string) => {
@@ -158,10 +165,10 @@ const Game: React.FC = () => {
             onNpcInteraction={handleNpcInteraction}
             player={gameStore.player}
           />
-          {gameStore.isDialogueOpen && (
+          {gameStore.isDialogueOpen && gameStore.currentNpcId && (
             <DialogueSystem
               onTitleMouseDown={handleMouseDown}
-              npcId={gameStore.activeNpcId!}
+              npcId={gameStore.currentNpcId}
               onClose={handleCloseDialogue}
               position={dialoguePosition}
               size={dialogueSize}
@@ -171,6 +178,13 @@ const Game: React.FC = () => {
           {/* Add PlayerInventory */}
           <CombatLog />
           <QuestLog />
+          {lootingNpcId && (
+            <LootDialog
+              npc={npcStore.npcs[lootingNpcId]}
+              player={gameStore.player}
+              onClose={handleCloseLoot}
+            />
+          )}
         </>
       )}
       <PlayerMod>
@@ -182,36 +196,14 @@ const Game: React.FC = () => {
         <>
           <Overlay onClick={toggleHelp} />
           <HelpDialog>
-            <h2>Game Help</h2>
+            <h2>Controls:</h2>
+            <p>WASD or Arrow Keys - Move character</p>
+            <p>Click on NPCs to interact with them</p>
+            <p>Click on dead NPCs to loot their inventory</p>
             <p>
-              <strong>W/A/S/D:</strong> Move the player.
+              When talking to NPCs, you can ask them about their background,
+              knowledge, or try to trade items
             </p>
-            <p>
-              <strong>C:</strong> Toggle combat mode.
-            </p>
-            <p>
-              <strong>Click NPC:</strong> Interact or attack (in combat mode).
-            </p>
-            <p>
-              <strong>Inventory:</strong> Manage your items.
-            </p>
-            <p>
-              <strong>Dialogue:</strong> Communicate with NPCs.
-            </p>
-            <button
-              onClick={toggleHelp}
-              style={{
-                marginTop: '10px',
-                padding: '8px 16px',
-                backgroundColor: '#e76f51',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
-            >
-              Close
-            </button>
           </HelpDialog>
         </>
       )}
