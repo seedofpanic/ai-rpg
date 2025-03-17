@@ -39,10 +39,12 @@ class NPCStore {
     const npcArray = Object.values(this.npcs);
     for (const npc of npcArray) {
       // Get a random NPC that isn't the current one
-      const otherNpcs = npcArray.filter((other) => other.id !== npc.id);
-      if (otherNpcs.length > 0) {
-        const targetNpc = getRandomElement(otherNpcs);
-        npc.addKillNeed(targetNpc.name);
+      if (Math.random() < 0.2) {
+        const otherNpcs = npcArray.filter((other) => other.id !== npc.id);
+        if (otherNpcs.length > 0) {
+          const targetNpc = getRandomElement(otherNpcs);
+          npc.addKillNeed(targetNpc.name);
+        }
       }
     }
   }

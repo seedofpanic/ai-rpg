@@ -66,6 +66,14 @@ const QuestGiver = styled.span`
   margin-left: 5px;
 `;
 
+const QuestProgress = styled.div`
+  font-size: 0.8em;
+  color: #adb5bd;
+  margin-top: 5px;
+  padding: 2px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+`;
+
 const QuestLog: React.FC = () => {
   return (
     <QuestLogContainer>
@@ -85,6 +93,13 @@ const QuestLog: React.FC = () => {
               </QuestGiver>
             </QuestTitle>
             <QuestDescription>{quest.description}</QuestDescription>
+            {!quest.completed && (
+              <QuestProgress>
+                Progress: {quest.action === 'Kill' 
+                  ? `${quest.killCount}/${quest.quantity} ${quest.subject} killed`
+                  : `0/${quest.quantity} ${quest.subject} collected`}
+              </QuestProgress>
+            )}
             {quest.rewards && (
               <QuestRewards>
                 Rewards: {quest.rewards.gold && `${quest.rewards.gold} gold`}

@@ -7,6 +7,7 @@ import { mobStore } from './mobStore';
 import { keysDown } from 'utils/keyboard';
 
 export interface Quest {
+  killCount: number;
   id: string;
   title: string;
   description: string;
@@ -39,6 +40,7 @@ export class GameStore {
       return false;
     }
 
+    makeAutoObservable(quest);
     this.questLog.push(quest);
     return true;
   }

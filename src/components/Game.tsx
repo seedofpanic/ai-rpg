@@ -135,6 +135,13 @@ const Game: React.FC = () => {
     setLootingNpcId(null);
   };
 
+  const updateQuest = (target: {name: string}) => {
+    const quest = gameStore.questLog.find((quest) => quest.subject.toLowerCase() === target.name.toLowerCase());
+    if (quest) {
+      quest.killCount++;
+    }
+  }
+
   const handleCombat = (targetId: string) => {
     const npc = npcStore.npcs[targetId];
     const mob = mobStore.mobs[targetId];
@@ -149,6 +156,7 @@ const Game: React.FC = () => {
 
       if (!mob.isAlive()) {
         combatLogStore.push(`${mob.name} has been defeated!`);
+        updateQuest(mob);
         return;
       }
     } else if (npc) {
@@ -158,6 +166,7 @@ const Game: React.FC = () => {
 
       if (!npc.isAlive()) {
         combatLogStore.push(`${npc.name} has been defeated!`);
+        updateQuest(npc);
         return;
       }
     }
@@ -223,7 +232,7 @@ const Game: React.FC = () => {
         </>
       )}
       <PlayerMod>
-        {gameStore.player?.combatMode ? 'Combat Mode press &lsquo;E&rsquo; to switch' : 'Exploration Mode press &lsquo;C&rsquo; to switch'}
+        {gameStore.player?.combatMode ? 'Combat Mode press "E" to switch' : 'Exploration Mode press "C" to switch'}
       </PlayerMod>
       <HelpButton onClick={toggleHelp}>Help</HelpButton>
       {isHelpOpen && (
@@ -242,6 +251,6 @@ const Game: React.FC = () => {
       )}
     </GameContainer>
   );
-};
+}
 
 export default observer(Game);

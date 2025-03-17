@@ -30,6 +30,7 @@ export const createContext = (
 
     Current Needs:
     ${npcContext.needs.map((need) => `- ${need.type}: ${need.subject} ${need.potentialGoldReward ? `(Potential base Gold Reward: ${need.potentialGoldReward})` : ''} (Priority: ${need.priority.toFixed(1)})`).join('\n')}
+    You are bothered by monsters around.
 
     You have only items that are in your inventory:
     ${npcContext.inventory?.map((item) => `- ${itemsData.get(item.itemId)?.name} x${item.quantity} cost ${itemsData.get(item.itemId)?.price} piece`).join('\n') || 'No items in inventory'}
@@ -44,39 +45,38 @@ export const createContext = (
     ${npcContext.location.description}
 
     Environment:
-    - Nearby NPCs: ${npcContext.location.npcs
+    - Nearby Characters: ${npcContext.location.npcs
       .map((npcId) => {
         const npc = npcStore.npcs[npcId];
         return `${npc.name} ${npc.race} ${npc.role} ${npc.background} (is ${npc.isAlive() ? 'Alive' : 'Dead'})`;
       })
       .join(', ')}
 
-    Relationships with other NPCs:
+    Relationships with other Characters:
     ${Object.entries(npcContext.relationships)
       .map(([name, relation]) => `- ${name}: ${relation}`)
       .join('\n')}
     
     Relationship with Player: ${npcContext.getPlayerRelation()}. Increase selling price if you don't like the player.
 
-    Mobs in the Environment:
-    ${Object.values(mobStore.mobs)
-      .filter(mob => mob.location.name === npcContext.location.name)
-      .map(mob => 
-        `- ${mob.name} (${mob.mobType}): Health ${mob.health}/${mob.maxHealth}, ${mob.isAggressive ? 'Aggressive' : 'Patrolling'}, ${mob.isAlive() ? 'Alive' : 'Dead'}
-         Carrying: ${mob.inventory.map(item => `${itemsData.get(item.itemId)?.name} x${item.quantity}`).join(', ') || 'Nothing'}`
-      ).join('\n') || 'No mobs in this location'}
-
     Other Locations:
     ${npcStore.locations
       .map((loc) => {
-        const npcs = ` NPCs there: ${loc.npcs
+        const npcs = ` Characters in ${loc.name}: ${loc.npcs
           .map((npcId) => {
             const npc = npcStore.npcs[npcId];
-            return `${npc.name} ${npc.role} (is${npc.isAlive() ? 'Alive' : 'Dead'})`;
+            return `${npc.name} ${npc.role} (is ${npc.isAlive() ? 'Alive' : 'Dead'})`;
+          })
+          .join(', ')}`;
+        const mobs = ` Monsters in ${loc.name}: ${mobStore.mobIds
+          .filter((mobId) => mobStore.mobs[mobId].location.name === loc.name)
+          .map((mobId) => {
+            const mob = mobStore.mobs[mobId];
+            return `${mob.name} ${mob.isAlive() ? 'Alive' : 'Dead'}`;
           })
           .join(', ')}`;
 
-        return `- ${loc.name}: ${loc.description}\n${loc.npcs.length ? npcs : ''}`;
+        return `- ${loc.name}: ${loc.description}\n${loc.npcs.length ? npcs : ''}\n${mobs}`;
       })
       .join('\n')}
 
@@ -91,9 +91,14 @@ export const createContext = (
         .filter((quest) => !quest.completed && quest.questGiverId === npcId)
         .map((quest) => {
           const { action, quantity, subject } = quest;
+          let status = 'In Progress';
+
+          if (quest.action === 'Kill') {
+            status = `Player killed ${quest.killCount} of ${quantity} ${subject}`;
+          }
 
           return `- ${quest.title}, id: ${quest.id}
-          Quest Type: ${action} ${quantity} ${subject}`;
+          Status: ${status}`;
         })
         .join('\n') || 'No active quests'
     }
@@ -159,7 +164,7 @@ export const createContext = (
     Add your mood towards the player's message using <mood>like</mood> or <mood>unfriendly</mood>. Valid moods are: like, confused, offensive, interesting, unfriendly.
     If you want to sell something to the player or update prices in your selling list, add a list of items with prices wrapped in <sell></sell>. Example: <sell>Iron Sword,50;Red mask,34</sell>
     If you want to buy something from the player or update prices in your buying list, add a list of items with prices wrapped in <buy></buy>. Example: <buy>Iron Sword,50;Red mask,34</buy>
-    If you give a quest, or ask for somethig, or command player to do something wrap it in to <quest></quest>. Example:
+    If you give a quest, or ask for somethig, or command player to do something, or agreeing for player to help you with something wrap it in to <quest></quest>. Example:
     <quest>
     [
       {
@@ -180,14 +185,15 @@ export const createContext = (
     </quest>
 
     Quests rules:
+    You can ask to kill monsters.
     Scale reward based on your relation with the player.
     Don't promise gold or items that you don't have.
     Don't give quests if the relation with the player is low or if it doesn't make sense with your background.
   
     Communication rules:
-    If player message doesn't make much sense just ignore it and stay silent.
-    If player is repeating himself, ignore it.
-    If you don't have much new to say *Silently looking at ${player.name} with a blank expression*.
+    If player message is unclear, ask for clarification in a friendly way.
+    If player repeats themselves, acknowledge it and try to provide additional information or a different perspective.
+    If you don't have much to say, express interest through simple gestures or brief responses like *Nods thoughtfully* or *Gives ${player.name} an encouraging smile*.
 
     Player's message: ${message}`;
 

@@ -48,6 +48,7 @@ const parseQuests = (data: string, description: string, npcId: string) => {
         completed: false,
         questGiverId: npcId,
         rewards: questData.reward,
+        killCount: 0,
       };
     });
   } catch (error) {
