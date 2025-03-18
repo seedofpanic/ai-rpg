@@ -164,8 +164,11 @@ export class GameStore {
 
   updateControls(keyDown: string) {
     if (keyDown === 'KeyE' && this.hoveredNpcId) {
-      this.setCurrentNpcId(this.hoveredNpcId);
-      this.setDialogueOpen(true);
+      const npc = npcStore.npcs[this.hoveredNpcId];
+      if (npc && this.player.isCloseTo(npc.position)) {
+        this.setCurrentNpcId(this.hoveredNpcId);
+        this.setDialogueOpen(true);
+      }
     }
   }
 }

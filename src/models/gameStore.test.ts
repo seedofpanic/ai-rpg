@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { GameStore } from './gameStore';
 import { Player } from './Player';
+import { npcStore } from './npcs';
+import { NPC } from './npc';
 
 describe('GameStore', () => {
   let gameStore: GameStore;
@@ -9,7 +11,7 @@ describe('GameStore', () => {
   beforeEach(() => {
     // Initialize a fresh game store and player for each test
     gameStore = new GameStore();
-    player = new Player('TestPlayer', 'Human', 'Warrior');
+    player = new Player('TestPlayer', 'Human', 'Warrior', 'Female');
     gameStore.startGame(player);
   });
 
@@ -49,6 +51,7 @@ describe('GameStore', () => {
       action: 'bring',
       completed: false,
       questGiverId: 'npc-1',
+      killCount: 0,
     };
     // Add quest and verify it's in the log
     gameStore.addQuest(quest);
@@ -66,6 +69,7 @@ describe('GameStore', () => {
       action: 'bring',
       completed: false,
       questGiverId: 'npc-1',
+      killCount: 0,
     };
     // Try to add the same quest twice
     gameStore.addQuest(quest);
@@ -89,6 +93,7 @@ describe('GameStore', () => {
       action: 'bring',
       completed: false,
       questGiverId: 'npc-1',
+      killCount: 0,
       rewards: {
         gold: 100,
         items: ['reward-item'],
@@ -118,6 +123,7 @@ describe('GameStore', () => {
       action: 'bring',
       completed: true,
       questGiverId: 'npc-1',
+      killCount: 0,
       rewards: {
         gold: 100,
       },
@@ -141,6 +147,7 @@ describe('GameStore', () => {
       action: 'bring',
       completed: false,
       questGiverId: 'npc-1',
+      killCount: 0,
     };
 
     gameStore.addQuest(quest);
@@ -188,5 +195,29 @@ describe('GameStore', () => {
     // Clean up mocks
     alertMock.mockRestore();
     reloadMock.mockRestore();
+  });
+
+  it('should only open dialogue when NPC is close to player', () => {
+    // Mock npcStore
+    const mockNpc = {} as NPC;
+
+    npcStore.npcs['npc-1'] = mockNpc;
+    npcStore.npcIds.push('npc-1');
+
+    // Mock player.isCloseTo
+    vi.spyOn(player, 'isCloseTo').mockReturnValue(false);
+
+    // Try to open dialogue when NPC is far
+    gameStore.setHoveredNpcId('npc-1');
+    gameStore.updateControls('KeyE');
+    expect(gameStore.isDialogueOpen).toBe(false);
+
+    // Mock player.isCloseTo to return true
+    vi.spyOn(player, 'isCloseTo').mockReturnValue(true);
+
+    // Try to open dialogue when NPC is close
+    gameStore.updateControls('KeyE');
+    expect(gameStore.isDialogueOpen).toBe(true);
+    expect(gameStore.currentNpcId).toBe('npc-1');
   });
 });

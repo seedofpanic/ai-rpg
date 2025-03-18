@@ -6,7 +6,7 @@ describe('Player', () => {
   let player: Player;
 
   beforeEach(() => {
-    player = new Player('TestPlayer', 'Human', 'Warrior');
+    player = new Player('TestPlayer', 'Human', 'Warrior', 'Female');
     player.gold = 100;
   });
 
@@ -16,7 +16,7 @@ describe('Player', () => {
     expect(player.class).toBe('Warrior');
     expect(player.health).toBe(100);
     expect(player.gold).toBe(100);
-    expect(player.position).toEqual(new Vector2(50, 50));
+    expect(player.position).toEqual(new Vector2(800, 550));
   });
 
   it('should add items to inventory', () => {
@@ -65,13 +65,14 @@ describe('Player', () => {
       takeDamage: (damage: number) => {
         target.health -= damage;
       },
-      position: new Vector2(30, 30),
+      position: new Vector2(player.position.x + 30, player.position.y + 30),
     };
     player.attack(target);
     expect(target.health).toBe(85); // Default attackPower is 10
   });
 
   it('should move based on keys pressed', () => {
+    player.position = new Vector2(50, 50);
     const keysDown = new Set(['KeyW', 'KeyD']);
     const currentTime = Date.now() + 200; // Simulate time passed
     player.doActions(keysDown, currentTime, false);
@@ -80,6 +81,7 @@ describe('Player', () => {
   });
 
   it('should correctly determine if the player is close to a position', () => {
+    player.position = new Vector2(50, 50);
     const position = new Vector2(60, 60);
     expect(player.isCloseTo(position)).toBe(true); // Within range
     const farPosition = new Vector2(200, 200);
@@ -95,6 +97,7 @@ describe('Player', () => {
   });
 
   it('should handle movement based on keys pressed', () => {
+    player.position = new Vector2(50, 50);
     const keysDown = new Set(['KeyW', 'KeyD']);
     const currentTime = Date.now() + 200; // Simulate time passed
     player.doActions(keysDown, currentTime, false);
@@ -103,6 +106,7 @@ describe('Player', () => {
   });
 
   it('should not move if no keys are pressed', () => {
+    player.position = new Vector2(50, 50);
     const keysDown = new Set<string>();
     const currentTime = Date.now() + 200; // Simulate time passed
     player.doActions(keysDown, currentTime, false);
@@ -110,6 +114,7 @@ describe('Player', () => {
   });
 
   it('should not move if dialog is open', () => {
+    player.position = new Vector2(50, 50);
     const keysDown = new Set<string>(['KeyW', 'KeyD']);
     const currentTime = Date.now() + 200; // Simulate time passed
     player.doActions(keysDown, currentTime, true);

@@ -119,7 +119,8 @@ const QuestLog: React.FC = () => {
                 <QuestTitle>
                   {quest.title}
                   <QuestGiver>
-                    (from {npcStore.npcs[quest.questGiverId]?.name || 'Unknown'})
+                    (from {npcStore.npcs[quest.questGiverId]?.name || 'Unknown'}
+                    )
                   </QuestGiver>
                 </QuestTitle>
                 <QuestDescription>{quest.description}</QuestDescription>
@@ -133,7 +134,8 @@ const QuestLog: React.FC = () => {
                 )}
                 {quest.rewards && (
                   <QuestRewards>
-                    Rewards: {quest.rewards.gold && `${quest.rewards.gold} gold`}
+                    Rewards:{' '}
+                    {quest.rewards.gold && `${quest.rewards.gold} gold`}
                     {quest.rewards.items &&
                       quest.rewards.items.length > 0 &&
                       ` • ${quest.rewards.items.length} item${quest.rewards.items.length > 1 ? 's' : ''}`}

@@ -21,7 +21,7 @@ class NPCStore {
     const generatedNPCs = Array.from({ length: 10 });
     if (import.meta.env.VITE_CI) {
       const npc = NPC.generateRandomNPC(this.locations);
-      npc.position = new Vector2(70, 70);
+      npc.position = new Vector2(820, 570);
       this.npcs[npc.id] = npc;
     } else {
       for (const _ of generatedNPCs) {
