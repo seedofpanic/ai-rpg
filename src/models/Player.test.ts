@@ -7,6 +7,7 @@ describe('Player', () => {
 
   beforeEach(() => {
     player = new Player('TestPlayer', 'Human', 'Warrior');
+    player.gold = 100;
   });
 
   it('should initialize with default values', () => {
@@ -52,7 +53,7 @@ describe('Player', () => {
   });
 
   it('should dodge attacks based on dodgeChance', () => {
-    player.dodgeChance = 1; // 100% dodge chance
+    player.baseDodgeChance = 1; // 100% dodge chance
     player.takeDamage(20);
     expect(player.health).toBe(100); // No damage taken
   });

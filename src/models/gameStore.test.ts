@@ -33,7 +33,7 @@ describe('GameStore', () => {
 
   it('should end the game when the player dies', () => {
     // Simulate player death
-    player.health = 0;
+    player.baseHealth = 0;
     gameStore.startGameActions();
     expect(gameStore.isOver).toBe(true);
   });
