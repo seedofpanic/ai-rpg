@@ -89,6 +89,7 @@ export const createContext = (
     - Name: ${player.name}
     - Race: ${player.race}
     - Class: ${player.class}
+    - Equipment: ${Object.entries(player.equipment).map(([slot, itemId]) => `- ${slot}: ${itemsData.get(itemId)?.name || 'Empty'}`).join('\n')}
     
     Player's Active Quests:
     ${
