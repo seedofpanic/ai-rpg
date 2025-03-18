@@ -37,7 +37,7 @@ export default defineConfig({
   webServer: {
     command: "cross-env VITE_CI=true npm start -- --port 3030",
     port: 3030,
-    reuseExistingServer: !!process.env.LOCAL,
+    reuseExistingServer: false,
     stdout: "ignore",
     stderr: "pipe",
   },

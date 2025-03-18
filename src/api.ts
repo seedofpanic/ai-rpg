@@ -21,7 +21,7 @@ const sendMessageProxy = async (
   try {
     const prompt = createContext(npcId, message, isSystemMessage);
 
-    const response = await fetch('http://167.71.7.172:9003/api/v1/send', {
+    const response = await fetch(`${import.meta.env.LOCAL ? 'http' : 'https'}://167.71.7.172:9003/api/v1/send`, {
       method: 'POST',
       body: JSON.stringify({
         "generationConfig": {},
