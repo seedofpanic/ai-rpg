@@ -49,6 +49,7 @@ const PlayerCustomization: React.FC = () => {
   const [name, setName] = useState('');
   const [race, setRace] = useState('');
   const [playerClass, setPlayerClass] = useState('');
+  const [type, setType] = useState('');
   const [apiKey, setApiKey] = useState(apiConfig.apiKey);
 
   // Restore settings from localStorage on component mount
@@ -63,10 +64,12 @@ const PlayerCustomization: React.FC = () => {
     const savedName = localStorage.getItem('playerName');
     const savedRace = localStorage.getItem('playerRace');
     const savedClass = localStorage.getItem('playerClass');
+    const savedType = localStorage.getItem('playerType');
 
     if (savedName) setName(savedName);
     if (savedRace) setRace(savedRace);
     if (savedClass) setPlayerClass(savedClass);
+    if (savedType) setType(savedType);
   }, []);
 
   const handleApiKeySave = () => {
@@ -86,6 +89,7 @@ const PlayerCustomization: React.FC = () => {
       localStorage.setItem('playerName', name);
       localStorage.setItem('playerRace', race);
       localStorage.setItem('playerClass', playerClass);
+      localStorage.setItem('playerType', type);
 
       const player = new Player(name, race, playerClass);
       gameStore.startGame(player); // Set player in gameStore
@@ -128,6 +132,12 @@ const PlayerCustomization: React.FC = () => {
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
+      <Select value={type} onChange={(e) => setType(e.target.value)}>
+        <option value="">Type</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </Select>
       <Select value={race} onChange={(e) => setRace(e.target.value)}>
         <option value="">Race</option>
         <option value="Human">Human</option>

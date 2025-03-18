@@ -153,7 +153,7 @@ export class NPC {
   knowledge: string[];
   relationships: Record<string, string>;
   location: Location;
-  dialogueHistory: Message[];
+  dialogueHistory: Message[] | null;
   state?: string;
   inventory?: InventoryItem[];
   gold: number;
@@ -193,7 +193,6 @@ export class NPC {
     beliefs: string,
     relationships: Record<string, string>,
     location: Location,
-    dialogueHistory: Message[] = [],
     state?: string,
     inventory?: InventoryItem[],
     gold: number = 0,
@@ -219,7 +218,7 @@ export class NPC {
     this.beliefs = beliefs;
     this.relationships = relationships;
     this.location = location;
-    this.dialogueHistory = dialogueHistory;
+    this.dialogueHistory = null;
     this.state = state;
     this.inventory = inventory;
     this.gold = gold;
@@ -277,7 +276,6 @@ export class NPC {
       background?.beliefs || '',
       {},
       location,
-      [],
       undefined,
       generateRoleSpecificInventory(role),
       Math.floor(Math.random() * 3000) + 2000,
@@ -365,7 +363,9 @@ export class NPC {
   }
 
   addDialogHistory(message: Message) {
-    this.dialogueHistory.push(message);
+    if (this.dialogueHistory) {
+      this.dialogueHistory.push(message);
+    }
   }
 
   removeItem({ itemId, quantity }: InventoryItem) {
@@ -505,5 +505,9 @@ export class NPC {
       subject: targetNpcName,
       potentialGoldReward: 200,
     });
+  }
+
+  initializeDialogueHistory() {
+    this.dialogueHistory = [];
   }
 }

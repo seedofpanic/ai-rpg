@@ -63,13 +63,19 @@ export class MagicEffects {
   }
 
   private handleBuff(targetId: string, effect: Effect) {
-    // Implement buff logic here
-    // This could modify player stats temporarily
+    if (targetId === this.player.name) {
+      this.player.baseAttackPower += effect.value;
+      combatLogStore.push(`${this.player.name} buffed for ${effect.value} AP!`);
+    }
   }
 
   private handleDebuff(targetId: string, effect: Effect) {
-    // Implement debuff logic here
-    // This could modify player stats temporarily
+    if (targetId === this.player.name) {
+      this.player.baseAttackPower -= effect.value;
+      combatLogStore.push(
+        `${this.player.name} debuffed for ${effect.value} AP!`,
+      );
+    }
   }
 
   private handleDamage(targetId: string, effect: Effect) {

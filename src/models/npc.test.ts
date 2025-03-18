@@ -34,7 +34,6 @@ describe('NPC', () => {
       'Gold is power.',
       {},
       location,
-      [],
       undefined,
       [],
       100,
@@ -125,13 +124,14 @@ describe('NPC', () => {
   });
 
   it('should add dialogue history correctly', () => {
+    npc.initializeDialogueHistory();
     npc.addDialogHistory({
       text: 'Hello, traveler!',
       type: MessageType.NPC,
       tokensCount: 10,
     });
     expect(npc.dialogueHistory).toHaveLength(1);
-    expect(npc.dialogueHistory[0].text).toBe('Hello, traveler!');
+    expect(npc.dialogueHistory?.[0].text).toBe('Hello, traveler!');
   });
 
   it('should correctly calculate relation change based on state', () => {

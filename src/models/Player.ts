@@ -34,6 +34,7 @@ export class Player {
   name: string;
   race: string;
   class: string;
+  type: string;
   gold: number;
   inventory: InventorySlot[] = [];
   equipment: Equipment = {};
@@ -70,11 +71,12 @@ export class Player {
   lastUpdateTime = Date.now();
   combatMode = false;
 
-  constructor(name: string, race: string, playerClass: string) {
+  constructor(name: string, race: string, playerClass: string, type: string) {
     this.position = new Vector2(50, 50);
     this.name = name;
     this.race = race;
     this.class = playerClass;
+    this.type = type;
     this.gold = 300;
     this.baseHealth = 100;
     this.baseAttackPower = 15;

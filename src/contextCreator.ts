@@ -10,6 +10,7 @@ export const createContext = (
   npcId: string,
   player: Player,
   message: string,
+  systemMessage: boolean = false,
 ) => {
   const npcContext = npcStore.npcs[npcId];
 
@@ -92,7 +93,13 @@ export const createContext = (
     - Name: ${player.name}
     - Race: ${player.race}
     - Class: ${player.class}
-    - Equipment: ${Object.entries(player.equipment).map(([slot, itemId]) => `- ${slot}: ${itemsData.get(itemId)?.name || 'Empty'}`).join('\n')}
+    - Type: ${player.type}
+    - Equipment: ${Object.entries(player.equipment)
+      .map(
+        ([slot, itemId]) =>
+          `- ${slot}: ${itemsData.get(itemId)?.name || 'Empty'}`,
+      )
+      .join('\n')}
     
     Player's Active Quests:
     ${
@@ -204,23 +211,25 @@ export const createContext = (
     If player repeats themselves, acknowledge it and try to provide additional information or a different perspective.
     If you don't have much to say, express interest through simple gestures or brief responses like *Nods thoughtfully* or *Gives ${player.name} an encouraging smile*.
 
-    Player's message: ${message}`;
+    ${systemMessage ? '' : "Player's message: "}${message}`;
 
   let tokensCount = 0;
   let dialogIndex = 0;
 
-  while (
-    tokensCount < 500000 &&
-    dialogIndex < npcContext.dialogueHistory.length
-  ) {
-    const dialogItem = npcContext.dialogueHistory[dialogIndex];
-    tokensCount += dialogItem.tokensCount || 20; // 20 for hello message
-    dialogIndex++;
+  if (npcContext.dialogueHistory) {
+    while (
+      tokensCount < 500000 &&
+      dialogIndex < npcContext.dialogueHistory.length
+    ) {
+      const dialogItem = npcContext.dialogueHistory[dialogIndex];
+      tokensCount += dialogItem.tokensCount || 20; // 20 for hello message
+      dialogIndex++;
+    }
   }
   const dialogContext =
     dialogIndex > 1
       ? npcContext.dialogueHistory
-          .slice(-dialogIndex + 1)
+          ?.slice(-dialogIndex + 1)
           .map((d) => {
             let prefix = '';
             if (d.type === MessageType.Player) {

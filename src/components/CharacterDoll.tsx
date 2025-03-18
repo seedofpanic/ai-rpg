@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Player } from '../models/Player';
 import { itemsData } from '../models/itemsData';
@@ -59,10 +59,42 @@ interface CharacterDollProps {
 }
 
 const CharacterDoll: React.FC<CharacterDollProps> = ({ player }) => {
+  const [tooltip, setTooltip] = useState<{
+    visible: boolean;
+    text: string;
+    x: number;
+    y: number;
+  }>({
+    visible: false,
+    text: '',
+    x: 0,
+    y: 0,
+  });
+
   const handleSlotClick = (slot: keyof typeof player.equipment) => {
     if (player.equipment[slot]) {
       player.unequipItem(slot);
     }
+  };
+
+  const handleSlotHover = (
+    event: React.MouseEvent<HTMLDivElement>,
+    itemId: string | undefined,
+  ) => {
+    const itemName = getItemName(itemId);
+    if (itemName) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      setTooltip({
+        visible: true,
+        text: itemName,
+        x: rect.left + rect.width / 2,
+        y: rect.top - 25,
+      });
+    }
+  };
+
+  const handleSlotLeave = () => {
+    setTooltip({ visible: false, text: '', x: 0, y: 0 });
   };
 
   const getItemName = (itemId: string | undefined) => {
@@ -79,6 +111,8 @@ const CharacterDoll: React.FC<CharacterDollProps> = ({ player }) => {
           $hasItem={!!player.equipment.head}
           style={{ top: 10, left: 35 }}
           onClick={() => handleSlotClick('head')}
+          onMouseEnter={(e) => handleSlotHover(e, player.equipment.head)}
+          onMouseLeave={handleSlotLeave}
         >
           {getItemName(player.equipment.head)}
         </EquipmentSlot>
@@ -88,6 +122,8 @@ const CharacterDoll: React.FC<CharacterDollProps> = ({ player }) => {
           $hasItem={!!player.equipment.chest}
           style={{ top: 50, left: 35 }}
           onClick={() => handleSlotClick('chest')}
+          onMouseEnter={(e) => handleSlotHover(e, player.equipment.chest)}
+          onMouseLeave={handleSlotLeave}
         >
           {getItemName(player.equipment.chest)}
         </EquipmentSlot>
@@ -97,6 +133,8 @@ const CharacterDoll: React.FC<CharacterDollProps> = ({ player }) => {
           $hasItem={!!player.equipment.weapon}
           style={{ top: 70, left: 5 }}
           onClick={() => handleSlotClick('weapon')}
+          onMouseEnter={(e) => handleSlotHover(e, player.equipment.weapon)}
+          onMouseLeave={handleSlotLeave}
         >
           {getItemName(player.equipment.weapon)}
         </EquipmentSlot>
@@ -106,6 +144,8 @@ const CharacterDoll: React.FC<CharacterDollProps> = ({ player }) => {
           $hasItem={!!player.equipment.shield}
           style={{ top: 70, right: 5 }}
           onClick={() => handleSlotClick('shield')}
+          onMouseEnter={(e) => handleSlotHover(e, player.equipment.shield)}
+          onMouseLeave={handleSlotLeave}
         >
           {getItemName(player.equipment.shield)}
         </EquipmentSlot>
@@ -115,6 +155,8 @@ const CharacterDoll: React.FC<CharacterDollProps> = ({ player }) => {
           $hasItem={!!player.equipment.ring}
           style={{ top: 90, left: 35 }}
           onClick={() => handleSlotClick('ring')}
+          onMouseEnter={(e) => handleSlotHover(e, player.equipment.ring)}
+          onMouseLeave={handleSlotLeave}
         >
           {getItemName(player.equipment.ring)}
         </EquipmentSlot>
@@ -124,10 +166,23 @@ const CharacterDoll: React.FC<CharacterDollProps> = ({ player }) => {
           $hasItem={!!player.equipment.feet}
           style={{ top: 110, left: 35 }}
           onClick={() => handleSlotClick('feet')}
+          onMouseEnter={(e) => handleSlotHover(e, player.equipment.feet)}
+          onMouseLeave={handleSlotLeave}
         >
           {getItemName(player.equipment.feet)}
         </EquipmentSlot>
       </DollFigure>
+      {tooltip.visible && (
+        <SlotTooltip
+          style={{
+            left: tooltip.x,
+            top: tooltip.y,
+            transform: 'translateX(-50%)',
+          }}
+        >
+          {tooltip.text}
+        </SlotTooltip>
+      )}
     </DollContainer>
   );
 };

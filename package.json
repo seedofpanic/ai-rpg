@@ -8,8 +8,9 @@
     "test:e2e": "playwright test",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "vitest",
-    "test:watch": "vitest --watch"
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "verify": "npm run lint:fix && npm run test && npm run test:e2e"
   },
   "keywords": [],
   "author": "",

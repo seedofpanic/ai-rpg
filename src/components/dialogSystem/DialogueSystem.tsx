@@ -1,12 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import { sendMessage } from '../../api';
-import { npcStore } from '../../models/npcs';
 import { observer } from 'mobx-react';
 import { gameStore } from '../../models/gameStore'; // Import gameStore
 import { itemsData } from '../../models/itemsData';
-import { MessageType, NPC, TradeItem } from '../../models/npc';
-import { parseNpcMessage } from './parseNpcMessage';
+import { MessageType } from '../../models/npc';
+import { dialogController } from '../../models/dialogController';
 
 interface DialogueSystemProps {
   npcId: string;
@@ -224,20 +222,12 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
   size,
   onTitleMouseDown,
 }) => {
-  const npcContext = npcStore.npcs[npcId] as NPC;
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const messageLogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!npcContext.dialogueHistory.length) {
-      npcContext.addDialogHistory({
-        text: npcStore.getNpcGreating(npcId),
-        type: MessageType.NPC,
-        tokensCount: 20,
-      }); // Save to dialogue history
-    }
-  }, [npcContext, npcId]);
+    dialogController.initializeDialog(npcId);
+  }, [npcId]);
 
   useEffect(() => {
     if (messageLogRef.current) {
@@ -245,94 +235,12 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
     }
   }, [npcId]);
 
-  const handleBuyItem = (item: TradeItem) => {
-    if (gameStore.player.gold >= item.price) {
-      const itemData = itemsData.get(item.itemId);
-
-      if (!itemData) {
-        return;
-      }
-
-      gameStore.player.updateGold(-item.price);
-      npcContext.updateGold(item.price);
-      npcContext.setShopItems(
-        npcContext.sellingItems.filter((i) => i !== item),
-      );
-
-      npcContext.removeItem({ itemId: item.itemId, quantity: 1 });
-      gameStore.player?.addItemToInventory({
-        itemId: item.itemId,
-        quantity: 1,
-      });
-      npcContext.addDialogHistory({
-        text: `Player bought ${itemData.name} for ${item.price} gold from ${npcContext.name}`,
-        type: MessageType.Action,
-        tokensCount: 20,
-      }); // Save to dialogue history
-      console.log(`Bought ${itemData.name} for ${item.price} gold.`);
-    } else {
-      console.log('Not enough gold.');
-    }
-  };
-
-  const handleSellItem = (item: TradeItem) => {
-    if (npcContext.gold >= item.price) {
-      const itemData = itemsData.get(item.itemId);
-
-      if (!itemData) {
-        return;
-      }
-
-      gameStore.player.updateGold(item.price);
-      npcContext.updateGold(-item.price);
-      npcContext.setBuyItems(npcContext.buyingItems.filter((i) => i !== item));
-      gameStore.player?.removeItemFromInventory({
-        itemId: item.itemId,
-        quantity: 1,
-      });
-      npcContext.addItem({ itemId: item.itemId, quantity: 1 });
-      npcContext.addDialogHistory({
-        text: `Player sold ${itemData.name} for ${item.price} gold to ${npcContext.name}`,
-        type: MessageType.Action,
-        tokensCount: 20,
-      }); // Save to dialogue history
-      console.log(`Sold ${itemData.name} for ${item.price} gold.`);
-    }
-  };
-
   const handleSend = async () => {
-    if (input.trim() === '' || isLoading) return;
+    if (input.trim() === '' || dialogController.isLoading) return;
 
-    setIsLoading(true);
     const userMessage = input;
     setInput('');
-
-    // Send message to API with NPC context
-    try {
-      npcContext.addDialogHistory({
-        text: userMessage,
-        type: MessageType.Player,
-        tokensCount: 30,
-      }); // Save to dialogue history
-
-      const response = await sendMessage(userMessage, npcId);
-
-      if (!response) {
-        return;
-      }
-
-      const { text, tokensCount } = response;
-      parseNpcMessage(text, tokensCount, npcContext);
-    } catch (error) {
-      console.error('Failed to send message:', error);
-      npcContext.addDialogHistory({
-        text: "Sorry, I couldn't process that message. Please try again.",
-        type: MessageType.NPC,
-        tokensCount: 20,
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    await dialogController.handleSendMessage(userMessage);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -340,6 +248,10 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
       handleSend();
     }
   };
+
+  const npcContext = dialogController.npcContext;
+
+  if (!npcContext) return null;
 
   return (
     <DialogueContainer
@@ -361,12 +273,12 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
       <BoxRow>
         <Box style={{ flex: '60%' }}>
           <MessageLog ref={messageLogRef}>
-            {npcContext.dialogueHistory.map((message, index) => (
+            {npcContext.dialogueHistory?.map((message, index) => (
               <Message key={index} $type={message.type}>
                 {message.text}
               </Message>
             ))}
-            {isLoading && (
+            {dialogController.isLoading && (
               <LoadingMessage>
                 <span>{npcContext.name} is thinking</span>
                 <LoadingDots />
@@ -380,15 +292,15 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="Enter a message..."
-              disabled={isLoading}
+              disabled={dialogController.isLoading}
             />
             <Button
               data-testid="send-message"
               onClick={handleSend}
-              disabled={isLoading}
-              style={{ opacity: isLoading ? 0.7 : 1 }}
+              disabled={dialogController.isLoading}
+              style={{ opacity: dialogController.isLoading ? 0.7 : 1 }}
             >
-              {isLoading ? 'Sending...' : 'Send'}
+              {dialogController.isLoading ? 'Sending...' : 'Send'}
             </Button>
           </InputContainer>
         </Box>
@@ -403,7 +315,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
                     <span>{item.price} gold</span>
                     <ShopButton
                       data-testid="buy-item"
-                      onClick={() => handleBuyItem(item)}
+                      onClick={() => dialogController.handleBuyItem(item)}
                     >
                       Buy
                     </ShopButton>
@@ -427,7 +339,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
                       <span>{item.price} gold</span>
                       <ShopButton
                         data-testid="sell-item"
-                        onClick={() => handleSellItem(item)}
+                        onClick={() => dialogController.handleSellItem(item)}
                         disabled={!hasItem}
                         style={{
                           opacity: hasItem ? 1 : 0.5,

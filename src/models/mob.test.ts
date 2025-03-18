@@ -26,7 +26,7 @@ describe('Mob', () => {
     testMob.lastUpdateTime = Date.now() - 1000;
 
     // Create a test player
-    player = new Player('TestPlayer', 'Human', 'Warrior');
+    player = new Player('TestPlayer', 'Human', 'Warrior', 'Male');
     player.position = new Vector2(150, 150);
   });
 
