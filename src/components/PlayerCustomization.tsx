@@ -51,6 +51,7 @@ const PlayerCustomization: React.FC = () => {
   const [playerClass, setPlayerClass] = useState('');
   const [type, setType] = useState('');
   const [apiKey, setApiKey] = useState(apiConfig.apiKey);
+  const [selectedApi, setSelectedApi] = useState<'gemini' | 'proxy'>(gameStore.api);
 
   // Restore settings from localStorage on component mount
   useEffect(() => {
@@ -65,11 +66,13 @@ const PlayerCustomization: React.FC = () => {
     const savedRace = localStorage.getItem('playerRace');
     const savedClass = localStorage.getItem('playerClass');
     const savedType = localStorage.getItem('playerType');
+    const savedApi = localStorage.getItem('selectedApi') as 'gemini' | 'proxy';
 
     if (savedName) setName(savedName);
     if (savedRace) setRace(savedRace);
     if (savedClass) setPlayerClass(savedClass);
     if (savedType) setType(savedType);
+    if (savedApi) setSelectedApi(savedApi);
   }, []);
 
   const handleApiKeySave = () => {
@@ -79,26 +82,35 @@ const PlayerCustomization: React.FC = () => {
   };
 
   const handleSubmit = () => {
-    if (!apiKey) {
-      alert('Please provide a valid API key.');
+    if (selectedApi === 'gemini' && !apiKey) {
+      alert('Please provide a valid API key for Gemini API.');
       return;
     }
     if (name && race && playerClass) {
-      apiConfig.apiKey = apiKey; // Set API key in apiConfig
+      apiConfig.apiKey = apiKey;
+      gameStore.api = selectedApi;
       // Save settings to localStorage
       localStorage.setItem('playerName', name);
       localStorage.setItem('playerRace', race);
       localStorage.setItem('playerClass', playerClass);
       localStorage.setItem('playerType', type);
+      localStorage.setItem('selectedApi', selectedApi);
 
       const player = new Player(name, race, playerClass, type);
-      gameStore.startGame(player); // Set player in gameStore
+      gameStore.startGame(player);
     }
   };
 
   return (
     <CustomizationContainer>
-      {!import.meta.env.VITE_GEMINI_API_KEY && (
+      <h1>Game setup</h1>
+
+      <Select value={selectedApi} onChange={(e) => setSelectedApi(e.target.value as 'gemini' | 'proxy')}>
+        <option value="gemini">Gemini API</option>
+        <option value="proxy">Proxy API</option>
+      </Select>
+
+      {selectedApi === 'gemini' && !import.meta.env.VITE_GEMINI_API_KEY && (
         <>
           <p>
             You can acquire an API key{' '}
@@ -124,7 +136,8 @@ const PlayerCustomization: React.FC = () => {
           </Button>
         </>
       )}
-      <h1>Character Customization</h1>
+
+      <h2>Character Customization</h2>
 
       <Input
         type="text"

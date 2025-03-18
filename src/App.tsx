@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Game from './components/Game';
+import Settings from './components/Settings';
+import SettingsIcon from './components/SettingsIcon';
 import { createGlobalStyle } from 'styled-components';
+import { gameStore } from 'models/gameStore';
+import { observer } from 'mobx-react';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -16,8 +20,8 @@ const GlobalStyle = createGlobalStyle`
 
   a.github-link {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 17px;
+    left: calc(50% + 70px);
     text-decoration: none;
     color: #000;
     font-size: 14px;
@@ -33,10 +37,18 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
   return (
     <>
       <GlobalStyle />
       <Game />
+      { !gameStore.isOver && (
+        <>
+          <SettingsIcon onClick={() => setIsSettingsOpen(true)} />
+          <Settings isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+        </>
+      )}
       <a
         href="https://github.com/seedofpanic/ai-rpg"
         className="github-link"
@@ -49,4 +61,4 @@ function App() {
   );
 }
 
-export default App;
+export default observer(App);

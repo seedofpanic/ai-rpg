@@ -108,6 +108,7 @@ const NPCHeader = styled.div`
   font-weight: bold;
   margin-bottom: 15px;
   text-align: center;
+  user-select: none;
 `;
 
 const ShopContainer = styled.div`

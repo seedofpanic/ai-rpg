@@ -8,10 +8,10 @@ import { mobStore } from './models/mobStore';
 
 export const createContext = (
   npcId: string,
-  player: Player,
   message: string,
   systemMessage: boolean = false,
 ) => {
+  const player = gameStore.player;
   const npcContext = npcStore.npcs[npcId];
 
   if (!npcContext) {

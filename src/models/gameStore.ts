@@ -31,6 +31,7 @@ export class GameStore {
   isOver = true;
   questLog: Quest[] = [];
   hoveredNpcId: string | null = null;
+  api: 'gemini' | 'proxy' = 'gemini';
 
   constructor() {
     makeAutoObservable(this);
