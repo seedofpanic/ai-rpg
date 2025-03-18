@@ -53,6 +53,10 @@ npm start
 
 Any contribution is welcome.
 
+## Contact Author
+
+For any questions or feedback, please contact: seedofpanic41@gmail.com
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
