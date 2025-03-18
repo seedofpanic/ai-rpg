@@ -29,8 +29,8 @@ export const createContext = (
     - Beliefs: ${npcContext.beliefs}
 
     Current Needs:
-    ${npcContext.needs.map((need) => `- ${need.type}: ${need.subject} ${need.potentialGoldReward ? `(Potential base Gold Reward: ${need.potentialGoldReward})` : ''} (Priority: ${need.priority.toFixed(1)})`).join('\n')}
     You are bothered by monsters around.
+    ${npcContext.needs.map((need) => `- ${need.type}: ${need.subject} ${need.potentialGoldReward ? `(Potential base Gold Reward: ${need.potentialGoldReward})` : ''} (Priority: ${need.priority.toFixed(1)})`).join('\n')}
 
     You have only items that are in your inventory:
     ${npcContext.inventory?.map((item) => `- ${itemsData.get(item.itemId)?.name} x${item.quantity} cost ${itemsData.get(item.itemId)?.price} piece`).join('\n') || 'No items in inventory'}
@@ -164,7 +164,7 @@ export const createContext = (
     Add your mood towards the player's message using <mood>like</mood> or <mood>unfriendly</mood>. Valid moods are: like, confused, offensive, interesting, unfriendly.
     If you want to sell something to the player or update prices in your selling list, add a list of items with prices wrapped in <sell></sell>. Example: <sell>Iron Sword,50;Red mask,34</sell>
     If you want to buy something from the player or update prices in your buying list, add a list of items with prices wrapped in <buy></buy>. Example: <buy>Iron Sword,50;Red mask,34</buy>
-    If you give a quest, or ask for somethig, or command player to do something, or agreeing for player to help you with something wrap it in to <quest></quest>. Example:
+    If you give a quest, or ask for somethig, or command player to do something, or agreeing for player to help you with something wrap it in to <quest>[{...}]</quest>. Example:
     <quest>
     [
       {

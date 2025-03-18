@@ -1,10 +1,30 @@
 import { combatLogStore } from 'components/CombatLog';
 import { makeAutoObservable } from 'mobx';
 import { Vector2 } from 'utils/vector2';
+import { itemsData } from './itemsData';
 
 interface InventorySlot {
   itemId: string;
   quantity: number;
+}
+
+interface Equipment {
+  head?: string;
+  chest?: string;
+  legs?: string;
+  feet?: string;
+  weapon?: string;
+  shield?: string;
+  ring?: string;
+  amulet?: string;
+}
+
+interface EquipmentStats {
+  attackPower: number;
+  defense: number;
+  criticalChance: number;
+  dodgeChance: number;
+  health: number;
 }
 
 export class Player {
@@ -15,11 +35,34 @@ export class Player {
   class: string;
   gold: number;
   inventory: InventorySlot[] = [];
-  health: number;
-  attackPower: number;
-  defense: number; // New attribute
-  criticalChance: number; // New attribute
-  dodgeChance: number; // New attribute
+  equipment: Equipment = {};
+  baseHealth: number;
+  baseAttackPower: number;
+  baseDefense: number;
+  baseCriticalChance: number;
+  baseDodgeChance: number;
+  private cachedEquipmentStats: EquipmentStats;
+
+  // Computed stats (including equipment)
+  get health(): number {
+    return this.baseHealth + this.cachedEquipmentStats.health;
+  }
+
+  get attackPower(): number {
+    return this.baseAttackPower + this.cachedEquipmentStats.attackPower;
+  }
+
+  get defense(): number {
+    return this.baseDefense + this.cachedEquipmentStats.defense;
+  }
+
+  get criticalChance(): number {
+    return this.baseCriticalChance + this.cachedEquipmentStats.criticalChance;
+  }
+
+  get dodgeChance(): number {
+    return this.baseDodgeChance + this.cachedEquipmentStats.dodgeChance;
+  }
 
   // utils
   lastUpdateTime = Date.now();
@@ -30,13 +73,43 @@ export class Player {
     this.name = name;
     this.race = race;
     this.class = playerClass;
-    this.gold = 100; // Default gold amount
-    this.health = 100; // Default health
-    this.attackPower = 15; // Default attack power
-    this.defense = 5; // Default defense
-    this.criticalChance = 0.1; // 10% critical chance
-    this.dodgeChance = 0.05; // 5% dodge chance
+    this.gold = 300;
+    this.baseHealth = 100;
+    this.baseAttackPower = 15;
+    this.baseDefense = 5;
+    this.baseCriticalChance = 0.1;
+    this.baseDodgeChance = 0.05;
+    this.cachedEquipmentStats = this.calculateEquipmentStats();
     makeAutoObservable(this);
+  }
+
+  private calculateEquipmentStats(): EquipmentStats {
+    const stats: EquipmentStats = {
+      attackPower: 0,
+      defense: 0,
+      criticalChance: 0,
+      dodgeChance: 0,
+      health: 0
+    };
+
+    // Calculate stats from all equipped items
+    Object.values(this.equipment).forEach(itemId => {
+      const item = itemsData.get(itemId);
+      if (!item?.stats) return;
+
+      // Add all stats from the item
+      Object.entries(item.stats).forEach(([stat, value]) => {
+        if (value !== undefined) {
+          stats[stat as keyof EquipmentStats] += value;
+        }
+      });
+    });
+
+    return stats;
+  }
+
+  private updateEquipmentStats() {
+    this.cachedEquipmentStats = this.calculateEquipmentStats();
   }
 
   addItemToInventory(item: InventorySlot) {
@@ -78,7 +151,7 @@ export class Player {
     }
 
     const reducedDamage = Math.max(0, amount - this.defense);
-    this.health = Math.max(0, this.health - reducedDamage);
+    this.baseHealth = Math.max(0, this.baseHealth - reducedDamage);
     console.log(`${this.name} took ${reducedDamage} damage.`);
     combatLogStore.push(`${this.name} took ${reducedDamage} damage.`);
   }
@@ -159,5 +232,58 @@ export class Player {
 
   updateGold(price: number) {
     this.gold += price;
+  }
+
+  equipItem(itemId: string) {
+    const item = itemsData.get(itemId);
+    if (!item) return false;
+
+    // Check if item is equipment
+    const isEquipment = this.isEquipment(item.name);
+    if (!isEquipment) return false;
+
+    // Get the slot type for this item
+    const slot = this.getEquipmentSlot(item.name);
+    if (!slot) return false;
+
+    this.removeItemFromInventory({ itemId, quantity: 1 });
+
+    // Unequip current item in that slot if any
+    if (this.equipment[slot]) {
+      this.unequipItem(slot);
+    }
+
+    // Equip the new item
+    this.equipment[slot] = itemId;
+    this.updateEquipmentStats();
+    return true;
+  }
+
+  unequipItem(slot: keyof Equipment) {
+    if (this.equipment[slot]) {
+      const itemId = this.equipment[slot];
+      this.equipment[slot] = undefined;
+      this.addItemToInventory({ itemId, quantity: 1 });
+      this.updateEquipmentStats();
+    }
+  }
+
+  private getEquipmentSlot(itemName: string): keyof Equipment | null {
+    if (itemName.includes('Helmet')) return 'head';
+    if (itemName.includes('Armor')) return 'chest';
+    if (itemName.includes('Boots')) return 'feet';
+    if (itemName.includes('Sword') || itemName.includes('Axe') || itemName.includes('Spear')) return 'weapon';
+    if (itemName.includes('Shield')) return 'shield';
+    if (itemName.includes('Ring')) return 'ring';
+    if (itemName.includes('Amulet')) return 'amulet';
+    return null;
+  }
+
+  isEquipment(itemName: string): boolean {
+    const equipmentTypes = [
+      'Helmet', 'Armor', 'Plate Armor', 'Chain Mail', 'Leather Armor',
+      'Boots', 'Sword', 'Shield', 'Ring', 'Amulet'
+    ];
+    return equipmentTypes.some(type => itemName.includes(type));
   }
 }

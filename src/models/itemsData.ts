@@ -1,23 +1,38 @@
 import { v4 as uuidv4 } from 'uuid';
 
-interface Item {
+interface ItemStats {
+  attackPower?: number;
+  defense?: number;
+  criticalChance?: number;
+  dodgeChance?: number;
+  health?: number;
+}
+
+interface ItemData {
   name: string;
   description: string;
   price: number;
+  stats?: ItemStats;
 }
 
-export const itemsData = new Map<string, Item>();
+export const itemsData = new Map<string, ItemData>();
 const uuid = uuidv4();
 itemsData.set(uuid, {
   name: 'Sword',
   description: 'A sharp sword for battle.',
   price: 100,
+  stats: {
+    attackPower: 10
+  }
 });
 
 itemsData.set(uuidv4(), {
   name: 'Shield',
   description: 'A sturdy shield for protection.',
   price: 150,
+  stats: {
+    defense: 8
+  }
 });
 
 itemsData.set(uuidv4(), {
@@ -36,6 +51,9 @@ itemsData.set(uuidv4(), {
   name: 'Helmet',
   description: 'A helmet to protect your head.',
   price: 75,
+  stats: {
+    defense: 5
+  }
 });
 
 itemsData.set(uuidv4(), {
@@ -54,6 +72,10 @@ itemsData.set(uuidv4(), {
   name: 'Boots',
   description: 'Boots to increase your speed.',
   price: 80,
+  stats: {
+    defense: 3,
+    dodgeChance: 0.02
+  }
 });
 
 itemsData.set(uuidv4(), {
@@ -170,12 +192,19 @@ itemsData.set(uuidv4(), {
   name: 'Battle Axe',
   description: 'A heavy weapon that deals massive damage.',
   price: 180,
+  stats: {
+    attackPower: 15
+  }
 });
 
 itemsData.set(uuidv4(), {
   name: 'Spear',
   description: 'A versatile weapon with good reach.',
   price: 130,
+  stats: {
+    attackPower: 8,
+    defense: 2
+  }
 });
 
 // Armor
@@ -183,17 +212,29 @@ itemsData.set(uuidv4(), {
   name: 'Leather Armor',
   description: 'Light armor offering basic protection.',
   price: 120,
+  stats: {
+    defense: 5,
+    health: 5
+  }
 });
 
 itemsData.set(uuidv4(), {
   name: 'Chain Mail',
   description: 'Medium armor made of interlocking metal rings.',
   price: 250,
+  stats: {
+    defense: 10,
+    health: 10
+  }
 });
 itemsData.set(uuidv4(), {
   name: 'Plate Armor',
   description: 'Heavy armor offering excellent protection.',
   price: 500,
+  stats: {
+    defense: 15,
+    health: 20
+  }
 });
 
 // Consumables
@@ -226,12 +267,18 @@ itemsData.set(uuidv4(), {
   name: 'Ring of Protection',
   description: 'Enhances defensive capabilities.',
   price: 280,
+  stats: {
+    defense: 5
+  }
 });
 
 itemsData.set(uuidv4(), {
   name: 'Amulet of Health',
   description: 'Increases maximum health.',
   price: 300,
+  stats: {
+    health: 15
+  }
 });
 
 // Trade Goods
@@ -549,12 +596,6 @@ itemsData.set(uuidv4(), {
   name: 'Raw Meat',
   description: 'Fresh meat from a hunted animal.',
   price: 45,
-});
-
-itemsData.set(uuidv4(), {
-  name: 'Gold Coin',
-  description: 'A shiny gold coin, accepted everywhere.',
-  price: 1,
 });
 
 itemsData.set(uuidv4(), {
