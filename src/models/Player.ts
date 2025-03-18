@@ -92,11 +92,11 @@ export class Player {
       defense: 0,
       criticalChance: 0,
       dodgeChance: 0,
-      health: 0
+      health: 0,
     };
 
     // Calculate stats from all equipped items
-    Object.values(this.equipment).forEach(itemId => {
+    Object.values(this.equipment).forEach((itemId) => {
       const item = itemsData.get(itemId);
       if (!item?.stats) return;
 
@@ -276,7 +276,12 @@ export class Player {
     if (itemName.includes('Helmet')) return 'head';
     if (itemName.includes('Armor')) return 'chest';
     if (itemName.includes('Boots')) return 'feet';
-    if (itemName.includes('Sword') || itemName.includes('Axe') || itemName.includes('Spear')) return 'weapon';
+    if (
+      itemName.includes('Sword') ||
+      itemName.includes('Axe') ||
+      itemName.includes('Spear')
+    )
+      return 'weapon';
     if (itemName.includes('Shield')) return 'shield';
     if (itemName.includes('Ring')) return 'ring';
     if (itemName.includes('Amulet')) return 'amulet';
@@ -285,10 +290,18 @@ export class Player {
 
   isEquipment(itemName: string): boolean {
     const equipmentTypes = [
-      'Helmet', 'Armor', 'Plate Armor', 'Chain Mail', 'Leather Armor',
-      'Boots', 'Sword', 'Shield', 'Ring', 'Amulet'
+      'Helmet',
+      'Armor',
+      'Plate Armor',
+      'Chain Mail',
+      'Leather Armor',
+      'Boots',
+      'Sword',
+      'Shield',
+      'Ring',
+      'Amulet',
     ];
-    return equipmentTypes.some(type => itemName.includes(type));
+    return equipmentTypes.some((type) => itemName.includes(type));
   }
 
   useItem(itemId: string) {

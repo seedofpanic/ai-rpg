@@ -24,7 +24,7 @@ describe('GameStore', () => {
     gameStore.openDialogue('npc-1');
     expect(gameStore.isDialogueOpen).toBe(true);
     expect(gameStore.activeNpcId).toBe('npc-1');
-    
+
     // Close dialogue - no need to specify NPC ID
     gameStore.closeDialogue();
     expect(gameStore.isDialogueOpen).toBe(false);
@@ -102,7 +102,9 @@ describe('GameStore', () => {
     // Verify quest completion and rewards
     expect(gameStore.questLog[0].completed).toBe(true);
     expect(player.gold).toBe(initialGold + 100);
-    expect(player.inventory.some((item) => item.itemId === 'reward-item')).toBe(true);
+    expect(player.inventory.some((item) => item.itemId === 'reward-item')).toBe(
+      true,
+    );
   });
 
   it('should not complete an already completed quest', () => {
@@ -161,7 +163,7 @@ describe('GameStore', () => {
     // Opening dialogue with another NPC while one is active
     gameStore.openDialogue('npc-2');
     expect(gameStore.activeNpcId).toBe('npc-2');
-    
+
     // Closing dialogue should work correctly
     gameStore.closeDialogue();
     expect(gameStore.isDialogueOpen).toBe(false);
@@ -171,7 +173,9 @@ describe('GameStore', () => {
   it('should handle game over correctly', () => {
     // Mock window.alert and location.reload
     const alertMock = vi.spyOn(window, 'alert').mockImplementation(() => {});
-    const reloadMock = vi.spyOn(window.location, 'reload').mockImplementation(() => {});
+    const reloadMock = vi
+      .spyOn(window.location, 'reload')
+      .mockImplementation(() => {});
 
     // Trigger game over
     gameStore.over();

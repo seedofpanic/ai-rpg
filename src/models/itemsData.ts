@@ -29,9 +29,9 @@ itemsData.set(uuid, {
   description: 'A sharp sword for battle.',
   price: 100,
   stats: {
-    attackPower: 10
+    attackPower: 10,
   },
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
@@ -39,23 +39,23 @@ itemsData.set(uuidv4(), {
   description: 'A sturdy shield for protection.',
   price: 150,
   stats: {
-    defense: 8
+    defense: 8,
   },
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Health Potion',
   description: 'A potion that restores health.',
   price: 50,
-  isUsable: true
+  isUsable: true,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Magic Wand',
   description: 'A wand imbued with magical powers.',
   price: 200,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
@@ -63,23 +63,23 @@ itemsData.set(uuidv4(), {
   description: 'A helmet to protect your head.',
   price: 75,
   stats: {
-    defense: 5
+    defense: 5,
   },
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Bow',
   description: 'A bow for ranged attacks.',
   price: 120,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Arrow',
   description: 'Ammunition for the bow.',
   price: 10,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
@@ -88,128 +88,128 @@ itemsData.set(uuidv4(), {
   price: 80,
   stats: {
     defense: 3,
-    dodgeChance: 0.02
+    dodgeChance: 0.02,
   },
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Ring of Strength',
   description: 'A ring that increases your strength.',
   price: 250,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Cloak of Invisibility',
   description: 'A cloak that makes you invisible.',
   price: 300,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Silk',
   description: 'Fine, smooth fabric prized by merchants.',
   price: 180,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Mushroom',
   description: 'A rare mushroom used in alchemy.',
   price: 45,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Letter',
   description: 'An important document that needs delivery.',
   price: 30,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Flour',
   description: 'High-quality baking flour.',
   price: 25,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Iron',
   description: 'Raw iron ore for blacksmithing.',
   price: 120,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Worm',
   description: 'Fresh bait for fishing.',
   price: 5,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Pelt',
   description: 'A well-preserved animal hide.',
   price: 90,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Seed',
   description: 'Quality seeds for farming.',
   price: 15,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Cloth',
   description: 'Sturdy fabric for tailoring.',
   price: 60,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Gem',
   description: 'A precious stone for jewelry making.',
   price: 350,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Leather',
   description: 'Tanned animal hide used for armor crafting.',
   price: 45,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Wood',
   description: 'Quality lumber for crafting.',
   price: 30,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Silver Ore',
   description: 'Raw silver for crafting jewelry and weapons.',
   price: 200,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Gold Ore',
   description: 'Raw gold for crafting precious items.',
   price: 400,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Dagger',
   description: 'A quick, light weapon for close combat.',
   price: 75,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
@@ -217,9 +217,9 @@ itemsData.set(uuidv4(), {
   description: 'A heavy weapon that deals massive damage.',
   price: 180,
   stats: {
-    attackPower: 15
+    attackPower: 15,
   },
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
@@ -228,9 +228,9 @@ itemsData.set(uuidv4(), {
   price: 130,
   stats: {
     attackPower: 8,
-    defense: 2
+    defense: 2,
   },
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
@@ -239,9 +239,9 @@ itemsData.set(uuidv4(), {
   price: 120,
   stats: {
     defense: 5,
-    health: 5
+    health: 5,
   },
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
@@ -250,9 +250,9 @@ itemsData.set(uuidv4(), {
   price: 250,
   stats: {
     defense: 10,
-    health: 10
+    health: 10,
   },
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
@@ -261,65 +261,65 @@ itemsData.set(uuidv4(), {
   price: 500,
   stats: {
     defense: 15,
-    health: 20
+    health: 20,
   },
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Mana Potion',
   description: 'Restores magical energy.',
   price: 60,
-  isUsable: true
+  isUsable: true,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Stamina Potion',
   description: 'Restores physical energy.',
   price: 55,
-  isUsable: true
+  isUsable: true,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Scroll of Fireball',
   description: 'A scroll containing the Fireball spell.',
   price: 100,
-  isUsable: true
+  isUsable: true,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Scroll of Lightning',
   description: 'A scroll containing the Lightning spell.',
   price: 120,
-  isUsable: true
+  isUsable: true,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Scroll of Healing',
   description: 'A scroll containing the Healing spell.',
   price: 80,
-  isUsable: true
+  isUsable: true,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Antidote',
   description: 'Cures poison effects.',
   price: 40,
-  isUsable: true
+  isUsable: true,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Healing Salve',
   description: 'A salve that restores health over time.',
   price: 45,
-  isUsable: true
+  isUsable: true,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Crystal Vial',
   description: 'A vial used for storing magical substances.',
   price: 30,
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
@@ -327,9 +327,9 @@ itemsData.set(uuidv4(), {
   description: 'A ring that increases defense.',
   price: 200,
   stats: {
-    defense: 3
+    defense: 3,
   },
-  isUsable: false
+  isUsable: false,
 });
 
 itemsData.set(uuidv4(), {
@@ -337,9 +337,9 @@ itemsData.set(uuidv4(), {
   description: 'An amulet that increases health.',
   price: 250,
   stats: {
-    health: 10
+    health: 10,
   },
-  isUsable: false
+  isUsable: false,
 });
 
 // Crafting Materials
@@ -379,8 +379,8 @@ itemsData.set(uuidv4(), {
   description: 'A heavy weapon that deals massive damage.',
   price: 180,
   stats: {
-    attackPower: 15
-  }
+    attackPower: 15,
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -389,8 +389,8 @@ itemsData.set(uuidv4(), {
   price: 130,
   stats: {
     attackPower: 8,
-    defense: 2
-  }
+    defense: 2,
+  },
 });
 
 // Armor
@@ -400,8 +400,8 @@ itemsData.set(uuidv4(), {
   price: 120,
   stats: {
     defense: 5,
-    health: 5
-  }
+    health: 5,
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -410,8 +410,8 @@ itemsData.set(uuidv4(), {
   price: 250,
   stats: {
     defense: 10,
-    health: 10
-  }
+    health: 10,
+  },
 });
 itemsData.set(uuidv4(), {
   name: 'Plate Armor',
@@ -419,8 +419,8 @@ itemsData.set(uuidv4(), {
   price: 500,
   stats: {
     defense: 15,
-    health: 20
-  }
+    health: 20,
+  },
 });
 
 // Consumables
@@ -454,8 +454,8 @@ itemsData.set(uuidv4(), {
   description: 'Enhances defensive capabilities.',
   price: 280,
   stats: {
-    defense: 5
-  }
+    defense: 5,
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -463,8 +463,8 @@ itemsData.set(uuidv4(), {
   description: 'Increases maximum health.',
   price: 300,
   stats: {
-    health: 15
-  }
+    health: 15,
+  },
 });
 
 // Trade Goods
@@ -840,8 +840,8 @@ itemsData.set(uuidv4(), {
   isUsable: true,
   effect: {
     type: 'heal',
-    value: 100
-  }
+    value: 100,
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -852,8 +852,8 @@ itemsData.set(uuidv4(), {
   effect: {
     type: 'buff',
     value: 10,
-    duration: 30000 // 30 seconds
-  }
+    duration: 30000, // 30 seconds
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -864,8 +864,8 @@ itemsData.set(uuidv4(), {
   effect: {
     type: 'buff',
     value: 0.15,
-    duration: 20000 // 20 seconds
-  }
+    duration: 20000, // 20 seconds
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -876,8 +876,8 @@ itemsData.set(uuidv4(), {
   effect: {
     type: 'buff',
     value: 8,
-    duration: 25000 // 25 seconds
-  }
+    duration: 25000, // 25 seconds
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -888,8 +888,8 @@ itemsData.set(uuidv4(), {
   effect: {
     type: 'debuff',
     value: 5,
-    duration: 10000 // 10 seconds
-  }
+    duration: 10000, // 10 seconds
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -899,8 +899,8 @@ itemsData.set(uuidv4(), {
   isUsable: true,
   effect: {
     type: 'damage',
-    value: 30
-  }
+    value: 30,
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -911,8 +911,8 @@ itemsData.set(uuidv4(), {
   effect: {
     type: 'heal',
     value: 5,
-    duration: 15000 // 15 seconds
-  }
+    duration: 15000, // 15 seconds
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -923,7 +923,6 @@ itemsData.set(uuidv4(), {
   effect: {
     type: 'buff',
     value: 0.2,
-    duration: 20000 // 20 seconds
-  }
+    duration: 20000, // 20 seconds
+  },
 });
-

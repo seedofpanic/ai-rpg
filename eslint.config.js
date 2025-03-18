@@ -11,7 +11,7 @@ export default tseslint.config(
   reactHooks.configs["recommended-latest"],
   prettier,
   {
-    ignores: ["node_modules/", "dist/"],
+    ignores: ["node_modules/", "dist/", "playwright-report/"],
   },
   {
     files: ["src/**/*.test.ts", "src/**/*.test.tsx"],

@@ -54,7 +54,7 @@ const StatRow = styled.div`
 `;
 
 const StatValue = styled.span<{ $bonus?: number }>`
-  color: ${props => props.$bonus && props.$bonus > 0 ? '#4CAF50' : 'white'};
+  color: ${(props) => (props.$bonus && props.$bonus > 0 ? '#4CAF50' : 'white')};
 `;
 
 interface PlayerInventoryProps {
@@ -92,7 +92,8 @@ const PlayerInventory: React.FC<PlayerInventoryProps> = ({ player }) => {
         <StatRow>
           <span>Attack:</span>
           <StatValue $bonus={player.attackPower - player.baseAttackPower}>
-            {player.attackPower} {getStatBonus(player.baseAttackPower, player.attackPower)}
+            {player.attackPower}{' '}
+            {getStatBonus(player.baseAttackPower, player.attackPower)}
           </StatValue>
         </StatRow>
         <StatRow>
@@ -104,13 +105,15 @@ const PlayerInventory: React.FC<PlayerInventoryProps> = ({ player }) => {
         <StatRow>
           <span>Crit Chance:</span>
           <StatValue $bonus={player.criticalChance - player.baseCriticalChance}>
-            {(player.criticalChance * 100).toFixed(1)}% {getStatBonus(player.baseCriticalChance, player.criticalChance)}
+            {(player.criticalChance * 100).toFixed(1)}%{' '}
+            {getStatBonus(player.baseCriticalChance, player.criticalChance)}
           </StatValue>
         </StatRow>
         <StatRow>
           <span>Dodge:</span>
           <StatValue $bonus={player.dodgeChance - player.baseDodgeChance}>
-            {(player.dodgeChance * 100).toFixed(1)}% {getStatBonus(player.baseDodgeChance, player.dodgeChance)}
+            {(player.dodgeChance * 100).toFixed(1)}%{' '}
+            {getStatBonus(player.baseDodgeChance, player.dodgeChance)}
           </StatValue>
         </StatRow>
       </StatContainer>
@@ -127,7 +130,9 @@ const PlayerInventory: React.FC<PlayerInventoryProps> = ({ player }) => {
 
           return (
             <InventoryItem data-testid="item-view" key={index}>
-              <span>{item.name} (x{quantity})</span>
+              <span>
+                {item.name} (x{quantity})
+              </span>
               <div>
                 {isEquipment && (
                   <ItemButton

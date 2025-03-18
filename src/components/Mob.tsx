@@ -52,8 +52,10 @@ const MobContainer = styled.div<{ $isAggressive: boolean; $isAlive: boolean }>`
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 2px solid ${(props) => (props.$isAggressive ? '#ff0000' : 'transparent')};
-    animation: ${(props) => (props.$isAggressive ? 'pulse 1.5s infinite' : 'none')};
+    border: 2px solid
+      ${(props) => (props.$isAggressive ? '#ff0000' : 'transparent')};
+    animation: ${(props) =>
+      props.$isAggressive ? 'pulse 1.5s infinite' : 'none'};
   }
 
   @keyframes pulse {
@@ -185,4 +187,4 @@ const Mob: React.FC<MobProps> = ({
   );
 };
 
-export default Mob; 
+export default Mob;

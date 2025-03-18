@@ -10,4 +10,4 @@ export function handleKeyUp(event: KeyboardEvent) {
 
 // Initialize keyboard event listeners
 window.addEventListener('keydown', handleKeyDown);
-window.addEventListener('keyup', handleKeyUp); 
+window.addEventListener('keyup', handleKeyUp);

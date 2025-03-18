@@ -49,23 +49,29 @@ export class GameStore {
     const quest = this.questLog.find((q) => q.id === questId);
     if (quest && !quest.completed) {
       if (quest.action.toLowerCase() === 'bring') {
-        const itemId = itemsData.keys().find(id => itemsData.get(id)?.name.toLowerCase() === quest.subject.toLowerCase());
+        const itemId = itemsData
+          .keys()
+          .find(
+            (id) =>
+              itemsData.get(id)?.name.toLowerCase() ===
+              quest.subject.toLowerCase(),
+          );
         if (itemId) {
           this.player.removeItemFromInventory({
             itemId: itemId || quest.subject,
-            quantity: quest.quantity
+            quantity: quest.quantity,
           });
           // add this item to the quest giver inventory
           const questGiver = npcStore.npcs[quest.questGiverId];
           if (questGiver) {
             questGiver.addItem({
               itemId: quest.subject,
-              quantity: quest.quantity
+              quantity: quest.quantity,
             });
           }
         }
       }
-      
+
       quest.completed = true;
       if (quest.rewards) {
         if (quest.rewards.gold) {
@@ -87,7 +93,7 @@ export class GameStore {
 
     if (this.player) {
       const currentTime = Date.now();
-      
+
       // Process NPC actions
       for (const id of npcStore.npcIds) {
         const npc = npcStore.npcs[id];

@@ -8,46 +8,52 @@ import { itemsData } from './itemsData';
 export type MobType = 'wolf' | 'bandit' | 'zombie' | 'skeleton';
 
 // Loot tables for each mob type
-const MOB_LOOT: Record<MobType, Array<{
-  itemName: string;
-  chance: number; // Chance from 0 to 1
-  quantity: [number, number]; // [min, max]
-}>> = {
+const MOB_LOOT: Record<
+  MobType,
+  Array<{
+    itemName: string;
+    chance: number; // Chance from 0 to 1
+    quantity: [number, number]; // [min, max]
+  }>
+> = {
   wolf: [
     { itemName: 'Wolf Pelt', chance: 0.8, quantity: [1, 1] },
     { itemName: 'Wolf Fang', chance: 0.6, quantity: [1, 2] },
     { itemName: 'Raw Meat', chance: 0.9, quantity: [1, 3] },
-    { itemName: 'Leather', chance: 0.4, quantity: [1, 2] }
+    { itemName: 'Leather', chance: 0.4, quantity: [1, 2] },
   ],
   bandit: [
     { itemName: 'Dagger', chance: 0.4, quantity: [1, 1] },
     { itemName: 'Leather Armor', chance: 0.3, quantity: [1, 1] },
     { itemName: 'Health Potion', chance: 0.5, quantity: [1, 2] },
-    { itemName: 'Stolen Goods', chance: 0.6, quantity: [1, 3] }
+    { itemName: 'Stolen Goods', chance: 0.6, quantity: [1, 3] },
   ],
   zombie: [
     { itemName: 'Rotten Flesh', chance: 0.9, quantity: [1, 3] },
     { itemName: 'Tattered Cloth', chance: 0.7, quantity: [1, 2] },
     { itemName: 'Bone', chance: 0.5, quantity: [1, 3] },
-    { itemName: 'Ancient Coin', chance: 0.2, quantity: [1, 5] }
+    { itemName: 'Ancient Coin', chance: 0.2, quantity: [1, 5] },
   ],
   skeleton: [
     { itemName: 'Bone', chance: 0.9, quantity: [2, 4] },
     { itemName: 'Arrow', chance: 0.7, quantity: [5, 15] },
     { itemName: 'Bow', chance: 0.3, quantity: [1, 1] },
-    { itemName: 'Ancient Coin', chance: 0.3, quantity: [1, 5] }
-  ]
+    { itemName: 'Ancient Coin', chance: 0.3, quantity: [1, 5] },
+  ],
 };
 
-export const MOB_STATS: Record<MobType, {
-  health: number;
-  attackPower: number;
-  defense: number;
-  speed: number;
-  aggroRange: number;
-  criticalChance: number;
-  dodgeChance: number;
-}> = {
+export const MOB_STATS: Record<
+  MobType,
+  {
+    health: number;
+    attackPower: number;
+    defense: number;
+    speed: number;
+    aggroRange: number;
+    criticalChance: number;
+    dodgeChance: number;
+  }
+> = {
   wolf: {
     health: 80,
     attackPower: 15,
@@ -55,7 +61,7 @@ export const MOB_STATS: Record<MobType, {
     speed: 15,
     aggroRange: 150,
     criticalChance: 0.15,
-    dodgeChance: 0.1
+    dodgeChance: 0.1,
   },
   bandit: {
     health: 100,
@@ -64,7 +70,7 @@ export const MOB_STATS: Record<MobType, {
     speed: 10,
     aggroRange: 120,
     criticalChance: 0.1,
-    dodgeChance: 0.05
+    dodgeChance: 0.05,
   },
   zombie: {
     health: 120,
@@ -73,7 +79,7 @@ export const MOB_STATS: Record<MobType, {
     speed: 7,
     aggroRange: 100,
     criticalChance: 0.05,
-    dodgeChance: 0.02
+    dodgeChance: 0.02,
   },
   skeleton: {
     health: 90,
@@ -82,8 +88,8 @@ export const MOB_STATS: Record<MobType, {
     speed: 12,
     aggroRange: 130,
     criticalChance: 0.12,
-    dodgeChance: 0.08
-  }
+    dodgeChance: 0.08,
+  },
 };
 
 export class Mob {
@@ -109,12 +115,7 @@ export class Mob {
   location: Location;
   inventory: { itemId: string; quantity: number }[] = [];
 
-  constructor(
-    mobType: MobType,
-    x: number,
-    y: number,
-    location: Location
-  ) {
+  constructor(mobType: MobType, x: number, y: number, location: Location) {
     const stats = MOB_STATS[mobType];
     this.id = uuidv4();
     this.mobType = mobType;
@@ -122,7 +123,7 @@ export class Mob {
     this.position = new Vector2(x, y);
     this.patrolPoint = new Vector2(x, y);
     this.location = location;
-    
+
     // Initialize stats
     this.health = stats.health;
     this.maxHealth = stats.health;
@@ -135,7 +136,7 @@ export class Mob {
 
     // Generate initial loot
     this.generateLoot();
-    
+
     makeAutoObservable(this);
   }
 
@@ -151,13 +152,13 @@ export class Mob {
 
         // Find the item ID by name
         const itemEntry = Array.from(itemsData.entries()).find(
-          ([_, item]) => item.name === lootEntry.itemName
+          ([_, item]) => item.name === lootEntry.itemName,
         );
 
         if (itemEntry) {
           this.inventory.push({
             itemId: itemEntry[0],
-            quantity
+            quantity,
           });
         }
       }
@@ -198,13 +199,15 @@ export class Mob {
       this.lastUpdateTime = currentTime;
 
       // Calculate distance to player
-      const distanceToPlayer = player.position.subtract(this.position).magnitude();
-      
+      const distanceToPlayer = player.position
+        .subtract(this.position)
+        .magnitude();
+
       // Check if player is in aggro range
       if (distanceToPlayer <= this.aggroRange) {
         this.isAggressive = true;
         this.state = 'chasing';
-        
+
         // Move towards player
         const direction = player.position.subtract(this.position).normalize();
         const movement = direction.multiply(this.speed);
@@ -228,23 +231,27 @@ export class Mob {
 
         // Patrol behavior
         const patrolDelta = currentTime - this.lastPatrolTime;
-        if (patrolDelta >= 200) { // Change patrol direction every 3 seconds
+        if (patrolDelta >= 200) {
+          // Change patrol direction every 3 seconds
           this.lastPatrolTime = currentTime;
           const angle = Math.random() * Math.PI * 2;
-          const patrolDirection = new Vector2(
-            Math.cos(angle),
-            Math.sin(angle)
-          );
-          
+          const patrolDirection = new Vector2(Math.cos(angle), Math.sin(angle));
+
           // Stay within patrol radius of spawn point
-          const distanceToSpawn = this.position.subtract(this.patrolPoint).magnitude();
+          const distanceToSpawn = this.position
+            .subtract(this.patrolPoint)
+            .magnitude();
           if (distanceToSpawn > this.patrolRadius) {
             // Move back towards spawn point
-            const toSpawn = this.patrolPoint.subtract(this.position).normalize();
+            const toSpawn = this.patrolPoint
+              .subtract(this.position)
+              .normalize();
             this.position = this.position.add(toSpawn.multiply(this.speed));
           } else {
             // Normal patrol movement
-            this.position = this.position.add(patrolDirection.multiply(this.speed));
+            this.position = this.position.add(
+              patrolDirection.multiply(this.speed),
+            );
           }
         }
       }
@@ -252,7 +259,7 @@ export class Mob {
   }
 
   addItem(item: { itemId: string; quantity: number }): void {
-    const existingItem = this.inventory.find(i => i.itemId === item.itemId);
+    const existingItem = this.inventory.find((i) => i.itemId === item.itemId);
     if (existingItem) {
       existingItem.quantity += item.quantity;
     } else {
@@ -261,11 +268,11 @@ export class Mob {
   }
 
   removeItem(item: { itemId: string; quantity: number }): void {
-    const existingItem = this.inventory.find(i => i.itemId === item.itemId);
+    const existingItem = this.inventory.find((i) => i.itemId === item.itemId);
     if (existingItem) {
       existingItem.quantity -= item.quantity;
       if (existingItem.quantity <= 0) {
-        this.inventory = this.inventory.filter(i => i.itemId !== item.itemId);
+        this.inventory = this.inventory.filter((i) => i.itemId !== item.itemId);
       }
     }
   }
@@ -273,10 +280,10 @@ export class Mob {
   static generateRandomMob(location: Location): Mob {
     const mobTypes: MobType[] = ['wolf', 'bandit', 'zombie', 'skeleton'];
     const randomType = mobTypes[Math.floor(Math.random() * mobTypes.length)];
-    
+
     const x = location.x + Math.floor(Math.random() * (location.width - 40));
     const y = location.y + Math.floor(Math.random() * (location.height - 40));
-    
+
     return new Mob(randomType, x, y, location);
   }
-} 
+}

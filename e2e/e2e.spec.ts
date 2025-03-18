@@ -147,7 +147,7 @@ test.describe("AI RPG E2E Tests", () => {
     // await item.waitFor({ state: "hidden" });
     await page
       .locator('[data-testid="player-inventory"]')
-      .locator('[data-testid="item-veiw"]', { hasText: "Sword" })
+      .locator('[data-testid="item-view"]', { hasText: "Sword (x1)" })
       .waitFor({ state: "visible" });
   });
 });

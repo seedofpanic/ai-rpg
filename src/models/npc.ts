@@ -250,14 +250,15 @@ export class NPC {
 
     // Generate role-specific needs
     const roleNeeds = roleSpecificNeeds[role] || [
-      { type: 'bring', subject: 'supply', basePriority: 7, randomRange: 3 }
+      { type: 'bring', subject: 'supply', basePriority: 7, randomRange: 3 },
     ];
-    
-    const needs = roleNeeds.map(needConfig => ({
+
+    const needs = roleNeeds.map((needConfig) => ({
       type: needConfig.type,
       subject: needConfig.subject,
-      priority: needConfig.basePriority + Math.random() * needConfig.randomRange,
-      potentialGoldReward: needConfig.potentialGoldReward
+      priority:
+        needConfig.basePriority + Math.random() * needConfig.randomRange,
+      potentialGoldReward: needConfig.potentialGoldReward,
     }));
 
     const npc = new NPC(

@@ -42,7 +42,9 @@ export const createContext = (
     ${lore}
 
     Common items that exist in the world:
-    ${Array.from(itemsData.entries()).map(([itemId, item]) => `- ${item.name} ${item.description}`).join('\n')}
+    ${Array.from(itemsData.entries())
+      .map(([_, item]) => `- ${item.name} ${item.description}`)
+      .join('\n')}
 
     Location: Agnir, Kadera, (${npcContext.location.name}):
     ${npcContext.location.description}
@@ -96,7 +98,7 @@ export const createContext = (
           const { action, quantity, subject } = quest;
           let status = 'In Progress';
 
-          if (quest.action === 'Kill') {
+          if (action === 'Kill') {
             status = `Player killed ${quest.killCount} of ${quantity} ${subject}`;
           }
 

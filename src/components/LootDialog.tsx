@@ -77,58 +77,65 @@ interface LootDialogProps {
   onClose: () => void;
 }
 
-const LootDialog: React.FC<LootDialogProps> = observer(({ target, player, onClose }) => {
-  const handleLootItem = (itemId: string, quantity: number) => {
-    // Transfer item from target to player
-    target.removeItem({ itemId, quantity });
-    player.addItemToInventory({ itemId, quantity });
-  };
+const LootDialog: React.FC<LootDialogProps> = observer(
+  ({ target, player, onClose }) => {
+    const handleLootItem = (itemId: string, quantity: number) => {
+      // Transfer item from target to player
+      target.removeItem({ itemId, quantity });
+      player.addItemToInventory({ itemId, quantity });
+    };
 
-  const handleLootAll = () => {
-    // Transfer all items from target to player
-    target.inventory?.forEach(item => {
-      player.addItemToInventory({ itemId: item.itemId, quantity: item.quantity });
-    });
-    target.inventory = [];
-  };
+    const handleLootAll = () => {
+      // Transfer all items from target to player
+      target.inventory?.forEach((item) => {
+        player.addItemToInventory({
+          itemId: item.itemId,
+          quantity: item.quantity,
+        });
+      });
+      target.inventory = [];
+    };
 
-  return (
-    <DialogContainer data-testid="loot-dialog">
-      <Title>{target.name}'s Loot</Title>
-      <CloseButton onClick={onClose}>&times;</CloseButton>
-      
-      <ItemList>
-        {target.inventory && target.inventory.length > 0 ? (
-          target.inventory.map((item, index) => {
-            const itemData = itemsData.get(item.itemId);
-            return (
-              <ItemRow key={index}>
-                <span>{itemData?.name} (x{item.quantity})</span>
-                <LootButton
-                  onClick={() => handleLootItem(item.itemId, item.quantity)}
-                  data-testid="loot-item-button"
-                >
-                  Take
-                </LootButton>
-              </ItemRow>
-            );
-          })
-        ) : (
-          <p>No items to loot.</p>
+    return (
+      <DialogContainer data-testid="loot-dialog">
+        <Title>{target.name}&apos;s Loot</Title>
+        <CloseButton onClick={onClose}>&times;</CloseButton>
+
+        <ItemList>
+          {target.inventory && target.inventory.length > 0 ? (
+            target.inventory.map((item, index) => {
+              const itemData = itemsData.get(item.itemId);
+              return (
+                <ItemRow key={index}>
+                  <span>
+                    {itemData?.name} (x{item.quantity})
+                  </span>
+                  <LootButton
+                    onClick={() => handleLootItem(item.itemId, item.quantity)}
+                    data-testid="loot-item-button"
+                  >
+                    Take
+                  </LootButton>
+                </ItemRow>
+              );
+            })
+          ) : (
+            <p>No items to loot.</p>
+          )}
+        </ItemList>
+
+        {target.inventory && target.inventory.length > 0 && (
+          <LootButton
+            onClick={handleLootAll}
+            style={{ width: '100%', marginTop: '10px' }}
+            data-testid="loot-all-button"
+          >
+            Take All
+          </LootButton>
         )}
-      </ItemList>
+      </DialogContainer>
+    );
+  },
+);
 
-      {target.inventory && target.inventory.length > 0 && (
-        <LootButton
-          onClick={handleLootAll}
-          style={{ width: '100%', marginTop: '10px' }}
-          data-testid="loot-all-button"
-        >
-          Take All
-        </LootButton>
-      )}
-    </DialogContainer>
-  );
-});
-
-export default LootDialog; 
+export default LootDialog;

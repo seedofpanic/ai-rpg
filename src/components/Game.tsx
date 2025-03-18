@@ -135,12 +135,14 @@ const Game: React.FC = () => {
     setLootingNpcId(null);
   };
 
-  const updateQuest = (target: {name: string}) => {
-    const quest = gameStore.questLog.find((quest) => quest.subject.toLowerCase() === target.name.toLowerCase());
+  const updateQuest = (target: { name: string }) => {
+    const quest = gameStore.questLog.find(
+      (quest) => quest.subject.toLowerCase() === target.name.toLowerCase(),
+    );
     if (quest) {
       quest.killCount++;
     }
-  }
+  };
 
   const handleCombat = (targetId: string) => {
     const npc = npcStore.npcs[targetId];
@@ -224,7 +226,9 @@ const Game: React.FC = () => {
           <QuestLog />
           {lootingNpcId && (
             <LootDialog
-              target={mobStore.mobs[lootingNpcId] || npcStore.npcs[lootingNpcId]}
+              target={
+                mobStore.mobs[lootingNpcId] || npcStore.npcs[lootingNpcId]
+              }
               player={gameStore.player}
               onClose={handleCloseLoot}
             />
@@ -232,7 +236,9 @@ const Game: React.FC = () => {
         </>
       )}
       <PlayerMod>
-        {gameStore.player?.combatMode ? 'Combat Mode press "E" to switch' : 'Exploration Mode press "C" to switch'}
+        {gameStore.player?.combatMode
+          ? 'Combat Mode press "E" to switch'
+          : 'Exploration Mode press "C" to switch'}
       </PlayerMod>
       <HelpButton onClick={toggleHelp}>Help</HelpButton>
       {isHelpOpen && (
@@ -245,12 +251,15 @@ const Game: React.FC = () => {
             <p>E - Return to exploration mode</p>
             <p>Click on NPCs to interact with them</p>
             <p>Click on dead NPCs or mobs to loot their inventory</p>
-            <p>When talking to NPCs, you can ask them about their background, knowledge, or try to trade items</p>
+            <p>
+              When talking to NPCs, you can ask them about their background,
+              knowledge, or try to trade items
+            </p>
           </HelpDialog>
         </>
       )}
     </GameContainer>
   );
-}
+};
 
 export default observer(Game);

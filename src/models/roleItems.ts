@@ -1,8 +1,6 @@
-import { InventoryItem } from './npc';
-
 type RoleItems = {
   [key: string]: {
-    items: Array<{ name: string, quantity?: [number, number] }>;
+    items: Array<{ name: string; quantity?: [number, number] }>;
   };
 };
 
@@ -19,8 +17,8 @@ export const roleSpecificItems: RoleItems = {
       { name: 'Exotic Perfume', quantity: [1, 2] },
       { name: 'Dye', quantity: [2, 4] },
       { name: 'Incense', quantity: [2, 5] },
-      { name: 'Gold Ore', quantity: [1, 2] }
-    ]
+      { name: 'Gold Ore', quantity: [1, 2] },
+    ],
   },
   Alchemist: {
     items: [
@@ -33,8 +31,8 @@ export const roleSpecificItems: RoleItems = {
       { name: 'Stamina Potion', quantity: [1, 3] },
       { name: 'Antidote', quantity: [1, 2] },
       { name: 'Healing Salve', quantity: [2, 4] },
-      { name: 'Herbalist Kit' }
-    ]
+      { name: 'Herbalist Kit' },
+    ],
   },
   Guard: {
     items: [
@@ -47,8 +45,8 @@ export const roleSpecificItems: RoleItems = {
       { name: 'Chain Cuffs' },
       { name: 'Chain Mail' },
       { name: 'Plate Armor' },
-      { name: 'Spear' }
-    ]
+      { name: 'Spear' },
+    ],
   },
   Baker: {
     items: [
@@ -56,8 +54,8 @@ export const roleSpecificItems: RoleItems = {
       { name: 'Yeast', quantity: [2, 5] },
       { name: 'Rolling Pin' },
       { name: 'Recipe Book' },
-      { name: 'Baking Oven' }
-    ]
+      { name: 'Baking Oven' },
+    ],
   },
   Blacksmith: {
     items: [
@@ -69,8 +67,8 @@ export const roleSpecificItems: RoleItems = {
       { name: 'Anvil' },
       { name: 'Forge Tongs' },
       { name: 'Silver Ore', quantity: [1, 2] },
-      { name: 'Leather', quantity: [2, 4] }
-    ]
+      { name: 'Leather', quantity: [2, 4] },
+    ],
   },
   Fisherman: {
     items: [
@@ -79,8 +77,8 @@ export const roleSpecificItems: RoleItems = {
       { name: 'Fishing Net' },
       { name: 'Fish Bait', quantity: [3, 8] },
       { name: 'Fish Basket' },
-      { name: 'Fishing Boat' }
-    ]
+      { name: 'Fishing Boat' },
+    ],
   },
   Hunter: {
     items: [
@@ -92,8 +90,8 @@ export const roleSpecificItems: RoleItems = {
       { name: 'Skinning Knife' },
       { name: 'Camouflage Cloak' },
       { name: 'Leather', quantity: [1, 3] },
-      { name: 'Dagger' }
-    ]
+      { name: 'Dagger' },
+    ],
   },
   Farmer: {
     items: [
@@ -102,8 +100,8 @@ export const roleSpecificItems: RoleItems = {
       { name: 'Fertilizer', quantity: [2, 5] },
       { name: 'Watering Can' },
       { name: 'Scarecrow' },
-      { name: 'Wood', quantity: [2, 5] }
-    ]
+      { name: 'Wood', quantity: [2, 5] },
+    ],
   },
   Tailor: {
     items: [
@@ -114,8 +112,8 @@ export const roleSpecificItems: RoleItems = {
       { name: 'Measuring Tape' },
       { name: 'Sewing Machine' },
       { name: 'Dye', quantity: [1, 3] },
-      { name: 'Leather', quantity: [1, 3] }
-    ]
+      { name: 'Leather', quantity: [1, 3] },
+    ],
   },
   Jeweler: {
     items: [
@@ -127,8 +125,8 @@ export const roleSpecificItems: RoleItems = {
       { name: 'Gold Scales' },
       { name: 'Ring of Protection' },
       { name: 'Gold Ore', quantity: [1, 2] },
-      { name: 'Silver Ore', quantity: [1, 2] }
-    ]
+      { name: 'Silver Ore', quantity: [1, 2] },
+    ],
   },
   Mage: {
     items: [
@@ -137,8 +135,8 @@ export const roleSpecificItems: RoleItems = {
       { name: 'Scroll of Fireball', quantity: [1, 3] },
       { name: 'Crystal Vial', quantity: [1, 3] },
       { name: 'Ring of Protection' },
-      { name: 'Amulet of Health' }
-    ]
+      { name: 'Amulet of Health' },
+    ],
   },
   Healer: {
     items: [
@@ -147,8 +145,8 @@ export const roleSpecificItems: RoleItems = {
       { name: 'Herbalist Kit' },
       { name: 'Antidote', quantity: [2, 4] },
       { name: 'Crystal Vial', quantity: [2, 4] },
-      { name: 'Amulet of Health' }
-    ]
+      { name: 'Amulet of Health' },
+    ],
   },
   Adventurer: {
     items: [
@@ -157,7 +155,7 @@ export const roleSpecificItems: RoleItems = {
       { name: 'Health Potion', quantity: [1, 3] },
       { name: 'Torch', quantity: [1, 2] },
       { name: 'Dagger' },
-      { name: 'Boots' }
-    ]
-  }
-}; 
+      { name: 'Boots' },
+    ],
+  },
+};

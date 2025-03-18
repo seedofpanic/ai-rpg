@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { Mob, MobType } from './mob';
+import { Mob } from './mob';
 import { Location } from './location';
 import { Player } from './Player';
 import { Vector2 } from '../utils/vector2';
@@ -18,7 +18,7 @@ describe('Mob', () => {
       y: 0,
       width: 1000,
       height: 1000,
-      npcs: []  
+      npcs: [],
     };
 
     // Create a test mob
@@ -42,7 +42,9 @@ describe('Mob', () => {
     it('should generate a random mob correctly', () => {
       const randomMob = Mob.generateRandomMob(testLocation);
       expect(randomMob).toBeInstanceOf(Mob);
-      expect(['wolf', 'bandit', 'zombie', 'skeleton']).toContain(randomMob.mobType);
+      expect(['wolf', 'bandit', 'zombie', 'skeleton']).toContain(
+        randomMob.mobType,
+      );
       expect(randomMob.position.x).toBeGreaterThanOrEqual(0);
       expect(randomMob.position.x).toBeLessThanOrEqual(testLocation.width);
       expect(randomMob.position.y).toBeGreaterThanOrEqual(0);
@@ -79,7 +81,7 @@ describe('Mob', () => {
       // Place player within aggro range
       player.position = new Vector2(
         testMob.position.x + testMob.aggroRange / 2,
-        testMob.position.y
+        testMob.position.y,
       );
       testMob.doActions(player, Date.now());
       expect(testMob.state).toBe('chasing');
@@ -87,7 +89,7 @@ describe('Mob', () => {
       // Move player far away
       player.position = new Vector2(
         testMob.position.x + testMob.aggroRange * 2,
-        testMob.position.y
+        testMob.position.y,
       );
       testMob.doActions(player, Date.now() + 200);
       expect(testMob.state).toBe('patrolling');
@@ -114,11 +116,14 @@ describe('Mob', () => {
     it('should update patrol point periodically', () => {
       const initialPosition = testMob.position;
 
-      player.position = new Vector2(testMob.position.x + testMob.aggroRange + 10, testMob.position.y);
-      
+      player.position = new Vector2(
+        testMob.position.x + testMob.aggroRange + 10,
+        testMob.position.y,
+      );
+
       // Fast forward time to trigger patrol update
       testMob.doActions(player, Date.now() + 1000);
-      
+
       expect(testMob.position).not.toEqual(initialPosition);
     });
 
@@ -126,22 +131,25 @@ describe('Mob', () => {
       // Place player within aggro range
       player.position = new Vector2(
         testMob.position.x + testMob.aggroRange / 2,
-        testMob.position.y
+        testMob.position.y,
       );
-      
-      const initialPosition = new Vector2(testMob.position.x, testMob.position.y);
+
+      const initialPosition = new Vector2(
+        testMob.position.x,
+        testMob.position.y,
+      );
       testMob.doActions(player, Date.now());
-      
+
       expect(testMob.position).not.toEqual(initialPosition);
       const distanceToPlayerBefore = Math.sqrt(
         Math.pow(initialPosition.x - player.position.x, 2) +
-        Math.pow(initialPosition.y - player.position.y, 2)
+          Math.pow(initialPosition.y - player.position.y, 2),
       );
       const distanceToPlayerAfter = Math.sqrt(
         Math.pow(testMob.position.x - player.position.x, 2) +
-        Math.pow(testMob.position.y - player.position.y, 2)
+          Math.pow(testMob.position.y - player.position.y, 2),
       );
       expect(distanceToPlayerAfter).toBeLessThan(distanceToPlayerBefore);
     });
   });
-}); 
+});

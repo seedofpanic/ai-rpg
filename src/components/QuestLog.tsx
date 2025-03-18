@@ -95,7 +95,8 @@ const QuestLog: React.FC = () => {
             <QuestDescription>{quest.description}</QuestDescription>
             {!quest.completed && (
               <QuestProgress>
-                Progress: {quest.action === 'Kill' 
+                Progress:{' '}
+                {quest.action === 'Kill'
                   ? `${quest.killCount}/${quest.quantity} ${quest.subject} killed`
                   : `0/${quest.quantity} ${quest.subject} collected`}
               </QuestProgress>

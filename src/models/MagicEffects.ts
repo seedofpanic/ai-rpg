@@ -28,7 +28,7 @@ export class MagicEffects {
     const effects = this.activeEffects.get(targetId)!;
     effects.push({
       ...effect,
-      startTime: Date.now()
+      startTime: Date.now(),
     });
 
     this.processEffect(targetId, effect);
@@ -54,7 +54,10 @@ export class MagicEffects {
   private handleHeal(targetId: string, effect: Effect) {
     if (targetId === this.player.name) {
       const healAmount = effect.value;
-      this.player.baseHealth = Math.min(this.player.health + healAmount, this.player.health);
+      this.player.baseHealth = Math.min(
+        this.player.health + healAmount,
+        this.player.health,
+      );
       combatLogStore.push(`${this.player.name} healed for ${healAmount} HP!`);
     }
   }
@@ -99,9 +102,9 @@ export class MagicEffects {
     }
 
     this.applyEffect(this.player.name, {
-        type: item.effect.type,
-        value: item.effect.value,
-        source: item.name
+      type: item.effect.type,
+      value: item.effect.value,
+      source: item.name,
     });
   }
-} 
+}

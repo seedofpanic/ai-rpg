@@ -26,7 +26,7 @@ const EquipmentSlot = styled.div<{ $hasItem: boolean }>`
   position: absolute;
   width: 30px;
   height: 30px;
-  background-color: ${props => props.$hasItem ? '#4a4a4a' : '#333'};
+  background-color: ${(props) => (props.$hasItem ? '#4a4a4a' : '#333')};
   border: 2px solid #666;
   border-radius: 4px;
   cursor: pointer;
@@ -38,7 +38,7 @@ const EquipmentSlot = styled.div<{ $hasItem: boolean }>`
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: ${props => props.$hasItem ? '#666' : '#444'};
+    background-color: ${(props) => (props.$hasItem ? '#666' : '#444')};
   }
 `;
 
@@ -132,4 +132,4 @@ const CharacterDoll: React.FC<CharacterDollProps> = ({ player }) => {
   );
 };
 
-export default CharacterDoll; 
+export default CharacterDoll;
