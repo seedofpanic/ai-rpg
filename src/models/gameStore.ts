@@ -30,6 +30,7 @@ export class GameStore {
   player: Player = {} as Player;
   isOver = true;
   questLog: Quest[] = [];
+  hoveredNpcId: string | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -155,6 +156,17 @@ export class GameStore {
     this.isOver = true;
     alert('YOU DIED');
     window.location.reload();
+  }
+
+  setHoveredNpcId(npcId: string | null) {
+    this.hoveredNpcId = npcId;
+  }
+
+  updateControls(keyDown: string) {
+    if (keyDown === 'KeyE' && this.hoveredNpcId) {
+      this.setCurrentNpcId(this.hoveredNpcId);
+      this.setDialogueOpen(true);
+    }
   }
 }
 

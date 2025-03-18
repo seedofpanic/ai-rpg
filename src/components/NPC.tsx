@@ -18,6 +18,8 @@ interface NPCProps {
   personality: string;
   relation: number;
   onClick: () => void;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
 }
 
 const HoverableContainer = styled.div`
@@ -88,6 +90,25 @@ const NPCLocation = styled.div`
   font-style: italic;
 `;
 
+const InteractionHint = styled.div`
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  display: none;
+  pointer-events: none;
+
+  ${HoverableContainer}:hover & {
+    display: block;
+  }
+`;
+
 const getRelationColor = (relation: number) => {
   if (relation > 85) return '#2ecc71'; // Green for friendly
   if (relation > 60) return '#f1c40f'; // Yellow for neutral
@@ -107,6 +128,8 @@ const NPC: React.FC<NPCProps> = ({
   personality,
   relation,
   onClick,
+  onMouseEnter,
+  onMouseLeave,
   isAlive,
 }) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -117,14 +140,18 @@ const NPC: React.FC<NPCProps> = ({
   };
 
   return (
-    <HoverableContainer>
+    <HoverableContainer
+      onMouseMove={handleMouseMove}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       <NPCContainer
         data-testid="npc-view"
         style={{ left: x, top: y }}
         onClick={onClick}
-        onMouseMove={handleMouseMove}
         $isAlive={isAlive}
       >
+        <InteractionHint>Interact [E]</InteractionHint>
         {health < maxHealth && (
           <div
             style={{

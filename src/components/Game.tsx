@@ -43,7 +43,7 @@ const HelpDialog = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 400px;
+  width: 600px;
   background-color: rgba(38, 70, 83, 0.95);
   color: white;
   padding: 20px;
@@ -60,14 +60,6 @@ const Overlay = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
-`;
-
-const PlayerMod = styled.div`
-  background: white;
-  padding: 5px;
-  position: fixed;
-  top: 0;
-  left: 0;
 `;
 
 const Game: React.FC = () => {
@@ -107,23 +99,14 @@ const Game: React.FC = () => {
         return;
       }
 
-      if (gameStore.player?.combatMode) {
-        handleCombat(npcId);
-        return;
-      }
+      handleCombat(npcId);
     } else if (npc) {
       if (!npc.isAlive()) {
         setLootingNpcId(npcId);
         return;
       }
 
-      if (gameStore.player?.combatMode) {
-        handleCombat(npcId);
-        return;
-      }
-
-      gameStore.setDialogueOpen(true);
-      gameStore.setCurrentNpcId(npcId);
+      handleCombat(npcId);
     }
   };
 
@@ -210,6 +193,7 @@ const Game: React.FC = () => {
           <Map
             onNpcInteraction={handleNpcInteraction}
             player={gameStore.player}
+            onNpcHover={(npcId) => gameStore.setHoveredNpcId(npcId)}
           />
           {gameStore.isDialogueOpen && gameStore.currentNpcId && (
             <DialogueSystem
@@ -235,26 +219,38 @@ const Game: React.FC = () => {
           )}
         </>
       )}
-      <PlayerMod>
-        {gameStore.player?.combatMode
-          ? 'Combat Mode press "E" to switch'
-          : 'Exploration Mode press "C" to switch'}
-      </PlayerMod>
       <HelpButton onClick={toggleHelp}>Help</HelpButton>
       {isHelpOpen && (
         <>
           <Overlay onClick={toggleHelp} />
           <HelpDialog>
-            <h2>Controls:</h2>
+            <h2>Game Controls</h2>
             <p>WASD or Arrow Keys - Move character</p>
-            <p>C - Enable combat mode</p>
-            <p>E - Return to exploration mode</p>
-            <p>Click on NPCs to interact with them</p>
+
+            <h2>Combat</h2>
+            <p>Click on NPCs or mobs to initiate combat</p>
             <p>Click on dead NPCs or mobs to loot their inventory</p>
+            <h2>Interaction</h2>
+            <p>Click on NPCs to start conversations</p>
+            <p>When talking to NPCs, you can:</p>
+            <p>• Ask about their background and knowledge</p>
+            <p>• Trade items with them</p>
+            <p>• Receive and complete quests</p>
+            <p>• Learn about the world and its lore</p>
+
+            <h2>Game Features</h2>
+            <p>• Quest Log - Track your active quests</p>
+            <p>• Inventory - Manage your items and equipment</p>
+            <p>• Combat Log - View your combat history</p>
+            <p>• Dialogue System - Interact with NPCs through text</p>
+
+            <h2>Tips</h2>
             <p>
-              When talking to NPCs, you can ask them about their background,
-              knowledge, or try to trade items
+              • Pay attention to NPC relationships - they affect quest rewards
             </p>
+            <p>• Some NPCs may lie or have hidden agendas</p>
+            <p>• Explore the world to discover new quests and opportunities</p>
+            <p>• Keep track of your quest objectives in the Quest Log</p>
           </HelpDialog>
         </>
       )}

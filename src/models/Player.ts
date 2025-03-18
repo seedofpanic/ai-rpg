@@ -221,12 +221,6 @@ export class Player {
       if (keysDown.has('KeyD')) {
         moveX = 1;
       }
-      if (keysDown.has('KeyC')) {
-        this.setCombatMode(true);
-      }
-      if (keysDown.has('KeyE')) {
-        this.setCombatMode(false);
-      }
     }
 
     if (moveX || moveY) {

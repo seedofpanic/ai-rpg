@@ -92,7 +92,8 @@ test.describe("AI RPG E2E Tests", () => {
     // Interact with an NPC
     const npc = page.locator('[data-testid="npc-view"]').first();
     await npc.scrollIntoViewIfNeeded();
-    await npc.click();
+    await npc.hover();
+    await page.keyboard.press("e");
 
     const dialogContainer = page.locator('[data-testid="dialog-container"]');
     await dialogContainer.waitFor({ state: "visible" });
@@ -123,7 +124,8 @@ test.describe("AI RPG E2E Tests", () => {
 
     // Interact with an NPC
     const npc = page.locator('[data-testid="npc-view"]').first();
-    await npc.click();
+    await npc.hover();
+    await page.keyboard.press("e");
 
     const dialogContainer = page.locator('[data-testid="dialog-container"]');
     dialogContainer.waitFor({ state: "visible" });

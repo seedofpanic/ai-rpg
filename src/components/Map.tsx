@@ -42,9 +42,10 @@ const LocationContainer = styled.div<{
 interface MapProps {
   onNpcInteraction: (npcId: string) => void;
   player: Player;
+  onNpcHover: (npcId: string | null) => void;
 }
 
-const Map: React.FC<MapProps> = ({ onNpcInteraction, player }) => {
+const Map: React.FC<MapProps> = ({ onNpcInteraction, player, onNpcHover }) => {
   return (
     <MapContainer>
       {locations.map((location, index) => (
@@ -78,6 +79,8 @@ const Map: React.FC<MapProps> = ({ onNpcInteraction, player }) => {
             personality={npc.personality}
             relation={npc.relation}
             onClick={() => onNpcInteraction(id)}
+            onMouseEnter={() => onNpcHover(id)}
+            onMouseLeave={() => onNpcHover(null)}
           />
         );
       })}
