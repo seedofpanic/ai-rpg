@@ -1,23 +1,12 @@
 import { combatLogStore } from 'components/CombatLog';
 import { makeAutoObservable } from 'mobx';
 import { Vector2 } from 'utils/vector2';
-import { itemsData } from './itemsData';
+import { Equipment, itemsData } from './itemsData';
 import { MagicEffects } from './MagicEffects';
 
 interface InventorySlot {
   itemId: string;
   quantity: number;
-}
-
-interface Equipment {
-  head?: string;
-  chest?: string;
-  legs?: string;
-  feet?: string;
-  weapon?: string;
-  shield?: string;
-  ring?: string;
-  amulet?: string;
 }
 
 interface EquipmentStats {
@@ -72,7 +61,7 @@ export class Player {
   combatMode = false;
 
   constructor(name: string, race: string, playerClass: string, type: string) {
-    this.position = new Vector2(50, 50);
+    this.position = new Vector2(800, 550);
     this.name = name;
     this.race = race;
     this.class = playerClass;
@@ -239,12 +228,10 @@ export class Player {
     if (!item) return false;
 
     // Check if item is equipment
-    const isEquipment = this.isEquipment(item.name);
-    if (!isEquipment) return false;
+    if (!item.equippableSlot) return false;
 
     // Get the slot type for this item
-    const slot = this.getEquipmentSlot(item.name);
-    if (!slot) return false;
+    const slot = item.equippableSlot;
 
     this.removeItemFromInventory({ itemId, quantity: 1 });
 
@@ -266,38 +253,6 @@ export class Player {
       this.addItemToInventory({ itemId, quantity: 1 });
       this.updateEquipmentStats();
     }
-  }
-
-  private getEquipmentSlot(itemName: string): keyof Equipment | null {
-    if (itemName.includes('Helmet')) return 'head';
-    if (itemName.includes('Armor')) return 'chest';
-    if (itemName.includes('Boots')) return 'feet';
-    if (
-      itemName.includes('Sword') ||
-      itemName.includes('Axe') ||
-      itemName.includes('Spear')
-    )
-      return 'weapon';
-    if (itemName.includes('Shield')) return 'shield';
-    if (itemName.includes('Ring')) return 'ring';
-    if (itemName.includes('Amulet')) return 'amulet';
-    return null;
-  }
-
-  isEquipment(itemName: string): boolean {
-    const equipmentTypes = [
-      'Helmet',
-      'Armor',
-      'Plate Armor',
-      'Chain Mail',
-      'Leather Armor',
-      'Boots',
-      'Sword',
-      'Shield',
-      'Ring',
-      'Amulet',
-    ];
-    return equipmentTypes.some((type) => itemName.includes(type));
   }
 
   useItem(itemId: string) {

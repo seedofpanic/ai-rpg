@@ -7,6 +7,17 @@ interface ItemStats {
   health?: number;
 }
 
+export interface Equipment {
+  head?: string;
+  chest?: string;
+  legs?: string;
+  feet?: string;
+  weapon?: string;
+  shield?: string;
+  ring?: string;
+  amulet?: string;
+}
+
 export interface Effect {
   type: 'heal' | 'buff' | 'debuff' | 'damage';
   value: number;
@@ -17,6 +28,7 @@ export interface ItemData {
   name: string;
   description: string;
   price: number;
+  equippableSlot?: keyof Equipment;
   stats?: ItemStats;
   isUsable?: boolean;
   effect?: Effect;
@@ -28,6 +40,7 @@ itemsData.set(uuid, {
   name: 'Sword',
   description: 'A sharp sword for battle.',
   price: 100,
+  equippableSlot: 'weapon',
   stats: {
     attackPower: 10,
   },
@@ -38,6 +51,7 @@ itemsData.set(uuidv4(), {
   name: 'Shield',
   description: 'A sturdy shield for protection.',
   price: 150,
+  equippableSlot: 'shield',
   stats: {
     defense: 8,
   },
@@ -55,6 +69,11 @@ itemsData.set(uuidv4(), {
   name: 'Magic Wand',
   description: 'A wand imbued with magical powers.',
   price: 200,
+  equippableSlot: 'weapon',
+  stats: {
+    attackPower: 8,
+    criticalChance: 0.05,
+  },
   isUsable: false,
 });
 
@@ -62,6 +81,7 @@ itemsData.set(uuidv4(), {
   name: 'Helmet',
   description: 'A helmet to protect your head.',
   price: 75,
+  equippableSlot: 'head',
   stats: {
     defense: 5,
   },
@@ -86,6 +106,7 @@ itemsData.set(uuidv4(), {
   name: 'Boots',
   description: 'Boots to increase your speed.',
   price: 80,
+  equippableSlot: 'feet',
   stats: {
     defense: 3,
     dodgeChance: 0.02,
@@ -97,6 +118,11 @@ itemsData.set(uuidv4(), {
   name: 'Ring of Strength',
   description: 'A ring that increases your strength.',
   price: 250,
+  equippableSlot: 'ring',
+  stats: {
+    attackPower: 5,
+    criticalChance: 0.03,
+  },
   isUsable: false,
 });
 
@@ -104,6 +130,11 @@ itemsData.set(uuidv4(), {
   name: 'Cloak of Invisibility',
   description: 'A cloak that makes you invisible.',
   price: 300,
+  equippableSlot: 'chest',
+  stats: {
+    defense: 3,
+    dodgeChance: 0.1,
+  },
   isUsable: false,
 });
 
@@ -209,6 +240,11 @@ itemsData.set(uuidv4(), {
   name: 'Dagger',
   description: 'A quick, light weapon for close combat.',
   price: 75,
+  equippableSlot: 'weapon',
+  stats: {
+    attackPower: 6,
+    criticalChance: 0.08,
+  },
   isUsable: false,
 });
 
@@ -216,6 +252,7 @@ itemsData.set(uuidv4(), {
   name: 'Battle Axe',
   description: 'A heavy weapon that deals massive damage.',
   price: 180,
+  equippableSlot: 'weapon',
   stats: {
     attackPower: 15,
   },
@@ -226,6 +263,7 @@ itemsData.set(uuidv4(), {
   name: 'Spear',
   description: 'A versatile weapon with good reach.',
   price: 130,
+  equippableSlot: 'weapon',
   stats: {
     attackPower: 8,
     defense: 2,
@@ -237,6 +275,7 @@ itemsData.set(uuidv4(), {
   name: 'Leather Armor',
   description: 'Light armor offering basic protection.',
   price: 120,
+  equippableSlot: 'chest',
   stats: {
     defense: 5,
     health: 5,
@@ -248,6 +287,7 @@ itemsData.set(uuidv4(), {
   name: 'Chain Mail',
   description: 'Medium armor made of interlocking metal rings.',
   price: 250,
+  equippableSlot: 'chest',
   stats: {
     defense: 10,
     health: 10,
@@ -259,6 +299,7 @@ itemsData.set(uuidv4(), {
   name: 'Plate Armor',
   description: 'Heavy armor offering excellent protection.',
   price: 500,
+  equippableSlot: 'chest',
   stats: {
     defense: 15,
     health: 20,
@@ -326,6 +367,7 @@ itemsData.set(uuidv4(), {
   name: 'Ring of Protection',
   description: 'A ring that increases defense.',
   price: 200,
+  equippableSlot: 'ring',
   stats: {
     defense: 3,
   },
@@ -336,6 +378,7 @@ itemsData.set(uuidv4(), {
   name: 'Amulet of Health',
   description: 'An amulet that increases health.',
   price: 250,
+  equippableSlot: 'amulet',
   stats: {
     health: 10,
   },
@@ -378,6 +421,7 @@ itemsData.set(uuidv4(), {
   name: 'Battle Axe',
   description: 'A heavy weapon that deals massive damage.',
   price: 180,
+  equippableSlot: 'weapon',
   stats: {
     attackPower: 15,
   },
@@ -387,6 +431,7 @@ itemsData.set(uuidv4(), {
   name: 'Spear',
   description: 'A versatile weapon with good reach.',
   price: 130,
+  equippableSlot: 'weapon',
   stats: {
     attackPower: 8,
     defense: 2,
@@ -398,6 +443,7 @@ itemsData.set(uuidv4(), {
   name: 'Leather Armor',
   description: 'Light armor offering basic protection.',
   price: 120,
+  equippableSlot: 'chest',
   stats: {
     defense: 5,
     health: 5,
@@ -408,6 +454,7 @@ itemsData.set(uuidv4(), {
   name: 'Chain Mail',
   description: 'Medium armor made of interlocking metal rings.',
   price: 250,
+  equippableSlot: 'chest',
   stats: {
     defense: 10,
     health: 10,
@@ -417,6 +464,7 @@ itemsData.set(uuidv4(), {
   name: 'Plate Armor',
   description: 'Heavy armor offering excellent protection.',
   price: 500,
+  equippableSlot: 'chest',
   stats: {
     defense: 15,
     health: 20,
@@ -453,6 +501,7 @@ itemsData.set(uuidv4(), {
   name: 'Ring of Protection',
   description: 'Enhances defensive capabilities.',
   price: 280,
+  equippableSlot: 'ring',
   stats: {
     defense: 5,
   },
@@ -462,6 +511,7 @@ itemsData.set(uuidv4(), {
   name: 'Amulet of Health',
   description: 'Increases maximum health.',
   price: 300,
+  equippableSlot: 'amulet',
   stats: {
     health: 15,
   },
@@ -724,6 +774,11 @@ itemsData.set(uuidv4(), {
   name: 'Camouflage Cloak',
   description: 'Helps blend into natural surroundings.',
   price: 150,
+  equippableSlot: 'chest',
+  stats: {
+    defense: 2,
+    dodgeChance: 0.05,
+  },
 });
 
 // Additional Farmer-specific Items
@@ -830,6 +885,11 @@ itemsData.set(uuidv4(), {
   name: 'Bow',
   description: 'A well-crafted bow for hunting and combat.',
   price: 150,
+  equippableSlot: 'weapon',
+  stats: {
+    attackPower: 12,
+    criticalChance: 0.06,
+  },
 });
 
 // Add new consumable items

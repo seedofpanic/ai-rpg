@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
 import { gameStore } from '../models/gameStore';
@@ -7,7 +7,7 @@ import { npcStore } from '../models/npcs';
 const QuestLogContainer = styled.div`
   position: fixed;
   top: 20px;
-  right: 20px;
+  left: 20px;
   width: 300px;
   background-color: rgba(38, 70, 83, 0.95);
   color: white;
@@ -16,6 +16,27 @@ const QuestLogContainer = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   max-height: 80vh;
   overflow-y: auto;
+`;
+
+const QuestLogHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+`;
+
+const ToggleButton = styled.button`
+  background: none;
+  border: none;
+  color: #e76f51;
+  font-size: 1.2em;
+  cursor: pointer;
+  padding: 5px;
+  transition: transform 0.2s;
+
+  &:hover {
+    color: #f4a261;
+  }
 `;
 
 const QuestTitle = styled.h3`
@@ -75,44 +96,55 @@ const QuestProgress = styled.div`
 `;
 
 const QuestLog: React.FC = () => {
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
   return (
     <QuestLogContainer>
-      <h2>Quest Log</h2>
-      {gameStore.questLog.length === 0 ? (
-        <p>No active quests</p>
-      ) : (
-        gameStore.questLog.map((quest) => (
-          <QuestItem key={quest.id} $completed={quest.completed}>
-            <QuestStatus $completed={quest.completed}>
-              {quest.completed ? 'Completed' : 'Active'}
-            </QuestStatus>
-            <QuestTitle>
-              {quest.title}
-              <QuestGiver>
-                (from {npcStore.npcs[quest.questGiverId]?.name || 'Unknown'})
-              </QuestGiver>
-            </QuestTitle>
-            <QuestDescription>{quest.description}</QuestDescription>
-            {!quest.completed && (
-              <QuestProgress>
-                Progress:{' '}
-                {quest.action === 'Kill'
-                  ? `${quest.killCount}/${quest.quantity} ${quest.subject} killed`
-                  : `0/${quest.quantity} ${quest.subject} collected`}
-              </QuestProgress>
-            )}
-            {quest.rewards && (
-              <QuestRewards>
-                Rewards: {quest.rewards.gold && `${quest.rewards.gold} gold`}
-                {quest.rewards.items &&
-                  quest.rewards.items.length > 0 &&
-                  ` • ${quest.rewards.items.length} item${quest.rewards.items.length > 1 ? 's' : ''}`}
-                {quest.rewards.experience &&
-                  ` • ${quest.rewards.experience} XP`}
-              </QuestRewards>
-            )}
-          </QuestItem>
-        ))
+      <QuestLogHeader>
+        <h2>Quest Log</h2>
+        <ToggleButton onClick={() => setIsCollapsed(!isCollapsed)}>
+          {isCollapsed ? '▼' : '▲'}
+        </ToggleButton>
+      </QuestLogHeader>
+      {!isCollapsed && (
+        <>
+          {gameStore.questLog.length === 0 ? (
+            <p>No active quests</p>
+          ) : (
+            gameStore.questLog.map((quest) => (
+              <QuestItem key={quest.id} $completed={quest.completed}>
+                <QuestStatus $completed={quest.completed}>
+                  {quest.completed ? 'Completed' : 'Active'}
+                </QuestStatus>
+                <QuestTitle>
+                  {quest.title}
+                  <QuestGiver>
+                    (from {npcStore.npcs[quest.questGiverId]?.name || 'Unknown'})
+                  </QuestGiver>
+                </QuestTitle>
+                <QuestDescription>{quest.description}</QuestDescription>
+                {!quest.completed && (
+                  <QuestProgress>
+                    Progress:{' '}
+                    {quest.action === 'Kill'
+                      ? `${quest.killCount}/${quest.quantity} ${quest.subject} killed`
+                      : `0/${quest.quantity} ${quest.subject} collected`}
+                  </QuestProgress>
+                )}
+                {quest.rewards && (
+                  <QuestRewards>
+                    Rewards: {quest.rewards.gold && `${quest.rewards.gold} gold`}
+                    {quest.rewards.items &&
+                      quest.rewards.items.length > 0 &&
+                      ` • ${quest.rewards.items.length} item${quest.rewards.items.length > 1 ? 's' : ''}`}
+                    {quest.rewards.experience &&
+                      ` • ${quest.rewards.experience} XP`}
+                  </QuestRewards>
+                )}
+              </QuestItem>
+            ))
+          )}
+        </>
       )}
     </QuestLogContainer>
   );

@@ -15,6 +15,22 @@ const InventoryContainer = styled.div`
   padding: 10px;
   border-radius: 8px;
   width: 250px;
+  max-height: 80vh;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+  }
 `;
 
 const InventoryItem = styled.div`
@@ -125,7 +141,7 @@ const PlayerInventory: React.FC<PlayerInventoryProps> = ({ player }) => {
           const item = itemsData.get(itemId);
           if (!item) return null;
 
-          const isEquipment = player.isEquipment(item.name);
+          const isEquipment = !!item.equippableSlot;
           const usable = isUsableItem(item);
 
           return (

@@ -91,7 +91,7 @@ const PlayerCustomization: React.FC = () => {
       localStorage.setItem('playerClass', playerClass);
       localStorage.setItem('playerType', type);
 
-      const player = new Player(name, race, playerClass);
+      const player = new Player(name, race, playerClass, type);
       gameStore.startGame(player); // Set player in gameStore
     }
   };

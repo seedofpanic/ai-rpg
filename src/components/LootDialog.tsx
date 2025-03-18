@@ -83,6 +83,7 @@ const LootDialog: React.FC<LootDialogProps> = observer(
       // Transfer item from target to player
       target.removeItem({ itemId, quantity });
       player.addItemToInventory({ itemId, quantity });
+      checkIfEmpty();
     };
 
     const handleLootAll = () => {
@@ -94,6 +95,13 @@ const LootDialog: React.FC<LootDialogProps> = observer(
         });
       });
       target.inventory = [];
+      checkIfEmpty();
+    };
+
+    const checkIfEmpty = () => {
+      if (target.inventory && target.inventory.length === 0) {
+        onClose();
+      }
     };
 
     return (
