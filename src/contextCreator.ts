@@ -70,7 +70,10 @@ export const createContext = (
         const npcs = ` Characters in ${loc.name}: ${loc.npcs
           .map((npcId) => {
             const npc = npcStore.npcs[npcId];
-            return `${npc.name} ${npc.role} (is ${npc.isAlive() ? 'Alive' : 'Dead'})`;
+            const isAlive = npc.isAlive();
+
+            return `${npc.name} ${npc.role} (is ${isAlive ? 'Alive' : 'Dead'})
+            ${isAlive ? `- Inventory: ${npc.inventory?.map((item) => `- ${itemsData.get(item.itemId)?.name} x${item.quantity}`).join('\n') || 'No items in inventory'}` : ''}`;
           })
           .join(', ')}`;
         const mobs = ` Monsters in ${loc.name}: ${mobStore.mobIds
