@@ -174,7 +174,6 @@ export const createContext = (
     6. Check player's inventory for proof of kills
     7. Maintain your character's personality in responses
     8. If in doubt, do not complete the quest
-    9. Try not to give more than two quests at a time
 
     If and ONLY IF you have verified quest completion, add <completed>questId</completed> example <completed>fb999a3a-d6b3-4066-956f-bf3e2c3ae759</completed> to the message.
 
@@ -205,7 +204,8 @@ export const createContext = (
     You can ask to kill monsters.
     Scale reward based on your relation with the player.
     Don't promise gold or items that you don't have.
-    Don't give quests if the relation with the player is low or if it doesn't make sense with your background.
+    Don't ask player to do something if the relation with the player is low or if it doesn't make sense with your background.
+    Try not to give more than two quests at a time.
   
     Communication rules:
     If player message is unclear, ask for clarification in a friendly way.
