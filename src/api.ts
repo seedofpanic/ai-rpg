@@ -5,6 +5,7 @@ import {
 import { gameStore } from 'models/gameStore';
 import { createContext } from './contextCreator';
 
+
 export const apiConfig = {
   apiKey: import.meta.env.VITE_GEMINI_API_KEY || '',
 };
@@ -21,7 +22,7 @@ const sendMessageProxy = async (
   try {
     const prompt = createContext(npcId, message, isSystemMessage);
 
-    const response = await fetch(`${import.meta.env.LOCAL ? 'http' : 'https'}://167.71.7.172:9003/api/v1/send`, {
+    const response = await fetch(`http://167.71.7.172:9003/api/v1/send`, {
       method: 'POST',
       body: JSON.stringify({
         "generationConfig": {},
