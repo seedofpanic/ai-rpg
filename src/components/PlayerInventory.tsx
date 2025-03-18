@@ -4,6 +4,7 @@ import { Player } from '../models/Player';
 import { observer } from 'mobx-react';
 import { itemsData } from 'models/itemsData';
 import CharacterDoll from './CharacterDoll';
+import { ItemData } from 'models/itemsData';
 
 const InventoryContainer = styled.div`
   position: fixed;
@@ -65,6 +66,14 @@ const PlayerInventory: React.FC<PlayerInventoryProps> = ({ player }) => {
     player.equipItem(itemId);
   };
 
+  const handleUse = (itemId: string) => {
+    player.useItem(itemId);
+  };
+
+  const isUsableItem = (item: ItemData): boolean => {
+    return item.isUsable || false;
+  };
+
   const getStatBonus = (base: number, total: number) => {
     const bonus = total - base;
     return bonus > 0 ? `+${bonus}` : '';
@@ -114,18 +123,29 @@ const PlayerInventory: React.FC<PlayerInventoryProps> = ({ player }) => {
           if (!item) return null;
 
           const isEquipment = player.isEquipment(item.name);
+          const usable = isUsableItem(item);
 
           return (
             <InventoryItem data-testid="item-view" key={index}>
               <span>{item.name} (x{quantity})</span>
-              {isEquipment && (
-                <ItemButton
-                  onClick={() => handleEquip(itemId)}
-                  data-testid="equip-button"
-                >
-                  Equip
-                </ItemButton>
-              )}
+              <div>
+                {isEquipment && (
+                  <ItemButton
+                    onClick={() => handleEquip(itemId)}
+                    data-testid="equip-button"
+                  >
+                    Equip
+                  </ItemButton>
+                )}
+                {usable && (
+                  <ItemButton
+                    onClick={() => handleUse(itemId)}
+                    data-testid="use-button"
+                  >
+                    Use
+                  </ItemButton>
+                )}
+              </div>
             </InventoryItem>
           );
         })

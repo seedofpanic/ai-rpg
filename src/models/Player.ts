@@ -2,6 +2,7 @@ import { combatLogStore } from 'components/CombatLog';
 import { makeAutoObservable } from 'mobx';
 import { Vector2 } from 'utils/vector2';
 import { itemsData } from './itemsData';
+import { MagicEffects } from './MagicEffects';
 
 interface InventorySlot {
   itemId: string;
@@ -42,6 +43,7 @@ export class Player {
   baseCriticalChance: number;
   baseDodgeChance: number;
   private cachedEquipmentStats: EquipmentStats;
+  magicEffects: MagicEffects;
 
   // Computed stats (including equipment)
   get health(): number {
@@ -80,6 +82,7 @@ export class Player {
     this.baseCriticalChance = 0.1;
     this.baseDodgeChance = 0.05;
     this.cachedEquipmentStats = this.calculateEquipmentStats();
+    this.magicEffects = new MagicEffects(this);
     makeAutoObservable(this);
   }
 
@@ -196,6 +199,7 @@ export class Player {
 
     if (!dialogIsAcitve) {
       this.updateMovement(keysDown, delta);
+      this.magicEffects.update(currentTime);
     }
   }
 
@@ -285,5 +289,9 @@ export class Player {
       'Boots', 'Sword', 'Shield', 'Ring', 'Amulet'
     ];
     return equipmentTypes.some(type => itemName.includes(type));
+  }
+
+  useItem(itemId: string) {
+    this.magicEffects.useItem(itemId);
   }
 }

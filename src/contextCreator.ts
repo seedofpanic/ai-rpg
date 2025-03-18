@@ -41,6 +41,9 @@ export const createContext = (
     Lore and beliefs:
     ${lore}
 
+    Common items that exist in the world:
+    ${Array.from(itemsData.entries()).map(([itemId, item]) => `- ${item.name} ${item.description}`).join('\n')}
+
     Location: Agnir, Kadera, (${npcContext.location.name}):
     ${npcContext.location.description}
 

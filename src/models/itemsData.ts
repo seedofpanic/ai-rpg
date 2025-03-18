@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from 'uuid';
-
 interface ItemStats {
   attackPower?: number;
   defense?: number;
@@ -8,11 +7,19 @@ interface ItemStats {
   health?: number;
 }
 
-interface ItemData {
+export interface Effect {
+  type: 'heal' | 'buff' | 'debuff' | 'damage';
+  value: number;
+  duration?: number; // in milliseconds
+}
+
+export interface ItemData {
   name: string;
   description: string;
   price: number;
   stats?: ItemStats;
+  isUsable?: boolean;
+  effect?: Effect;
 }
 
 export const itemsData = new Map<string, ItemData>();
@@ -23,7 +30,8 @@ itemsData.set(uuid, {
   price: 100,
   stats: {
     attackPower: 10
-  }
+  },
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
@@ -32,19 +40,22 @@ itemsData.set(uuidv4(), {
   price: 150,
   stats: {
     defense: 8
-  }
+  },
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
   name: 'Health Potion',
   description: 'A potion that restores health.',
   price: 50,
+  isUsable: true
 });
 
 itemsData.set(uuidv4(), {
   name: 'Magic Wand',
   description: 'A wand imbued with magical powers.',
   price: 200,
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
@@ -53,19 +64,22 @@ itemsData.set(uuidv4(), {
   price: 75,
   stats: {
     defense: 5
-  }
+  },
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
   name: 'Bow',
   description: 'A bow for ranged attacks.',
   price: 120,
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
   name: 'Arrow',
   description: 'Ammunition for the bow.',
   price: 10,
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
@@ -75,85 +89,257 @@ itemsData.set(uuidv4(), {
   stats: {
     defense: 3,
     dodgeChance: 0.02
-  }
+  },
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
   name: 'Ring of Strength',
   description: 'A ring that increases your strength.',
   price: 250,
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
   name: 'Cloak of Invisibility',
   description: 'A cloak that makes you invisible.',
   price: 300,
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
   name: 'Silk',
   description: 'Fine, smooth fabric prized by merchants.',
   price: 180,
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
   name: 'Mushroom',
   description: 'A rare mushroom used in alchemy.',
   price: 45,
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
   name: 'Letter',
   description: 'An important document that needs delivery.',
   price: 30,
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
   name: 'Flour',
   description: 'High-quality baking flour.',
   price: 25,
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
   name: 'Iron',
   description: 'Raw iron ore for blacksmithing.',
   price: 120,
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
   name: 'Worm',
   description: 'Fresh bait for fishing.',
   price: 5,
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
   name: 'Pelt',
   description: 'A well-preserved animal hide.',
   price: 90,
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
   name: 'Seed',
   description: 'Quality seeds for farming.',
   price: 15,
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
   name: 'Cloth',
   description: 'Sturdy fabric for tailoring.',
   price: 60,
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
   name: 'Gem',
   description: 'A precious stone for jewelry making.',
   price: 350,
+  isUsable: false
 });
 
 itemsData.set(uuidv4(), {
-  name: 'Letter',
-  description: 'A letter from a friend.',
-  price: 1,
+  name: 'Leather',
+  description: 'Tanned animal hide used for armor crafting.',
+  price: 45,
+  isUsable: false
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Wood',
+  description: 'Quality lumber for crafting.',
+  price: 30,
+  isUsable: false
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Silver Ore',
+  description: 'Raw silver for crafting jewelry and weapons.',
+  price: 200,
+  isUsable: false
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Gold Ore',
+  description: 'Raw gold for crafting precious items.',
+  price: 400,
+  isUsable: false
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Dagger',
+  description: 'A quick, light weapon for close combat.',
+  price: 75,
+  isUsable: false
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Battle Axe',
+  description: 'A heavy weapon that deals massive damage.',
+  price: 180,
+  stats: {
+    attackPower: 15
+  },
+  isUsable: false
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Spear',
+  description: 'A versatile weapon with good reach.',
+  price: 130,
+  stats: {
+    attackPower: 8,
+    defense: 2
+  },
+  isUsable: false
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Leather Armor',
+  description: 'Light armor offering basic protection.',
+  price: 120,
+  stats: {
+    defense: 5,
+    health: 5
+  },
+  isUsable: false
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Chain Mail',
+  description: 'Medium armor made of interlocking metal rings.',
+  price: 250,
+  stats: {
+    defense: 10,
+    health: 10
+  },
+  isUsable: false
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Plate Armor',
+  description: 'Heavy armor offering excellent protection.',
+  price: 500,
+  stats: {
+    defense: 15,
+    health: 20
+  },
+  isUsable: false
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Mana Potion',
+  description: 'Restores magical energy.',
+  price: 60,
+  isUsable: true
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Stamina Potion',
+  description: 'Restores physical energy.',
+  price: 55,
+  isUsable: true
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Scroll of Fireball',
+  description: 'A scroll containing the Fireball spell.',
+  price: 100,
+  isUsable: true
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Scroll of Lightning',
+  description: 'A scroll containing the Lightning spell.',
+  price: 120,
+  isUsable: true
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Scroll of Healing',
+  description: 'A scroll containing the Healing spell.',
+  price: 80,
+  isUsable: true
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Antidote',
+  description: 'Cures poison effects.',
+  price: 40,
+  isUsable: true
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Healing Salve',
+  description: 'A salve that restores health over time.',
+  price: 45,
+  isUsable: true
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Crystal Vial',
+  description: 'A vial used for storing magical substances.',
+  price: 30,
+  isUsable: false
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Ring of Protection',
+  description: 'A ring that increases defense.',
+  price: 200,
+  stats: {
+    defense: 3
+  },
+  isUsable: false
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Amulet of Health',
+  description: 'An amulet that increases health.',
+  price: 250,
+  stats: {
+    health: 10
+  },
+  isUsable: false
 });
 
 // Crafting Materials
@@ -644,5 +830,100 @@ itemsData.set(uuidv4(), {
   name: 'Bow',
   description: 'A well-crafted bow for hunting and combat.',
   price: 150,
+});
+
+// Add new consumable items
+itemsData.set(uuidv4(), {
+  name: 'Greater Health Potion',
+  description: 'A powerful potion that restores a large amount of health.',
+  price: 100,
+  isUsable: true,
+  effect: {
+    type: 'heal',
+    value: 100
+  }
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Strength Elixir',
+  description: 'Temporarily increases your attack power.',
+  price: 150,
+  isUsable: true,
+  effect: {
+    type: 'buff',
+    value: 10,
+    duration: 30000 // 30 seconds
+  }
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Swiftness Potion',
+  description: 'Increases your dodge chance temporarily.',
+  price: 120,
+  isUsable: true,
+  effect: {
+    type: 'buff',
+    value: 0.15,
+    duration: 20000 // 20 seconds
+  }
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Defense Tonic',
+  description: 'Temporarily increases your defense.',
+  price: 130,
+  isUsable: true,
+  effect: {
+    type: 'buff',
+    value: 8,
+    duration: 25000 // 25 seconds
+  }
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Poison Vial',
+  description: 'A deadly poison that deals damage over time.',
+  price: 200,
+  isUsable: true,
+  effect: {
+    type: 'debuff',
+    value: 5,
+    duration: 10000 // 10 seconds
+  }
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Fire Scroll',
+  description: 'A scroll that unleashes a powerful fireball.',
+  price: 180,
+  isUsable: true,
+  effect: {
+    type: 'damage',
+    value: 30
+  }
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Regeneration Potion',
+  description: 'Gradually restores health over time.',
+  price: 160,
+  isUsable: true,
+  effect: {
+    type: 'heal',
+    value: 5,
+    duration: 15000 // 15 seconds
+  }
+});
+
+itemsData.set(uuidv4(), {
+  name: 'Critical Strike Elixir',
+  description: 'Temporarily increases your critical hit chance.',
+  price: 140,
+  isUsable: true,
+  effect: {
+    type: 'buff',
+    value: 0.2,
+    duration: 20000 // 20 seconds
+  }
 });
 
