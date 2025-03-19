@@ -45,6 +45,13 @@ const Button = styled.button`
   }
 `;
 
+const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+`;
+
 const PlayerCustomization: React.FC = () => {
   const [name, setName] = useState('');
   const [race, setRace] = useState('');
@@ -54,6 +61,7 @@ const PlayerCustomization: React.FC = () => {
   const [selectedApi, setSelectedApi] = useState<'gemini' | 'proxy'>(
     gameStore.api,
   );
+  const [isAdult, setIsAdult] = useState(false);
 
   // Restore settings from localStorage on component mount
   useEffect(() => {
@@ -69,12 +77,14 @@ const PlayerCustomization: React.FC = () => {
     const savedClass = localStorage.getItem('playerClass');
     const savedType = localStorage.getItem('playerType');
     const savedApi = localStorage.getItem('selectedApi') as 'gemini' | 'proxy';
+    const savedAgeVerification = localStorage.getItem('isAdult') === 'true';
 
     if (savedName) setName(savedName);
     if (savedRace) setRace(savedRace);
     if (savedClass) setPlayerClass(savedClass);
     if (savedType) setType(savedType);
     if (savedApi) setSelectedApi(savedApi);
+    if (savedAgeVerification) setIsAdult(savedAgeVerification);
   }, []);
 
   const handleApiKeySave = () => {
@@ -88,6 +98,10 @@ const PlayerCustomization: React.FC = () => {
       alert('Please provide a valid API key for Gemini API.');
       return;
     }
+    if (!isAdult) {
+      alert('You must confirm that you are 18 years or older to play.');
+      return;
+    }
     if (name && race && playerClass) {
       apiConfig.apiKey = apiKey;
       gameStore.api = selectedApi;
@@ -97,6 +111,7 @@ const PlayerCustomization: React.FC = () => {
       localStorage.setItem('playerClass', playerClass);
       localStorage.setItem('playerType', type);
       localStorage.setItem('selectedApi', selectedApi);
+      localStorage.setItem('isAdult', isAdult.toString());
 
       const player = new Player(name, race, playerClass, type);
       gameStore.startGame(player);
@@ -173,6 +188,15 @@ const PlayerCustomization: React.FC = () => {
         <option value="Archer">Archer</option>
         <option value="Thief">Thief</option>
       </Select>
+      <CheckboxContainer>
+        <input
+          type="checkbox"
+          id="ageVerification"
+          checked={isAdult}
+          onChange={(e) => setIsAdult(e.target.checked)}
+        />
+        <label htmlFor="ageVerification">I confirm that I am 18 years or older</label>
+      </CheckboxContainer>
       <Button onClick={handleSubmit}>Start Game</Button>
     </CustomizationContainer>
   );
