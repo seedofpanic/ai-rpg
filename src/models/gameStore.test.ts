@@ -199,7 +199,7 @@ describe('GameStore', () => {
 
   it('should only open dialogue when NPC is close to player', () => {
     // Mock npcStore
-    const mockNpc = {} as NPC;
+    const mockNpc = { isAlive: () => true } as NPC;
 
     npcStore.npcs['npc-1'] = mockNpc;
     npcStore.npcIds.push('npc-1');

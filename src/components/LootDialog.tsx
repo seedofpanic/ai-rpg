@@ -94,7 +94,7 @@ const LootDialog: React.FC<LootDialogProps> = observer(
           quantity: item.quantity,
         });
       });
-      target.inventory = [];
+      target.setInventory([]);
       checkIfEmpty();
     };
 

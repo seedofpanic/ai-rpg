@@ -986,3 +986,7 @@ itemsData.set(uuidv4(), {
     duration: 20000, // 20 seconds
   },
 });
+
+export const itemsDataContext = Array.from(itemsData)
+  .map(([id, item]) => `${item.name}|${id}|${item.description}`)
+  .join('\n');

@@ -5,23 +5,7 @@ import { combatLogStore } from 'components/CombatLog';
 import { itemsData } from './itemsData';
 import { mobStore } from './mobStore';
 import { keysDown } from 'utils/keyboard';
-
-export interface Quest {
-  killCount: number;
-  id: string;
-  title: string;
-  description: string;
-  subject: string;
-  quantity: number;
-  action: string;
-  completed: boolean;
-  questGiverId: string;
-  rewards?: {
-    gold?: number;
-    items?: string[];
-    experience?: number;
-  };
-}
+import { Quest } from './Quest';
 
 export class GameStore {
   isDialogueOpen: boolean = false;
@@ -166,9 +150,17 @@ export class GameStore {
   updateControls(keyDown: string) {
     if (keyDown === 'KeyE' && this.hoveredNpcId) {
       const npc = npcStore.npcs[this.hoveredNpcId];
-      if (npc && this.player.isCloseTo(npc.position)) {
+      if (npc?.isAlive() && this.player.isCloseTo(npc.position)) {
         this.setCurrentNpcId(this.hoveredNpcId);
         this.setDialogueOpen(true);
+      }
+    }
+  }
+
+  updateQuest(target: { name: string; type: string }) {
+    for (const quest of this.questLog) {
+      if (quest.subject.toLowerCase() === target.type.toLowerCase()) {
+        quest.killCount++;
       }
     }
   }

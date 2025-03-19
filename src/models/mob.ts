@@ -42,6 +42,8 @@ const MOB_LOOT: Record<
   ],
 };
 
+export const mobTypes: MobType[] = ['wolf', 'bandit', 'zombie', 'skeleton'];
+
 export const MOB_STATS: Record<
   MobType,
   {
@@ -96,7 +98,7 @@ export class Mob {
   id: string;
   position: Vector2;
   name: string;
-  mobType: MobType;
+  type: MobType;
   health: number;
   maxHealth: number;
   attackPower: number;
@@ -118,7 +120,7 @@ export class Mob {
   constructor(mobType: MobType, x: number, y: number, location: Location) {
     const stats = MOB_STATS[mobType];
     this.id = uuidv4();
-    this.mobType = mobType;
+    this.type = mobType;
     this.name = `${mobType.charAt(0).toUpperCase() + mobType.slice(1)}`;
     this.position = new Vector2(x, y);
     this.patrolPoint = new Vector2(x, y);
@@ -141,7 +143,7 @@ export class Mob {
   }
 
   private generateLoot(): void {
-    const lootTable = MOB_LOOT[this.mobType];
+    const lootTable = MOB_LOOT[this.type];
     this.inventory = [];
 
     for (const lootEntry of lootTable) {
@@ -278,12 +280,15 @@ export class Mob {
   }
 
   static generateRandomMob(location: Location): Mob {
-    const mobTypes: MobType[] = ['wolf', 'bandit', 'zombie', 'skeleton'];
     const randomType = mobTypes[Math.floor(Math.random() * mobTypes.length)];
 
     const x = location.x + Math.floor(Math.random() * (location.width - 40));
     const y = location.y + Math.floor(Math.random() * (location.height - 40));
 
     return new Mob(randomType, x, y, location);
+  }
+
+  setInventory(inventory: { itemId: string; quantity: number }[]): void {
+    this.inventory = inventory;
   }
 }

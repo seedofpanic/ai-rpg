@@ -7,6 +7,7 @@ import { Player } from 'models/Player';
 const generateContentMock = vi.fn().mockResolvedValue({
   response: {
     text: () => 'Test response',
+    functionCalls: () => [],
     usageMetadata: {
       candidatesTokensDetails: [{ tokensCount: 10 }],
     },
@@ -20,6 +21,15 @@ vi.mock('@google/generative-ai', () => {
         generateContent: generateContentMock,
       }),
     })),
+    SchemaType: {
+      OBJECT: 'OBJECT',
+      ARRAY: 'ARRAY',
+      STRING: 'STRING',
+      NUMBER: 'NUMBER',
+    },
+    FunctionCallingMode: {
+      AUTO: 'AUTO',
+    },
   };
 });
 
@@ -52,8 +62,6 @@ describe('API Rate Limiting', () => {
     // Send second message
     sendMessage('How are you?', 'npc-1');
 
-    console.log(vi.getTimerCount());
-
     // Fast forward remaining time
     await vi.advanceTimersByTimeAsync(500);
     // Verify that generateContent was only called once
@@ -71,13 +79,13 @@ describe('API Rate Limiting', () => {
     const firstPromise = sendMessage('Hello', 'npc-1');
 
     // Fast forward 1 second
-    await vi.advanceTimersByTimeAsync(1000);
+    await vi.advanceTimersByTimeAsync(1500);
 
     // Send second message
     const secondPromise = sendMessage('How are you?', 'npc-1');
 
     // Fast forward 1 second to complete both requests
-    await vi.advanceTimersByTimeAsync(2000);
+    await vi.advanceTimersByTimeAsync(2500);
 
     // Wait for both promises to resolve
     const [firstResponse, secondResponse] = await Promise.all([
@@ -99,7 +107,7 @@ describe('API Rate Limiting', () => {
     ];
 
     // Fast forward 2 seconds to allow all requests to complete
-    await vi.advanceTimersByTimeAsync(4000);
+    await vi.advanceTimersByTimeAsync(7000);
 
     // Wait for all requests to resolve
     const responses = await Promise.all(requests);

@@ -32,7 +32,7 @@ describe('Mob', () => {
 
   describe('Initialization', () => {
     it('should create a mob with correct properties', () => {
-      expect(testMob.mobType).toBe('wolf');
+      expect(testMob.type).toBe('wolf');
       expect(testMob.position).toEqual(new Vector2(100, 100));
       expect(testMob.location).toEqual(testLocation);
       expect(testMob.isAlive()).toBe(true);
@@ -43,7 +43,7 @@ describe('Mob', () => {
       const randomMob = Mob.generateRandomMob(testLocation);
       expect(randomMob).toBeInstanceOf(Mob);
       expect(['wolf', 'bandit', 'zombie', 'skeleton']).toContain(
-        randomMob.mobType,
+        randomMob.type,
       );
       expect(randomMob.position.x).toBeGreaterThanOrEqual(0);
       expect(randomMob.position.x).toBeLessThanOrEqual(testLocation.width);

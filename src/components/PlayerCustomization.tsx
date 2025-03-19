@@ -51,7 +51,9 @@ const PlayerCustomization: React.FC = () => {
   const [playerClass, setPlayerClass] = useState('');
   const [type, setType] = useState('');
   const [apiKey, setApiKey] = useState(apiConfig.apiKey);
-  const [selectedApi, setSelectedApi] = useState<'gemini' | 'proxy'>(gameStore.api);
+  const [selectedApi, setSelectedApi] = useState<'gemini' | 'proxy'>(
+    gameStore.api,
+  );
 
   // Restore settings from localStorage on component mount
   useEffect(() => {
@@ -105,9 +107,12 @@ const PlayerCustomization: React.FC = () => {
     <CustomizationContainer>
       <h1>Game setup</h1>
 
-      <Select value={selectedApi} onChange={(e) => setSelectedApi(e.target.value as 'gemini' | 'proxy')}>
+      <Select
+        value={selectedApi}
+        onChange={(e) => setSelectedApi(e.target.value as 'gemini' | 'proxy')}
+      >
         <option value="gemini">Gemini API</option>
-        <option value="proxy">Proxy API</option>
+        <option value="proxy">Demo API</option>
       </Select>
 
       {selectedApi === 'gemini' && !import.meta.env.VITE_GEMINI_API_KEY && (

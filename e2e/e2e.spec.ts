@@ -1,7 +1,13 @@
 import { test, expect } from "@playwright/test";
+import {
+  FinishReason,
+  FunctionCall,
+  GenerateContentResponse,
+  UsageMetadata,
+} from "@google/generative-ai";
 
-const mockGeminiResponse = (mock) => {
-  return {
+const mockGeminiResponse = (mock, functionCall?: FunctionCall) => {
+  const response: GenerateContentResponse = {
     candidates: [
       {
         content: {
@@ -12,29 +18,31 @@ const mockGeminiResponse = (mock) => {
           ],
           role: "model",
         },
-        finishReason: "STOP",
+        finishReason: FinishReason.STOP,
         avgLogprobs: -0.8996576876253695,
+        index: 0,
       },
     ],
     usageMetadata: {
       promptTokenCount: 2785,
       candidatesTokenCount: 74,
       totalTokenCount: 2859,
-      promptTokensDetails: [
-        {
-          modality: "TEXT",
-          tokenCount: 2785,
-        },
-      ],
       candidatesTokensDetails: [
         {
           modality: "TEXT",
           tokenCount: 74,
         },
       ],
-    },
-    modelVersion: "gemini-2.0-flash",
+    } as UsageMetadata,
   };
+
+  if (functionCall) {
+    response.candidates?.[0].content.parts.push({
+      functionCall: functionCall,
+    });
+  }
+
+  return response;
 };
 
 const isFullyVisible = async (page, element) => {
@@ -113,11 +121,7 @@ test.describe("AI RPG E2E Tests", () => {
         await route.fulfill({
           status: 200,
           contentType: "application/json",
-          body: JSON.stringify(
-            mockGeminiResponse(
-              "Mocked AI response <sell>Sword, 1; helm, 2;</sell>",
-            ),
-          ),
+          body: JSON.stringify(mockGeminiResponse("Mocked AI response")),
         });
       },
     );
@@ -129,6 +133,32 @@ test.describe("AI RPG E2E Tests", () => {
 
     const dialogContainer = page.locator('[data-testid="dialog-container"]');
     dialogContainer.waitFor({ state: "visible" });
+
+    await dialogContainer
+      .locator('[data-testid="message"]', { hasText: "Mocked AI response" })
+      .waitFor({ state: "visible" });
+
+    await page.route(
+      "https://generativelanguage.googleapis.com/**",
+      async (route) => {
+        const postData = route.request().postData();
+
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify(
+            mockGeminiResponse("Let's trade", {
+              name: "setSellItemsList",
+              args: {
+                items: [
+                  { itemId: postData?.match(/Sword\|(.*?)\|/)?.[1], price: 10 },
+                ],
+              },
+            }),
+          ),
+        });
+      },
+    );
 
     // Send  let's trade message
     await page.fill('[data-testid="message-input"]', "let's trade");

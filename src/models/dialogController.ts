@@ -82,9 +82,7 @@ export class DialogController {
 
       gameStore.player.updateGold(-item.price);
       this.npcContext.updateGold(item.price);
-      this.npcContext.setShopItems(
-        this.npcContext.sellingItems.filter((i) => i !== item),
-      );
+      this.npcContext.removeBuyItem(item);
 
       this.npcContext.removeItem({ itemId: item.itemId, quantity: 1 });
       gameStore.player?.addItemToInventory({
@@ -113,9 +111,7 @@ export class DialogController {
 
       gameStore.player.updateGold(item.price);
       this.npcContext.updateGold(-item.price);
-      this.npcContext.setBuyItems(
-        this.npcContext.buyingItems.filter((i) => i !== item),
-      );
+      this.npcContext.removeBuyItem(item);
       gameStore.player?.removeItemFromInventory({
         itemId: item.itemId,
         quantity: 1,

@@ -43,10 +43,13 @@ function App() {
     <>
       <GlobalStyle />
       <Game />
-      { !gameStore.isOver && (
+      {!gameStore.isOver && (
         <>
           <SettingsIcon onClick={() => setIsSettingsOpen(true)} />
-          <Settings isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+          <Settings
+            isOpen={isSettingsOpen}
+            onClose={() => setIsSettingsOpen(false)}
+          />
         </>
       )}
       <a

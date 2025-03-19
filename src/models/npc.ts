@@ -24,6 +24,7 @@ export interface Need {
 export interface TradeItem {
   itemId: string;
   price: number;
+  quantity: number;
 }
 
 export enum MessageType {
@@ -144,6 +145,7 @@ function generateRoleSpecificInventory(role: string): InventoryItem[] {
 
 export class NPC {
   id: string;
+  type = 'npc';
   position: Vector2;
   name: string;
   speed = 10;
@@ -449,34 +451,40 @@ export class NPC {
     }
   }
 
-  setShopItems(items: TradeItem[]) {
-    for (const item of items) {
-      const existingItem = this.sellingItems.find(
-        (i) => i.itemId === item.itemId,
-      );
+  setSellItem(item: TradeItem) {
+    const existingItem = this.sellingItems.find(
+      (i) => i.itemId === item.itemId,
+    );
 
-      if (existingItem) {
-        existingItem.price = item.price;
-      } else {
-        makeAutoObservable(item);
-        this.sellingItems.push(item);
-      }
+    if (existingItem) {
+      existingItem.price = item.price;
+      existingItem.quantity = item.quantity;
+    } else {
+      makeAutoObservable(item);
+      this.sellingItems.push(item);
     }
   }
 
-  setBuyItems(items: TradeItem[]) {
-    for (const item of items) {
-      const existingItem = this.buyingItems.find(
-        (i) => i.itemId === item.itemId,
-      );
+  setBuyItems(item: TradeItem) {
+    const existingItem = this.buyingItems.find((i) => i.itemId === item.itemId);
 
-      if (existingItem) {
-        existingItem.price = item.price;
-      } else {
-        makeAutoObservable(item);
-        this.buyingItems.push(item);
-      }
+    if (existingItem) {
+      existingItem.price = item.price;
+      existingItem.quantity = item.quantity;
+    } else {
+      makeAutoObservable(item);
+      this.buyingItems.push(item);
     }
+  }
+
+  removeBuyItem(item: TradeItem) {
+    this.buyingItems = this.buyingItems.filter((i) => i.itemId !== item.itemId);
+  }
+
+  removeSellItem(item: TradeItem) {
+    this.sellingItems = this.sellingItems.filter(
+      (i) => i.itemId !== item.itemId,
+    );
   }
 
   updateGold(price: number) {
@@ -509,5 +517,9 @@ export class NPC {
 
   initializeDialogueHistory() {
     this.dialogueHistory = [];
+  }
+
+  setInventory(inventory: { itemId: string; quantity: number }[]): void {
+    this.inventory = inventory;
   }
 }

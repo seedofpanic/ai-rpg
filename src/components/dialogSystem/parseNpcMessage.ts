@@ -1,29 +1,10 @@
-import { itemsData } from 'models/itemsData';
-import { MessageType, NPC, TradeItem } from 'models/npc';
+import { MessageType, NPC } from 'models/npc';
 import { gameStore } from 'models/gameStore';
 import { v4 as uuidv4 } from 'uuid';
 import { FunctionCall } from '@google/generative-ai';
-
-const parseItems = (data: string) => {
-  const items: TradeItem[] = [];
-  const itemsMatch = data.split(';');
-
-  for (const item of itemsMatch) {
-    const [name, price] = item.split(',');
-    if (
-      itemsData.entries().find(([_, itemData]) => itemData.name === name.trim())
-    ) {
-      const itemId = Array.from(itemsData.keys()).find(
-        (key) => itemsData.get(key)?.name === name.trim(),
-      );
-      if (itemId) {
-        items.push({ itemId, price: parseFloat(price.trim()) });
-      }
-    }
-  }
-
-  return items;
-};
+import { npcStore } from 'models/npcs';
+import { MobType, mobTypes } from 'models/mob';
+import { itemsData } from 'models/itemsData';
 
 interface QuestData {
   action: string;
@@ -35,113 +16,115 @@ interface QuestData {
   };
 }
 
-const parseQuests = (data: string, description: string, npcId: string) => {
-  try {
-    const questsData = JSON.parse(data) as QuestData[];
-    return questsData.map((questData) => {
-      return {
-        id: uuidv4(),
-        title: `${questData.action} ${questData.quantity} ${questData.subject}`,
-        description: description.trim(),
-        subject: questData.subject,
-        quantity: questData.quantity || 1,
-        action: questData.action,
-        completed: false,
-        questGiverId: npcId,
-        rewards: questData.reward,
-        killCount: 0,
-      };
+interface CompletedQuestsData {
+  questId: string;
+}
+
+interface BuyItemsData {
+  items: {
+    itemId: string;
+    quantity: number;
+    price: number;
+  }[];
+}
+
+interface SellItemsData {
+  items: {
+    itemId: string;
+    quantity: number;
+    price: number;
+  }[];
+}
+
+const parseBuyItems = (npcContext: NPC, data: BuyItemsData) => {
+  for (const item of data.items) {
+    npcContext.setBuyItems({
+      itemId: item.itemId,
+      price: item.price,
+      quantity: item.quantity,
     });
-  } catch (error) {
-    console.error('Error parsing quests:', error);
-    return [];
   }
 };
 
-const extractTags = (text: string) => {
-  const tags = new Map<string, string>();
-  let message = text;
-
-  let startTagIndex = message.indexOf('<');
-  while (startTagIndex !== -1) {
-    if (message[startTagIndex + 1] === '/') {
-      startTagIndex = message.indexOf('>', startTagIndex + 1);
-      continue;
-    }
-
-    // Find the end of tag name
-    const tagNameEnd = message.indexOf('>', startTagIndex);
-
-    if (tagNameEnd === -1) {
-      startTagIndex = message.indexOf('<');
-      continue;
-    }
-
-    // Extract tag name
-    const tagName = message.substring(startTagIndex + 1, tagNameEnd);
-
-    // Find closing tag
-    let closingTagStart = message.indexOf(`</${tagName}>`, tagNameEnd);
-    if (closingTagStart === -1) {
-      closingTagStart = message.length - 1;
-    }
-
-    // Extract content between tags
-    const content = message.substring(tagNameEnd + 1, closingTagStart);
-
-    // Add to tags map
-    tags.set(tagName, content);
-
-    // Remove the tag and content from message
-    const beforeTag = message.substring(0, startTagIndex);
-    const afterTag = message.substring(closingTagStart + tagName.length + 3); // +3 for "</>"
-    message = beforeTag + afterTag;
-
-    // Find next tag
-    startTagIndex = message.indexOf('<');
+const parseSellItems = (npcContext: NPC, data: SellItemsData) => {
+  for (const item of data.items) {
+    npcContext.setSellItem({
+      itemId: item.itemId,
+      price: item.price,
+      quantity: item.quantity,
+    });
   }
-
-  return { tags, message: message.trim() };
 };
 
-const parseCompletedQuests = (data: string) => {
-  const completedQuests = data.split(';');
-  completedQuests.forEach((quest) => {
-    gameStore.completeQuest(quest);
-  });
+const parseCompletedQuests = (data: CompletedQuestsData) => {
+  gameStore.completeQuest(data.questId);
 };
 
 interface QuestData {
   quests: {
-    type: string;
     name: string;
     description: string;
-    subject: string;
-    quantity: number;
+    itemId?: string;
+    monsterType?: string;
+    npcId?: string;
+    quantity?: number;
     reward: {
       gold?: number;
-      items?: string[];
+      item?: {
+        itemId: string;
+        quantity: number;
+      };
     };
   }[];
 }
 
-export const addQuests = (data: QuestData, npcContext: NPC) => {
+export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
   for (const quest of data.quests) {
-    console.log(quest);
+    let subject = '';
+    let quantity = 1;
+    let action;
+
+    // Set subject and quantity based on quest type
+    if (type === 'kill monsters' && quest.monsterType) {
+      subject = quest.monsterType;
+      if (!mobTypes.includes(subject as MobType)) {
+        return;
+      }
+      quantity = quest.quantity || 1;
+      action = 'kill';
+    } else if (type === 'kill NPC' && quest.npcId) {
+      subject = quest.npcId;
+      if (!npcStore.npcs[subject]) {
+        return;
+      }
+      quantity = 1;
+      action = 'kill';
+    } else if (type === 'bring items') {
+      subject = quest.itemId || '';
+      if (!itemsData.has(subject)) {
+        return;
+      }
+      quantity = quest.quantity || 1;
+      action = 'bring';
+    }
+
     gameStore.addQuest({
       id: uuidv4(),
-      title: `${quest.type} ${quest.quantity} ${quest.subject}`,
+      title: `${type} ${quantity} ${subject}`,
       description: quest.description,
-      subject: quest.subject,
-      quantity: quest.quantity,
-      action: quest.type,
+      subject,
+      quantity,
+      action: action || '',
       completed: false,
       questGiverId: npcContext.id,
-      rewards: quest.reward,
+      rewards: {
+        gold: quest.reward.gold,
+        items: quest.reward.item ? [quest.reward.item.itemId] : undefined,
+      },
       killCount: 0,
     });
   }
-}
+};
 
 export const parseNpcMessage = (
   text: string,
@@ -150,8 +133,18 @@ export const parseNpcMessage = (
   functionCalls: FunctionCall[],
 ) => {
   for (const functionCall of functionCalls) {
-    if (functionCall.name === 'giveQuest') {
-      addQuests(functionCall.args as QuestData, npcContext);
+    if (functionCall.name === 'giveKillMonsterQuest') {
+      addQuests('kill monsters', functionCall.args as QuestData, npcContext);
+    } else if (functionCall.name === 'giveBringQuest') {
+      addQuests('bring items', functionCall.args as QuestData, npcContext);
+    } else if (functionCall.name === 'giveKillNpcQuest') {
+      addQuests('kill NPC', functionCall.args as QuestData, npcContext);
+    } else if (functionCall.name === 'completeQuest') {
+      parseCompletedQuests(functionCall.args as CompletedQuestsData);
+    } else if (functionCall.name === 'setBuyItemsList') {
+      parseBuyItems(npcContext, functionCall.args as BuyItemsData);
+    } else if (functionCall.name === 'setSellItemsList') {
+      parseSellItems(npcContext, functionCall.args as SellItemsData);
     }
   }
 

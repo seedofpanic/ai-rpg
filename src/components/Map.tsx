@@ -94,9 +94,9 @@ const Map: React.FC<MapProps> = ({ onNpcInteraction, player, onNpcHover }) => {
             x={mob.position.x}
             y={mob.position.y}
             name={mob.name}
-            mobType={mob.mobType}
+            type={mob.type}
             health={mob.health}
-            maxHealth={MOB_STATS[mob.mobType].health}
+            maxHealth={MOB_STATS[mob.type].health}
             isAggressive={mob.isAggressive}
             isAlive={mob.isAlive()}
             onClick={() => onNpcInteraction(id)}

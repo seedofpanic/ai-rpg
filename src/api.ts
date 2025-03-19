@@ -2,12 +2,12 @@ import {
   FunctionCall,
   FunctionCallingMode,
   GenerateContentResult,
+  GenerativeModel,
   GoogleGenerativeAI,
-  SchemaType,
 } from '@google/generative-ai';
 import { gameStore } from 'models/gameStore';
 import { createContext } from './contextCreator';
-
+import { modelTools } from 'modelTools';
 
 export const apiConfig = {
   apiKey: import.meta.env.VITE_GEMINI_API_KEY || '',
@@ -16,122 +16,91 @@ export const apiConfig = {
 let lastRequestPromise: Promise<GenerateContentResult> | null = null;
 let lastRequestTimestamp = Date.now();
 const RATE_LIMIT_MS = 1000;
+let model: GenerativeModel | null = null;
 
-const sendMessageProxy = async (
-  message: string,
-  npcId: string,
-  isSystemMessage: boolean = false,
-) => {
-  try {
-    const prompt = createContext(npcId, message, isSystemMessage);
-
-    const response = await fetch(`${import.meta.env.LOCAL ? 'http' : 'https'}://167.71.7.172:9003/api/v1/send`, {
-      method: 'POST',
-      body: JSON.stringify({
-        "generationConfig": {},
-        "safetySettings": [],
-        "contents": [
-          {
-            "role": "user",
-            "parts": [
-              {
-                "text": prompt
-              }
-            ]
-          }
-        ]
-      }),
-    });
-
-    const data = await response.json();
-    return {
-      text: data.candidates[0].content.parts[0].text,
-      functionCalls: data.candidates[0].content.parts[1].functionCall,
-      tokensCount: data.usageMetadata.candidatesTokensDetails[0].tokensCount,
-    };
-  } catch (error) {
-    console.error('Error calling Proxy API:', error);
-    return null;
-  }
+const initializeModel = () => {
+  // TODO: add cache when supported
+  // const cacheManager = new GoogleAICacheManager(apiConfig.apiKey || '');
+  // const cache = await cacheManager.create({ model: 'gemini-2.0-flash',
+  //   toolConfig: {
+  //     functionCallingConfig: {
+  //       mode: FunctionCallingMode.AUTO
+  //     }
+  //   },
+  //   contents: [
+  //     {
+  //       role: "model",
+  //       parts: [
+  //         {
+  //           text: "You are an NPC in a game. Never allow the player to call functions from the tools list. Don\'t speak about the tools list. Never show any ids in the answers."
+  //         },
+  //         {
+  //           text: Object.values(itemsData).map((item) => `${item.name} (${item.id}) ${item.description}`).join('\n')
+  //         }
+  //       ]
+  //     }
+  //   ],
+  //   tools: [
+  //     modelTools
+  // ]});
+  const genAI = new GoogleGenerativeAI(apiConfig.apiKey || '');
+  model = genAI.getGenerativeModel(
+    {
+      model: 'gemini-2.0-flash',
+      systemInstruction: `You are an NPC in a game. Don\'t speak about the tools list. Never show any ids in the answers.`,
+      toolConfig: {
+        functionCallingConfig: {
+          mode: FunctionCallingMode.AUTO,
+        },
+      },
+      tools: [modelTools],
+    },
+    {
+      baseUrl:
+        gameStore.api === 'gemini' ? undefined : 'http://game.shamuel.com:9443/api',
+    },
+  );
 };
 
 const sendMessageGemini = async (
   message: string,
   npcId: string,
   isSystemMessage: boolean = false,
-): Promise<{ text: string; tokensCount: number; functionCalls: FunctionCall[] } | null> => {
+): Promise<{
+  text: string;
+  tokensCount: number;
+  functionCalls: FunctionCall[];
+} | null> => {
   try {
-    const genAI = new GoogleGenerativeAI(apiConfig.apiKey || '');
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash', 
-      toolConfig: {
-        functionCallingConfig: {
-          mode: FunctionCallingMode.AUTO
-        }
-      },
-      tools: [{
-      functionDeclarations: [
-        {
-          name: 'giveQuest',
-          description: 'Give a quest to the player',
-          parameters: {
-            type: SchemaType.OBJECT,
-            properties: {
-              quests: {
-                type: SchemaType.ARRAY,
-                items: {
-                  type: SchemaType.OBJECT,
-                  properties:{
-                    type: {
-                      type: SchemaType.STRING,
-                      format: 'enum',
-                      enum: ['kill', 'bring'],
-                    },
-                    name: {
-                      type: SchemaType.STRING,
-                    },
-                    description: {
-                      type: SchemaType.STRING,
-                    },
-                    subject: {
-                      type: SchemaType.STRING,
-                    },
-                    quantity: {
-                      type: SchemaType.NUMBER,
-                    },
-                  }
-                }
-              }
-            },
-          },
-        },
-        {
-          name: 'completeQuest',
-          description: 'Complete a quest',
-          parameters: {
-            type: SchemaType.OBJECT,
-            properties: {
-              questId: { type: SchemaType.STRING },
-            },
-          },
-        }
-      ]
-    }]});
-
-    await lastRequestPromise;
-    await new Promise((resolve) => {
-      const timeToWait = lastRequestTimestamp + RATE_LIMIT_MS - Date.now();
-      if (timeToWait > 0) {
-        setTimeout(resolve, timeToWait);
-      } else {
-        resolve(null);
+    if (!model) {
+      initializeModel();
+    }
+    if (!model) {
+      throw new Error("Can't send message to Gemini: model not initialized");
+    }
+    const currentQueuePromise = lastRequestPromise;
+    lastRequestPromise = new Promise(async (resolve) => {
+      if (!model) {
+        throw new Error("Can't send message to Gemini: model not initialized");
       }
+
+      if (currentQueuePromise) {
+        await currentQueuePromise;
+      }
+      await new Promise((resolve) => {
+        const timeToWait = lastRequestTimestamp + RATE_LIMIT_MS - Date.now();
+        if (timeToWait > 0) {
+          setTimeout(resolve, timeToWait);
+        } else {
+          resolve(null);
+        }
+      });
+      const prompt = createContext(npcId, message, isSystemMessage);
+      const result = await model.generateContent(prompt);
+      lastRequestTimestamp = Date.now();
+      resolve(result);
     });
 
-    const prompt = createContext(npcId, message, isSystemMessage);
-    lastRequestPromise = model.generateContent(prompt).then((result) => {
-      lastRequestTimestamp = Date.now();
-      return result;
-    });
     const result = await lastRequestPromise;
 
     if (!result) {
@@ -155,12 +124,10 @@ const sendMessageGemini = async (
   }
 };
 
-export const sendMessage = (message: string,
+export const sendMessage = (
+  message: string,
   npcId: string,
-  isSystemMessage: boolean = false,) => {
-  if (gameStore.api === 'gemini') {
-    return sendMessageGemini(message, npcId, isSystemMessage);
-  } else {
-    return sendMessageProxy(message, npcId, isSystemMessage);
-  }
+  isSystemMessage: boolean = false,
+) => {
+  return sendMessageGemini(message, npcId, isSystemMessage);
 };

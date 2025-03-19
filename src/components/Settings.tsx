@@ -11,7 +11,7 @@ const SettingsOverlay = styled.div<{ isOpen: boolean }>`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  display: ${props => props.isOpen ? 'flex' : 'none'};
+  display: ${(props) => (props.isOpen ? 'flex' : 'none')};
   justify-content: center;
   align-items: center;
   z-index: 1000;
@@ -40,7 +40,7 @@ const CloseButton = styled.button`
   cursor: pointer;
   padding: 0.5rem;
   color: #666;
-  
+
   &:hover {
     color: #333;
   }
@@ -75,7 +75,9 @@ const Select = styled.select`
   font-size: 1rem;
   cursor: pointer;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -110,14 +112,16 @@ const Settings: React.FC<SettingsProps> = observer(({ isOpen, onClose }) => {
 
   return (
     <SettingsOverlay isOpen={isOpen} onClick={onClose}>
-      <SettingsPanel onClick={e => e.stopPropagation()}>
+      <SettingsPanel onClick={(e) => e.stopPropagation()}>
         <SettingsHeader>
           <h2>Settings</h2>
           <CloseButton onClick={onClose}>&times;</CloseButton>
         </SettingsHeader>
         <SettingItem>
           <h3>API Configuration</h3>
-          <Description>Select which API to use for NPC interactions</Description>
+          <Description>
+            Select which API to use for NPC interactions
+          </Description>
           <SelectWrapper>
             <Select value={gameStore.api} onChange={handleApiChange}>
               <option value="gemini">Gemini API</option>
@@ -131,4 +135,4 @@ const Settings: React.FC<SettingsProps> = observer(({ isOpen, onClose }) => {
   );
 });
 
-export default Settings; 
+export default Settings;

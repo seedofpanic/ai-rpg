@@ -7,7 +7,7 @@ interface MobProps {
   x: number;
   y: number;
   name: string;
-  mobType: MobType;
+  type: MobType;
   health: number;
   maxHealth: number;
   isAggressive: boolean;
@@ -113,7 +113,7 @@ const Mob: React.FC<MobProps> = ({
   x,
   y,
   name,
-  mobType,
+  type,
   health,
   maxHealth,
   isAggressive,
@@ -175,7 +175,7 @@ const Mob: React.FC<MobProps> = ({
         }}
       >
         <MobName>{name}</MobName>
-        <MobType>{mobType}</MobType>
+        <MobType>{type}</MobType>
         <MobDetails>
           Health: {health}/{maxHealth}
         </MobDetails>

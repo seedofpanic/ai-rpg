@@ -50,4 +50,4 @@ const SettingsIcon: React.FC<SettingsIconProps> = ({ onClick }) => {
   );
 };
 
-export default SettingsIcon; 
+export default SettingsIcon;
