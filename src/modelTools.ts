@@ -4,6 +4,35 @@ import { mobTypes } from 'models/mob';
 export const modelTools: Tool = {
   functionDeclarations: [
     {
+      name: 'modifyMood',
+      description: 'Update NPC mood/reaction based on player message',
+      parameters: {
+        type: SchemaType.OBJECT,
+        properties: {
+          state: {
+            type: SchemaType.STRING,
+            description: 'The emotional state/reaction of the NPC',
+            enum: [
+              'like',
+              'confused',
+              'offensive',
+              'interesting',
+              'unfriendly',
+              'hostile',
+              'friendly',
+              'neutral',
+              'cautious',
+              'wary',
+              'frugality'
+            ],
+            format: 'enum',
+            nullable: false
+          }
+        },
+        required: ['state']
+      }
+    },
+    {
       name: 'giveBringQuest',
       description: 'Give a quest to the player',
       parameters: {

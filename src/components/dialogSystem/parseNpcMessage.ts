@@ -110,7 +110,7 @@ export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
 
     gameStore.addQuest({
       id: uuidv4(),
-      title: `${type} ${quantity} ${subject}`,
+      title: `${type} ${quantity} ${itemsData.get(subject)?.name || subject}`,
       description: quest.description,
       subject,
       quantity,
@@ -145,15 +145,10 @@ export const parseNpcMessage = (
       parseBuyItems(npcContext, functionCall.args as BuyItemsData);
     } else if (functionCall.name === 'setSellItemsList') {
       parseSellItems(npcContext, functionCall.args as SellItemsData);
+    } else if (functionCall.name === 'modifyMood') {
+      npcContext.setState((functionCall.args as { state: string }).state);
     }
   }
-
-  // npcContext.setState(tags.get('state') || npcContext.state);
-  // const items = parseItems(tags.get('sell') || '');
-  // const buyItems = parseItems(tags.get('buy') || '');
-  // npcContext.setBuyItems(buyItems);
-  // npcContext.setShopItems(items);
-  // parseCompletedQuests(tags.get('completed') || '');
 
   const relationChange = npcContext.getRelationChange(npcContext.state);
   npcContext.changeRelation(relationChange); // Change relation based on response

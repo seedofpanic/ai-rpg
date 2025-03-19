@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { Quest } from '../models/Quest';
 import { observer } from 'mobx-react';
+import { gameStore } from 'models/gameStore';
+import { itemsData } from 'models/itemsData';
 
 interface QuestItemProps {
   $completed: boolean;
@@ -80,7 +82,7 @@ const QuestItem: React.FC<QuestItemComponentProps> = ({ quest, npcName }) => {
           Progress:{' '}
           {quest.action === 'kill'
             ? `${quest.killCount}/${quest.quantity} ${quest.subject} killed`
-            : `0/${quest.quantity} ${quest.subject} collected`}
+            : `${gameStore.player.inventory.find(slot => slot.itemId === quest.subject)?.quantity || 0}/${quest.quantity} ${itemsData.get(quest.subject)?.name || ''} collected`}
         </QuestProgress>
       )}
       {quest.rewards && (
