@@ -23,14 +23,14 @@ export const modelTools: Tool = {
               'neutral',
               'cautious',
               'wary',
-              'frugality'
+              'frugality',
             ],
             format: 'enum',
-            nullable: false
-          }
+            nullable: false,
+          },
         },
-        required: ['state']
-      }
+        required: ['state'],
+      },
     },
     {
       name: 'giveBringQuest',

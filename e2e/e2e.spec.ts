@@ -83,6 +83,7 @@ test.beforeEach(async ({ page }) => {
   await page.fill('input[placeholder="Name"]', "TestPlayer");
   await page.selectOption('select:has-text("Race")', "Human");
   await page.selectOption('select:has-text("Class")', "Warrior");
+  await page.check("#ageVerification");
   await page.click('button:has-text("Start Game")');
 });
 

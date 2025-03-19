@@ -57,7 +57,9 @@ const initializeModel = () => {
     },
     {
       baseUrl:
-        gameStore.api === 'gemini' ? undefined : 'https://game.shamuel.com:9443/api',
+        gameStore.api === 'gemini'
+          ? undefined
+          : 'https://game.shamuel.com:9443/api',
     },
   );
 };

@@ -195,7 +195,9 @@ const PlayerCustomization: React.FC = () => {
           checked={isAdult}
           onChange={(e) => setIsAdult(e.target.checked)}
         />
-        <label htmlFor="ageVerification">I confirm that I am 18 years or older</label>
+        <label htmlFor="ageVerification">
+          I confirm that I am 18 years or older
+        </label>
       </CheckboxContainer>
       <Button onClick={handleSubmit}>Start Game</Button>
     </CustomizationContainer>

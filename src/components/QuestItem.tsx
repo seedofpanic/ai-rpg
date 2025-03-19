@@ -82,7 +82,7 @@ const QuestItem: React.FC<QuestItemComponentProps> = ({ quest, npcName }) => {
           Progress:{' '}
           {quest.action === 'kill'
             ? `${quest.killCount}/${quest.quantity} ${quest.subject} killed`
-            : `${gameStore.player.inventory.find(slot => slot.itemId === quest.subject)?.quantity || 0}/${quest.quantity} ${itemsData.get(quest.subject)?.name || ''} collected`}
+            : `${gameStore.player.inventory.find((slot) => slot.itemId === quest.subject)?.quantity || 0}/${quest.quantity} ${itemsData.get(quest.subject)?.name || ''} collected`}
         </QuestProgress>
       )}
       {quest.rewards && (
