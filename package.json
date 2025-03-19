@@ -19,7 +19,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
-    "@google/generative-ai": "^0.2.1",
+    "@google/generative-ai": "^0.24.0",
     "@testing-library/react": "^16.2.0",
     "@types/react": "^19.0.10",
     "@types/styled-components": "^5.1.34",

@@ -1,6 +1,9 @@
 import {
+  FunctionCall,
+  FunctionCallingMode,
   GenerateContentResult,
   GoogleGenerativeAI,
+  SchemaType,
 } from '@google/generative-ai';
 import { gameStore } from 'models/gameStore';
 import { createContext } from './contextCreator';
@@ -43,6 +46,7 @@ const sendMessageProxy = async (
     const data = await response.json();
     return {
       text: data.candidates[0].content.parts[0].text,
+      functionCalls: data.candidates[0].content.parts[1].functionCall,
       tokensCount: data.usageMetadata.candidatesTokensDetails[0].tokensCount,
     };
   } catch (error) {
@@ -55,10 +59,63 @@ const sendMessageGemini = async (
   message: string,
   npcId: string,
   isSystemMessage: boolean = false,
-): Promise<{ text: string; tokensCount: number } | null> => {
+): Promise<{ text: string; tokensCount: number; functionCalls: FunctionCall[] } | null> => {
   try {
     const genAI = new GoogleGenerativeAI(apiConfig.apiKey || '');
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash', 
+      toolConfig: {
+        functionCallingConfig: {
+          mode: FunctionCallingMode.AUTO
+        }
+      },
+      tools: [{
+      functionDeclarations: [
+        {
+          name: 'giveQuest',
+          description: 'Give a quest to the player',
+          parameters: {
+            type: SchemaType.OBJECT,
+            properties: {
+              quests: {
+                type: SchemaType.ARRAY,
+                items: {
+                  type: SchemaType.OBJECT,
+                  properties:{
+                    type: {
+                      type: SchemaType.STRING,
+                      format: 'enum',
+                      enum: ['kill', 'bring'],
+                    },
+                    name: {
+                      type: SchemaType.STRING,
+                    },
+                    description: {
+                      type: SchemaType.STRING,
+                    },
+                    subject: {
+                      type: SchemaType.STRING,
+                    },
+                    quantity: {
+                      type: SchemaType.NUMBER,
+                    },
+                  }
+                }
+              }
+            },
+          },
+        },
+        {
+          name: 'completeQuest',
+          description: 'Complete a quest',
+          parameters: {
+            type: SchemaType.OBJECT,
+            properties: {
+              questId: { type: SchemaType.STRING },
+            },
+          },
+        }
+      ]
+    }]});
 
     await lastRequestPromise;
     await new Promise((resolve) => {
@@ -82,8 +139,10 @@ const sendMessageGemini = async (
     }
 
     const response = await result.response;
+
     return {
-      text: response.text(), // Ensure <sell></sell> tags are preserved
+      text: response.text(),
+      functionCalls: response.functionCalls() || [],
       tokensCount: (
         response as unknown as {
           usageMetadata: { candidatesTokensDetails: { tokensCount: number }[] };

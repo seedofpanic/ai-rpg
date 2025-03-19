@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { GameStore } from './gameStore';
-import { Player } from './Player';
 import { npcStore } from './npcs';
+import { Player } from './Player';
 import { NPC } from './npc';
 
 describe('GameStore', () => {

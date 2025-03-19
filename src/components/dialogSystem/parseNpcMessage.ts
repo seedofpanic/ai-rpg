@@ -2,6 +2,7 @@ import { itemsData } from 'models/itemsData';
 import { MessageType, NPC, TradeItem } from 'models/npc';
 import { gameStore } from 'models/gameStore';
 import { v4 as uuidv4 } from 'uuid';
+import { FunctionCall } from '@google/generative-ai';
 
 const parseItems = (data: string) => {
   const items: TradeItem[] = [];
@@ -110,39 +111,62 @@ const parseCompletedQuests = (data: string) => {
   });
 };
 
+interface QuestData {
+  quests: {
+    type: string;
+    name: string;
+    description: string;
+    subject: string;
+    quantity: number;
+    reward: {
+      gold?: number;
+      items?: string[];
+    };
+  }[];
+}
+
+export const addQuests = (data: QuestData, npcContext: NPC) => {
+  for (const quest of data.quests) {
+    console.log(quest);
+    gameStore.addQuest({
+      id: uuidv4(),
+      title: `${quest.type} ${quest.quantity} ${quest.subject}`,
+      description: quest.description,
+      subject: quest.subject,
+      quantity: quest.quantity,
+      action: quest.type,
+      completed: false,
+      questGiverId: npcContext.id,
+      rewards: quest.reward,
+      killCount: 0,
+    });
+  }
+}
+
 export const parseNpcMessage = (
   text: string,
   tokensCount: number,
   npcContext: NPC,
+  functionCalls: FunctionCall[],
 ) => {
-  const { tags, message } = extractTags(text);
-  npcContext.setState(tags.get('state') || npcContext.state);
-  const items = parseItems(tags.get('sell') || '');
-  const buyItems = parseItems(tags.get('buy') || '');
-  npcContext.setBuyItems(buyItems);
-  npcContext.setShopItems(items);
-  parseCompletedQuests(tags.get('completed') || '');
-
-  // Parse and add quests
-  const questData = tags.get('quest');
-  if (questData) {
-    const quests = parseQuests(questData, message, npcContext.id);
-    quests.forEach((quest) => {
-      if (gameStore.addQuest(quest)) {
-        npcContext.addDialogHistory({
-          text: `New quest received: ${quest.title}`,
-          type: MessageType.Action,
-          tokensCount: 10,
-        });
-      }
-    });
+  for (const functionCall of functionCalls) {
+    if (functionCall.name === 'giveQuest') {
+      addQuests(functionCall.args as QuestData, npcContext);
+    }
   }
+
+  // npcContext.setState(tags.get('state') || npcContext.state);
+  // const items = parseItems(tags.get('sell') || '');
+  // const buyItems = parseItems(tags.get('buy') || '');
+  // npcContext.setBuyItems(buyItems);
+  // npcContext.setShopItems(items);
+  // parseCompletedQuests(tags.get('completed') || '');
 
   const relationChange = npcContext.getRelationChange(npcContext.state);
   npcContext.changeRelation(relationChange); // Change relation based on response
 
   npcContext.addDialogHistory({
-    text: message,
+    text,
     type: MessageType.NPC,
     tokensCount,
     relationChange,

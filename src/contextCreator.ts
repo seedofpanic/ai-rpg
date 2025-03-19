@@ -81,7 +81,7 @@ export const createContext = (
           .filter((mobId) => mobStore.mobs[mobId].location.name === loc.name)
           .map((mobId) => {
             const mob = mobStore.mobs[mobId];
-            return `${mob.name} ${mob.isAlive() ? 'Alive' : 'Dead'}`;
+            return `${mob.name} (${mob.isAlive() ? 'Alive' : 'Dead'})`;
           })
           .join(', ')}`;
 
@@ -175,30 +175,12 @@ export const createContext = (
     7. Maintain your character's personality in responses
     8. If in doubt, do not complete the quest
 
-    If you verified that the quest is finished, add <completed>questId</completed> example <completed>fb999a3a-d6b3-4066-956f-bf3e2c3ae759</completed> to the message.
+    If you verified that the quest is finished, call completeQuest function. 
 
-    Add your mood towards the player's message using <mood>like</mood> or <mood>unfriendly</mood>. Valid moods are: like, confused, offensive, interesting, unfriendly.
-    If you want to sell something to the player or update prices in your selling list, add a list of items with prices wrapped in <sell></sell>. Example: <sell>Iron Sword,50;Red mask,34</sell>
-    If you want to buy something from the player or update prices in your buying list, add a list of items with prices wrapped in <buy></buy>. Example: <buy>Iron Sword,50;Red mask,34</buy>
-    If you give a quest, or ask for somethig, or command player to do something, or agreeing for player to help you with something wrap it in to <quest>[{...}]</quest>. Example:
-    <quest>
-    [
-      {
-      "action": "Kill",
-      "subject": "Haskir \\"The Iron Tactician\\"",
-      "quantity": 10,
-      "reward": {
-        "gold": 50
-      }, {
-        "action": "Bring",
-        "subject": "red mask",
-        "quantity": 1,
-        "reward": {
-          "items": ["Healing Potion"]
-        }
-      }
-    ]
-    </quest>
+    Call modifyMood function to reflect how you like the player's message.
+    If you want to sell something to the player or update prices in your selling list, call addToSellList function.
+    If you want to buy something from the player or update prices in your buying list, call addToBuyList function.
+    If you give a quest, or ask for somethig, or command player to do something, or agreeing for player to help you with something, or agreeing for player to do something, call giveQuest function.
 
     Quests rules:
     You can ask to kill monsters.

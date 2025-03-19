@@ -53,8 +53,8 @@ export class DialogController {
         return;
       }
 
-      const { text, tokensCount } = response;
-      parseNpcMessage(text, tokensCount, this.npcContext);
+      const { text, tokensCount, functionCalls } = response;
+      parseNpcMessage(text, tokensCount, this.npcContext, functionCalls);
     } catch (error) {
       console.error('Failed to send message:', error);
       this.npcContext.addDialogHistory({
