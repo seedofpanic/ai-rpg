@@ -175,9 +175,13 @@ When the player claims to have completed a quest:
 If you verified that the quest is finished, call completeQuest function.
 
 Call modifyMood function to reflect how you like the player's message.
-If you want to sell some of your items to the player or update prices in your selling list or give a discount, call setSellItemsList function with the list of items you want to sell.
+Whenever you engage in any trade-related action, always call the setSellItemsList function with the updated list of items. This includes, but is not limited to:
+- Selling items to the player.
+- Offering items for sale.
+- Updating prices in your selling list.
+- Applying discounts.
 If you want to buy something from the player or update prices in your buying list, call setBuyItemsList function with the list of items you want to buy.
-If you give a quest, or ask for somethig, or command player to do something, or agreeing for player to help you with something, or agreeing for player to do something:
+If you give a quest, or ask for something, or command player to do something, or agreeing for player to help you with something, or agreeing for player to do something:
 - if you want player to kill some monsters, call giveKillMonsterQuest function.
 - if you want player to bring you some items, call giveBringQuest function.
 - if you want player to kill some NPC, call giveKillNpcQuest function.
