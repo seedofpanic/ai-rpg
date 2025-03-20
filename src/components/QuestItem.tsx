@@ -68,17 +68,17 @@ interface QuestItemComponentProps {
 
 const QuestItem: React.FC<QuestItemComponentProps> = ({ quest, npcName }) => {
   return (
-    <QuestItemContainer $completed={quest.completed}>
-      <QuestStatus $completed={quest.completed}>
+    <QuestItemContainer $completed={quest.completed} data-testid="quest-item">
+      <QuestStatus $completed={quest.completed} data-testid="quest-status">
         {quest.completed ? 'Completed' : 'Active'}
       </QuestStatus>
-      <QuestTitle>
+      <QuestTitle data-testid="quest-title">
         {quest.title}
-        <QuestGiver>(from {npcName || 'Unknown'})</QuestGiver>
+        <QuestGiver data-testid="quest-giver">(from {npcName || 'Unknown'})</QuestGiver>
       </QuestTitle>
-      <QuestDescription>{quest.description}</QuestDescription>
+      <QuestDescription data-testid="quest-description">{quest.description}</QuestDescription>
       {!quest.completed && (
-        <QuestProgress>
+        <QuestProgress data-testid="quest-progress">
           Progress:{' '}
           {quest.action === 'kill'
             ? `${quest.killCount}/${quest.quantity} ${quest.subject} killed`
@@ -86,7 +86,7 @@ const QuestItem: React.FC<QuestItemComponentProps> = ({ quest, npcName }) => {
         </QuestProgress>
       )}
       {quest.rewards && (
-        <QuestRewards>
+        <QuestRewards data-testid="quest-rewards">
           Rewards: {quest.rewards.gold && `${quest.rewards.gold} gold`}
           {quest.rewards.items &&
             quest.rewards.items.length > 0 &&

@@ -131,6 +131,7 @@ const NPC: React.FC<NPCProps> = ({
   onMouseEnter,
   onMouseLeave,
   isAlive,
+  id,
 }) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
@@ -146,7 +147,7 @@ const NPC: React.FC<NPCProps> = ({
       onMouseLeave={onMouseLeave}
     >
       <NPCContainer
-        data-testid="npc-view"
+        data-testid={`npc-view-${id}`}
         style={{ left: x, top: y }}
         onClick={onClick}
         $isAlive={isAlive}

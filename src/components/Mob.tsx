@@ -130,7 +130,7 @@ const Mob: React.FC<MobProps> = ({
   return (
     <HoverableContainer>
       <MobContainer
-        data-testid="mob-view"
+        data-testid={`mob-view-${id}`}
         style={{ left: x, top: y }}
         onClick={onClick}
         onMouseMove={handleMouseMove}
@@ -176,7 +176,7 @@ const Mob: React.FC<MobProps> = ({
         }}
       >
         <MobName>
-          {name} {id}
+          {name}
         </MobName>
         <MobType>{type}</MobType>
         <MobDetails>

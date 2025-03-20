@@ -141,11 +141,12 @@ const CharacterDoll: React.FC<CharacterDollProps> = observer(({ player }) => {
   };
 
   return (
-    <DollContainer>
+    <DollContainer data-testid="character-doll">
       <h3>Character</h3>
       <DollFigure>
         {/* Head */}
         <EquipmentSlot
+          data-testid="equipment-slot-head"
           $hasItem={!!player.equipment.head}
           style={{ top: 10, left: 35 }}
           onClick={() => handleSlotClick('head')}
@@ -157,6 +158,7 @@ const CharacterDoll: React.FC<CharacterDollProps> = observer(({ player }) => {
 
         {/* Chest */}
         <EquipmentSlot
+          data-testid="equipment-slot-chest"
           $hasItem={!!player.equipment.chest}
           style={{ top: 50, left: 35 }}
           onClick={() => handleSlotClick('chest')}
@@ -168,6 +170,7 @@ const CharacterDoll: React.FC<CharacterDollProps> = observer(({ player }) => {
 
         {/* Weapon */}
         <EquipmentSlot
+          data-testid="equipment-slot-weapon"
           $hasItem={!!player.equipment.weapon}
           style={{ top: 70, left: 5 }}
           onClick={() => handleSlotClick('weapon')}
@@ -179,6 +182,7 @@ const CharacterDoll: React.FC<CharacterDollProps> = observer(({ player }) => {
 
         {/* Shield */}
         <EquipmentSlot
+          data-testid="equipment-slot-shield"
           $hasItem={!!player.equipment.shield}
           style={{ top: 70, right: 5 }}
           onClick={() => handleSlotClick('shield')}
@@ -190,6 +194,7 @@ const CharacterDoll: React.FC<CharacterDollProps> = observer(({ player }) => {
 
         {/* Ring */}
         <EquipmentSlot
+          data-testid="equipment-slot-ring"
           $hasItem={!!player.equipment.ring}
           style={{ top: 90, left: 35 }}
           onClick={() => handleSlotClick('ring')}
@@ -201,6 +206,7 @@ const CharacterDoll: React.FC<CharacterDollProps> = observer(({ player }) => {
 
         {/* Feet */}
         <EquipmentSlot
+          data-testid="equipment-slot-feet"
           $hasItem={!!player.equipment.feet}
           style={{ top: 110, left: 35 }}
           onClick={() => handleSlotClick('feet')}
@@ -212,6 +218,7 @@ const CharacterDoll: React.FC<CharacterDollProps> = observer(({ player }) => {
       </DollFigure>
       {tooltip.visible && (
         <SlotTooltip
+          data-testid="equipment-tooltip"
           style={{
             left: tooltip.x,
             top: tooltip.y,
@@ -221,16 +228,20 @@ const CharacterDoll: React.FC<CharacterDollProps> = observer(({ player }) => {
           {tooltip.text}
         </SlotTooltip>
       )}
-      <EffectsContainer>
+      <EffectsContainer data-testid="effects-container">
         <h4 style={{ margin: '0 0 5px 0', fontSize: '14px' }}>
           Active Effects
         </h4>
         {Array.from(player.magicEffects.getActiveEffects().entries()).map(
           ([targetId, effects]) =>
             effects.map((effect, index) => (
-              <EffectItem key={`${targetId}-${index}`} $type={effect.type}>
-                <span>{effect.source}</span>
-                <EffectValue>
+              <EffectItem 
+                key={`${targetId}-${index}`} 
+                $type={effect.type}
+                data-testid={`effect-item-${effect.type}-${index}`}
+              >
+                <span data-testid={`effect-source-${index}`}>{effect.source}</span>
+                <EffectValue data-testid={`effect-value-${index}`}>
                   {effect.type === 'heal' && `+${effect.value} HP`}
                   {effect.type === 'buff' && `+${effect.value} AP`}
                   {effect.type === 'debuff' && `-${effect.value} AP`}
@@ -241,6 +252,7 @@ const CharacterDoll: React.FC<CharacterDollProps> = observer(({ player }) => {
         )}
         {player.magicEffects.getActiveEffects().size === 0 && (
           <div
+            data-testid="no-effects-message"
             style={{
               textAlign: 'center',
               color: '#888',
