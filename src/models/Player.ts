@@ -276,13 +276,13 @@ export class Player {
 
   getIntellectLevel() {
     if (this.stats.intelligence > 9) {
-      return 'high';
+      return 'high intelligence';
     } else if (this.stats.intelligence > 7) {
-      return 'medium';
+      return 'medium intelligence';
     } else if (this.stats.intelligence > 5) {
-      return 'low';
+      return 'low intelligence';
     } else if (this.stats.intelligence > 3) {
-      return 'very low';
+      return 'very low intelligence';
     } else if (this.stats.intelligence > 0) {
       return `can't speak`;
     } else {
