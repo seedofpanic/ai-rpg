@@ -60,6 +60,22 @@ const Message = styled.div<{ $type?: MessageType }>`
     props.$type === MessageType.Player ? 'auto' : '0'};
   font-style: ${(props) =>
     props.$type === MessageType.Action ? 'italic' : 'normal'};
+
+  & strong {
+    color: ${(props) => {
+      switch (props.$type) {
+        case MessageType.Player:
+          return '#4C1608';
+        case MessageType.NPC:
+          return 'rgba(38, 70, 83, 0.95)';
+        case MessageType.Action:
+          return 'white';
+        default:
+          return 'white';
+      }
+    }};
+    font-style: italic;
+  }
 `;
 
 const InputContainer = styled.div`
@@ -194,6 +210,15 @@ const LoadingMessage = styled(Message)`
   gap: 8px;
 `;
 
+const formatMessageText = (text: string) => {
+  return text.split(/(\*[^*]+\*)/).map((part, index) => {
+    if (part.startsWith('*') && part.endsWith('*')) {
+      return <strong key={index}>{part.slice(1, -1)}</strong>;
+    }
+    return part;
+  });
+};
+
 const DialogueSystem: React.FC<DialogueSystemProps> = ({
   npcId,
   onClose,
@@ -254,7 +279,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
           <MessageLog ref={messageLogRef}>
             {npcContext.dialogueHistory?.map((message, index) => (
               <Message data-testid="message" key={index} $type={message.type}>
-                {message.text}
+                {formatMessageText(message.text)}
               </Message>
             ))}
             {dialogController.isLoading && (

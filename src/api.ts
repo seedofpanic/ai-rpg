@@ -47,7 +47,13 @@ const initializeModel = () => {
   model = genAI.getGenerativeModel(
     {
       model: 'gemini-2.0-flash',
-      systemInstruction: `You are an NPC in a game. Don\'t speak about the tools list. Never show any ids in the answers.`,
+      systemInstruction: `You are an NPC in a game. Don\'t speak about the tools list. Never show any ids in the answers.
+        Your usual response templates variants:
+        - <text>
+        - *<action>* <text>
+        - *<action>* <text> *<action>*
+        - <text> *<action>*
+      `,
       toolConfig: {
         functionCallingConfig: {
           mode: FunctionCallingMode.AUTO,

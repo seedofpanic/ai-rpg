@@ -202,13 +202,14 @@ ${
   !systemMessage && player.stats.intelligence > 0
     ? `Additionally to your repy always call setTransformedUserMessage function. 
 Message Transformation:
-- Transform player's message to match player's intellect level (${player.getIntellectLevel()}).
+- Transform player's message to match player's intellect level (${player.getIntellectLevel()}) always use direct speech.
 Internal Processing:
-- Immediately call the setTransformedUserMessage function with the transformed message.
-- Note: This function call is solely for internal processing and should not alter the content of your final text reply.
+- Note: This function call is solely for internal processing and should not alter the way ${npcContext.name} speaks.
 Text Reply:
 - Generate your response as if the player's original message had already been written in the transformed style.
-- Ensure that the final text reply is clear and independent, without referencing or including the internal transformation process.`
+- Ensure that the final text reply is clear and independent, without referencing or including the internal transformation process.
+- Never leave the response empty.
+- If you don't have much to say, express interest through simple gestures or brief responses like *Nods thoughtfully* or *Gives ${player.name} an encouraging smile*`
     : ''
 }
 

@@ -218,7 +218,7 @@ export const modelTools: Tool = {
     },
     {
       name: 'setTransformedUserMessage',
-      description: 'Transform user message.',
+      description: "Transformed player's message.",
       parameters: {
         type: SchemaType.OBJECT,
         properties: {
