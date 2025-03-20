@@ -147,6 +147,10 @@ export const parseNpcMessage = (
       parseSellItems(npcContext, functionCall.args as SellItemsData);
     } else if (functionCall.name === 'modifyMood') {
       npcContext.setState((functionCall.args as { state: string }).state);
+    } else if (functionCall.name === 'setTransformedUserMessage') {
+      npcContext.replaceUserMessage(
+        (functionCall.args as { message: string }).message,
+      );
     }
   }
 

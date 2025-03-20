@@ -198,6 +198,20 @@ If player message is unclear, ask for clarification in a friendly way.
 If player repeats themselves, acknowledge it and try to provide additional information or a different perspective.
 If you don't have much to say, express interest through simple gestures or brief responses like *Nods thoughtfully* or *Gives ${player.name} an encouraging smile*.
 
+${
+  !systemMessage && player.stats.intelligence > 0
+    ? `Additionally to your repy always call setTransformedUserMessage function. 
+Message Transformation:
+- Transform player's message to match player's intellect level (${player.getIntellectLevel()}).
+Internal Processing:
+- Immediately call the setTransformedUserMessage function with the transformed message.
+- Note: This function call is solely for internal processing and should not alter the content of your final text reply.
+Text Reply:
+- Generate your response as if the player's original message had already been written in the transformed style.
+- Ensure that the final text reply is clear and independent, without referencing or including the internal transformation process.`
+    : ''
+}
+
 ${systemMessage ? '' : "Player's message: "}${message}`;
 
   let tokensCount = 0;

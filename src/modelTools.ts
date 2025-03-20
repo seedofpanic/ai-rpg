@@ -216,5 +216,15 @@ export const modelTools: Tool = {
         },
       },
     },
+    {
+      name: 'setTransformedUserMessage',
+      description: 'Transform user message.',
+      parameters: {
+        type: SchemaType.OBJECT,
+        properties: {
+          message: { type: SchemaType.STRING, nullable: false },
+        },
+      },
+    },
   ],
 };

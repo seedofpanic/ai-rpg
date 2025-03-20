@@ -34,6 +34,21 @@ export class Player {
   baseDodgeChance: number;
   private cachedEquipmentStats: EquipmentStats;
   magicEffects: MagicEffects;
+  stats: {
+    strength: number;
+    dexterity: number;
+    intelligence: number;
+    wisdom: number;
+    constitution: number;
+    charisma: number;
+  } = {
+    strength: 0,
+    dexterity: 0,
+    intelligence: 0,
+    wisdom: 0,
+    constitution: 0,
+    charisma: 0,
+  };
 
   // Computed stats (including equipment)
   get health(): number {
@@ -257,5 +272,21 @@ export class Player {
 
   useItem(itemId: string) {
     this.magicEffects.useItem(itemId);
+  }
+
+  getIntellectLevel() {
+    if (this.stats.intelligence > 9) {
+      return 'high';
+    } else if (this.stats.intelligence > 7) {
+      return 'medium';
+    } else if (this.stats.intelligence > 5) {
+      return 'low';
+    } else if (this.stats.intelligence > 3) {
+      return 'very low';
+    } else if (this.stats.intelligence > 0) {
+      return `can't speak`;
+    } else {
+      return '';
+    }
   }
 }

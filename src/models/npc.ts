@@ -522,4 +522,16 @@ export class NPC {
   setInventory(inventory: { itemId: string; quantity: number }[]): void {
     this.inventory = inventory;
   }
+
+  replaceUserMessage(message: string) {
+    if (!this.dialogueHistory) return;
+
+    // find index backwards
+    const playerMessageIndex = this.dialogueHistory.findLastIndex(
+      (message) => message.type === MessageType.Player,
+    );
+    if (playerMessageIndex !== undefined) {
+      this.dialogueHistory[playerMessageIndex].text = message;
+    }
+  }
 }

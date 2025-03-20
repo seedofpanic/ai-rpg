@@ -52,6 +52,45 @@ const CheckboxContainer = styled.div`
   margin: 10px 0;
 `;
 
+const StatsContainer = styled.div`
+  width: 100%;
+  max-width: 400px;
+  margin: 20px 0;
+  border: 1px solid #e76f51;
+  border-radius: 4px;
+  overflow: hidden;
+`;
+
+const StatsHeader = styled.div`
+  background-color: #e76f51;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const StatsContent = styled.div<{ isOpen: boolean }>`
+  padding: 10px;
+  display: ${(props) => (props.isOpen ? 'block' : 'none')};
+  background-color: #2a9d8f;
+`;
+
+const StatInput = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px 0;
+  color: white;
+`;
+
+const StatInputField = styled.input`
+  width: 60px;
+  padding: 5px;
+  border: none;
+  border-radius: 4px;
+`;
+
 const PlayerCustomization: React.FC = () => {
   const [name, setName] = useState('');
   const [race, setRace] = useState('');
@@ -62,6 +101,15 @@ const PlayerCustomization: React.FC = () => {
     gameStore.api,
   );
   const [isAdult, setIsAdult] = useState(false);
+  const [isStatsOpen, setIsStatsOpen] = useState(false);
+  const [stats, setStats] = useState({
+    strength: '0',
+    dexterity: '0',
+    intelligence: '0',
+    wisdom: '0',
+    constitution: '0',
+    charisma: '0',
+  });
 
   // Restore settings from localStorage on component mount
   useEffect(() => {
@@ -93,6 +141,13 @@ const PlayerCustomization: React.FC = () => {
     }
   };
 
+  const handleStatChange = (stat: string, value: string) => {
+    setStats((prev) => ({
+      ...prev,
+      [stat]: value,
+    }));
+  };
+
   const handleSubmit = () => {
     if (selectedApi === 'gemini' && !apiKey) {
       alert('Please provide a valid API key for Gemini API.');
@@ -112,8 +167,18 @@ const PlayerCustomization: React.FC = () => {
       localStorage.setItem('playerType', type);
       localStorage.setItem('selectedApi', selectedApi);
       localStorage.setItem('isAdult', isAdult.toString());
+      localStorage.setItem('playerStats', JSON.stringify(stats));
 
       const player = new Player(name, race, playerClass, type);
+      // Set player stats from the form
+      player.stats = {
+        strength: stats.strength ? parseInt(stats.strength) : 0,
+        dexterity: stats.dexterity ? parseInt(stats.dexterity) : 0,
+        intelligence: stats.intelligence ? parseInt(stats.intelligence) : 0,
+        wisdom: stats.wisdom ? parseInt(stats.wisdom) : 0,
+        constitution: stats.constitution ? parseInt(stats.constitution) : 0,
+        charisma: stats.charisma ? parseInt(stats.charisma) : 0,
+      };
       gameStore.startGame(player);
     }
   };
@@ -199,6 +264,90 @@ const PlayerCustomization: React.FC = () => {
           I confirm that I am 18 years or older
         </label>
       </CheckboxContainer>
+
+      {window.location.hash === '#exp' ? (
+        <StatsContainer>
+          <StatsHeader onClick={() => setIsStatsOpen(!isStatsOpen)}>
+            <span>EXPERIMENTAL</span>
+            <span>{isStatsOpen ? '▼' : '▶'}</span>
+          </StatsHeader>
+          <StatsContent isOpen={isStatsOpen}>
+            <StatInput>
+              <label htmlFor="strength">Strength:</label>
+              <StatInputField
+                id="strength"
+                type="number"
+                min="1"
+                max="10"
+                value={stats.strength}
+                onChange={(e) => handleStatChange('strength', e.target.value)}
+              />
+            </StatInput>
+            <StatInput>
+              <label htmlFor="dexterity">Dexterity:</label>
+              <StatInputField
+                id="dexterity"
+                type="number"
+                min="1"
+                max="10"
+                value={stats.dexterity}
+                onChange={(e) => handleStatChange('dexterity', e.target.value)}
+              />
+            </StatInput>
+            <StatInput>
+              <label htmlFor="intelligence">Intelligence:</label>
+              <StatInputField
+                id="intelligence"
+                type="number"
+                min="1"
+                max="10"
+                value={stats.intelligence}
+                onChange={(e) =>
+                  handleStatChange('intelligence', e.target.value)
+                }
+              />
+            </StatInput>
+            <StatInput>
+              <label htmlFor="wisdom">Wisdom:</label>
+              <StatInputField
+                id="wisdom"
+                type="number"
+                min="1"
+                max="10"
+                value={stats.wisdom}
+                onChange={(e) => handleStatChange('wisdom', e.target.value)}
+              />
+            </StatInput>
+            <StatInput>
+              <label htmlFor="constitution">Constitution:</label>
+              <StatInputField
+                id="constitution"
+                type="number"
+                min="1"
+                max="10"
+                value={stats.constitution}
+                onChange={(e) =>
+                  handleStatChange('constitution', e.target.value)
+                }
+              />
+            </StatInput>
+            <StatInput>
+              <label htmlFor="charisma">Charisma:</label>
+              <StatInputField
+                id="charisma"
+                type="number"
+                min="1"
+                max="10"
+                value={stats.charisma}
+                onChange={(e) => handleStatChange('charisma', e.target.value)}
+              />
+            </StatInput>
+          </StatsContent>
+        </StatsContainer>
+      ) : (
+        ''
+      )}
+
       <Button onClick={handleSubmit}>Start Game</Button>
     </CustomizationContainer>
   );
