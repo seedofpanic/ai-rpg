@@ -20,6 +20,11 @@ export class MagicEffects {
     makeAutoObservable(this);
   }
 
+  // Public method to get active effects
+  getActiveEffects(): Map<string, Effect[]> {
+    return this.activeEffects;
+  }
+
   applyEffect(targetId: string, effect: Effect) {
     if (!this.activeEffects.has(targetId)) {
       this.activeEffects.set(targetId, []);
@@ -54,9 +59,9 @@ export class MagicEffects {
   private handleHeal(targetId: string, effect: Effect) {
     if (targetId === this.player.name) {
       const healAmount = effect.value;
-      this.player.baseHealth = Math.min(
+      this.player.health = Math.min(
         this.player.health + healAmount,
-        this.player.health,
+        this.player.maxHealth,
       );
       combatLogStore.push(`${this.player.name} healed for ${healAmount} HP!`);
     }
@@ -107,6 +112,14 @@ export class MagicEffects {
       return false;
     }
 
+    if (!item.effect.duration) {
+      this.processEffect(this.player.name, {
+        type: item.effect.type,
+        value: item.effect.value,
+        source: item.name,
+      });
+      return;
+    }
     this.applyEffect(this.player.name, {
       type: item.effect.type,
       value: item.effect.value,

@@ -110,6 +110,7 @@ const MobDetails = styled.div`
 `;
 
 const Mob: React.FC<MobProps> = ({
+  id,
   x,
   y,
   name,
@@ -174,7 +175,7 @@ const Mob: React.FC<MobProps> = ({
               : mousePos.y + 30,
         }}
       >
-        <MobName>{name}</MobName>
+        <MobName>{name} {id}</MobName>
         <MobType>{type}</MobType>
         <MobDetails>
           Health: {health}/{maxHealth}

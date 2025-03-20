@@ -28,6 +28,7 @@ export class Player {
   inventory: InventorySlot[] = [];
   equipment: Equipment = {};
   baseHealth: number;
+  health: number;
   baseAttackPower: number;
   baseDefense: number;
   baseCriticalChance: number;
@@ -51,7 +52,7 @@ export class Player {
   };
 
   // Computed stats (including equipment)
-  get health(): number {
+  get maxHealth(): number {
     return this.baseHealth + this.cachedEquipmentStats.health;
   }
 
@@ -88,6 +89,14 @@ export class Player {
     this.baseCriticalChance = 0.1;
     this.baseDodgeChance = 0.05;
     this.cachedEquipmentStats = this.calculateEquipmentStats();
+    const healthPotion = Array.from(itemsData).find(([_, item]) => item.name === 'Health Potion')?.[0];
+    if (healthPotion) {
+      this.addItemToInventory({
+        itemId: healthPotion,
+        quantity: 1,
+      });
+    }
+    this.health = this.maxHealth;
     this.magicEffects = new MagicEffects(this);
     makeAutoObservable(this);
   }
@@ -160,7 +169,7 @@ export class Player {
     }
 
     const reducedDamage = Math.max(0, amount - this.defense);
-    this.baseHealth = Math.max(0, this.baseHealth - reducedDamage);
+    this.health = Math.max(0, this.baseHealth - reducedDamage);
     console.log(`${this.name} took ${reducedDamage} damage.`);
     combatLogStore.push(`${this.name} took ${reducedDamage} damage.`);
   }
@@ -271,7 +280,11 @@ export class Player {
   }
 
   useItem(itemId: string) {
+    const item = itemsData.get(itemId);
     this.magicEffects.useItem(itemId);
+    if (item?.isUsable === "single") {
+      this.removeItemFromInventory({ itemId, quantity: 1 });
+    }
   }
 
   getIntellectLevel() {

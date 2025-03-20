@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Player } from '../models/Player';
 import { itemsData } from '../models/itemsData';
+import { observer } from 'mobx-react';
 
 const DollContainer = styled.div`
   display: flex;
@@ -54,11 +55,43 @@ const SlotTooltip = styled.div`
   pointer-events: none;
 `;
 
+const EffectsContainer = styled.div`
+  width: 100%;
+  margin-top: 10px;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+`;
+
+const EffectItem = styled.div<{ $type: string }>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  margin: 2px 0;
+  border-radius: 3px;
+  font-size: 12px;
+  background-color: ${props => {
+    switch (props.$type) {
+      case 'heal': return 'rgba(76, 175, 80, 0.3)';
+      case 'buff': return 'rgba(33, 150, 243, 0.3)';
+      case 'debuff': return 'rgba(244, 67, 54, 0.3)';
+      case 'damage': return 'rgba(255, 152, 0, 0.3)';
+      default: return 'rgba(255, 255, 255, 0.1)';
+    }
+  }};
+  color: white;
+`;
+
+const EffectValue = styled.span`
+  font-weight: bold;
+`;
+
 interface CharacterDollProps {
   player: Player;
 }
 
-const CharacterDoll: React.FC<CharacterDollProps> = ({ player }) => {
+const CharacterDoll: React.FC<CharacterDollProps> = observer(({ player }) => {
   const [tooltip, setTooltip] = useState<{
     visible: boolean;
     text: string;
@@ -183,8 +216,29 @@ const CharacterDoll: React.FC<CharacterDollProps> = ({ player }) => {
           {tooltip.text}
         </SlotTooltip>
       )}
+      <EffectsContainer>
+        <h4 style={{ margin: '0 0 5px 0', fontSize: '14px' }}>Active Effects</h4>
+        {Array.from(player.magicEffects.getActiveEffects().entries()).map(([targetId, effects]) => (
+          effects.map((effect, index) => (
+            <EffectItem key={`${targetId}-${index}`} $type={effect.type}>
+              <span>{effect.source}</span>
+              <EffectValue>
+                {effect.type === 'heal' && `+${effect.value} HP`}
+                {effect.type === 'buff' && `+${effect.value} AP`}
+                {effect.type === 'debuff' && `-${effect.value} AP`}
+                {effect.type === 'damage' && `-${effect.value} HP`}
+              </EffectValue>
+            </EffectItem>
+          ))
+        ))}
+        {player.magicEffects.getActiveEffects().size === 0 && (
+          <div style={{ textAlign: 'center', color: '#888', fontSize: '12px', padding: '5px' }}>
+            No active effects
+          </div>
+        )}
+      </EffectsContainer>
     </DollContainer>
   );
-};
+});
 
 export default CharacterDoll;
