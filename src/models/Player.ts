@@ -89,7 +89,9 @@ export class Player {
     this.baseCriticalChance = 0.1;
     this.baseDodgeChance = 0.05;
     this.cachedEquipmentStats = this.calculateEquipmentStats();
-    const healthPotion = Array.from(itemsData).find(([_, item]) => item.name === 'Health Potion')?.[0];
+    const healthPotion = Array.from(itemsData).find(
+      ([_, item]) => item.name === 'Health Potion',
+    )?.[0];
     if (healthPotion) {
       this.addItemToInventory({
         itemId: healthPotion,
@@ -282,7 +284,7 @@ export class Player {
   useItem(itemId: string) {
     const item = itemsData.get(itemId);
     this.magicEffects.useItem(itemId);
-    if (item?.isUsable === "single") {
+    if (item?.isUsable === 'single') {
       this.removeItemFromInventory({ itemId, quantity: 1 });
     }
   }

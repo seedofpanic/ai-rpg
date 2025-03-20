@@ -30,7 +30,7 @@ export interface ItemData {
   price: number;
   equippableSlot?: keyof Equipment;
   stats?: ItemStats;
-  isUsable?: "single" | "multiple";
+  isUsable?: 'single' | 'multiple';
   effect?: Effect;
 }
 
@@ -43,7 +43,7 @@ itemsData.set(uuid, {
   equippableSlot: 'weapon',
   stats: {
     attackPower: 10,
-  }
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -53,14 +53,14 @@ itemsData.set(uuidv4(), {
   equippableSlot: 'shield',
   stats: {
     defense: 8,
-  }
+  },
 });
 
 itemsData.set(uuidv4(), {
   name: 'Health Potion',
   description: 'A potion that restores health.',
   price: 50,
-  isUsable: "single",
+  isUsable: 'single',
   effect: {
     type: 'heal',
     value: 50,
@@ -75,7 +75,7 @@ itemsData.set(uuidv4(), {
   stats: {
     attackPower: 8,
     criticalChance: 0.05,
-  }
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -85,19 +85,19 @@ itemsData.set(uuidv4(), {
   equippableSlot: 'head',
   stats: {
     defense: 5,
-  }
+  },
 });
 
 itemsData.set(uuidv4(), {
   name: 'Bow',
   description: 'A bow for ranged attacks.',
-  price: 120
+  price: 120,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Arrow',
   description: 'Ammunition for the bow.',
-  price: 10
+  price: 10,
 });
 
 itemsData.set(uuidv4(), {
@@ -108,7 +108,7 @@ itemsData.set(uuidv4(), {
   stats: {
     defense: 3,
     dodgeChance: 0.02,
-  }
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -119,7 +119,7 @@ itemsData.set(uuidv4(), {
   stats: {
     attackPower: 5,
     criticalChance: 0.03,
-  }
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -130,91 +130,91 @@ itemsData.set(uuidv4(), {
   stats: {
     defense: 3,
     dodgeChance: 0.1,
-  }
+  },
 });
 
 itemsData.set(uuidv4(), {
   name: 'Silk',
   description: 'Fine, smooth fabric prized by merchants.',
-  price: 180
+  price: 180,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Mushroom',
   description: 'A rare mushroom used in alchemy.',
-  price: 45
+  price: 45,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Letter',
   description: 'An important document that needs delivery.',
-  price: 30
+  price: 30,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Flour',
   description: 'High-quality baking flour.',
-  price: 25
+  price: 25,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Iron',
   description: 'Raw iron ore for blacksmithing.',
-  price: 120
+  price: 120,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Worm',
   description: 'Fresh bait for fishing.',
-  price: 5
+  price: 5,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Pelt',
   description: 'A well-preserved animal hide.',
-  price: 90
+  price: 90,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Seed',
   description: 'Quality seeds for farming.',
-  price: 15
+  price: 15,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Cloth',
   description: 'Sturdy fabric for tailoring.',
-  price: 60
+  price: 60,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Gem',
   description: 'A precious stone for jewelry making.',
-  price: 350
+  price: 350,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Leather',
   description: 'Tanned animal hide used for armor crafting.',
-  price: 45
+  price: 45,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Wood',
   description: 'Quality lumber for crafting.',
-  price: 30
+  price: 30,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Silver Ore',
   description: 'Raw silver for crafting jewelry and weapons.',
-  price: 200
+  price: 200,
 });
 
 itemsData.set(uuidv4(), {
   name: 'Gold Ore',
   description: 'Raw gold for crafting precious items.',
-  price: 400
+  price: 400,
 });
 
 itemsData.set(uuidv4(), {
@@ -225,7 +225,7 @@ itemsData.set(uuidv4(), {
   stats: {
     attackPower: 6,
     criticalChance: 0.08,
-  }
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -235,7 +235,7 @@ itemsData.set(uuidv4(), {
   equippableSlot: 'weapon',
   stats: {
     attackPower: 15,
-  }
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -246,7 +246,7 @@ itemsData.set(uuidv4(), {
   stats: {
     attackPower: 8,
     defense: 2,
-  }
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -257,7 +257,7 @@ itemsData.set(uuidv4(), {
   stats: {
     defense: 5,
     health: 5,
-  }
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -268,7 +268,7 @@ itemsData.set(uuidv4(), {
   stats: {
     defense: 10,
     health: 10,
-  }
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -279,62 +279,62 @@ itemsData.set(uuidv4(), {
   stats: {
     defense: 15,
     health: 20,
-  }
+  },
 });
 
 itemsData.set(uuidv4(), {
   name: 'Mana Potion',
   description: 'Restores magical energy.',
   price: 60,
-  isUsable: "single",
+  isUsable: 'single',
 });
 
 itemsData.set(uuidv4(), {
   name: 'Stamina Potion',
   description: 'Restores physical energy.',
   price: 55,
-  isUsable: "single",
+  isUsable: 'single',
 });
 
 itemsData.set(uuidv4(), {
   name: 'Scroll of Fireball',
   description: 'A scroll containing the Fireball spell.',
   price: 100,
-  isUsable: "single",
+  isUsable: 'single',
 });
 
 itemsData.set(uuidv4(), {
   name: 'Scroll of Lightning',
   description: 'A scroll containing the Lightning spell.',
   price: 120,
-  isUsable: "single",
+  isUsable: 'single',
 });
 
 itemsData.set(uuidv4(), {
   name: 'Scroll of Healing',
   description: 'A scroll containing the Healing spell.',
   price: 80,
-  isUsable: "single",
+  isUsable: 'single',
 });
 
 itemsData.set(uuidv4(), {
   name: 'Antidote',
   description: 'Cures poison effects.',
   price: 40,
-  isUsable: "single",
+  isUsable: 'single',
 });
 
 itemsData.set(uuidv4(), {
   name: 'Healing Salve',
   description: 'A salve that restores health over time.',
   price: 45,
-  isUsable: "single",
+  isUsable: 'single',
 });
 
 itemsData.set(uuidv4(), {
   name: 'Crystal Vial',
   description: 'A vial used for storing magical substances.',
-  price: 30
+  price: 30,
 });
 
 itemsData.set(uuidv4(), {
@@ -344,7 +344,7 @@ itemsData.set(uuidv4(), {
   equippableSlot: 'ring',
   stats: {
     defense: 3,
-  }
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -354,7 +354,7 @@ itemsData.set(uuidv4(), {
   equippableSlot: 'amulet',
   stats: {
     health: 10,
-  }
+  },
 });
 
 // Crafting Materials
@@ -815,7 +815,7 @@ itemsData.set(uuidv4(), {
   name: 'Health Potion',
   description: 'A red potion that restores health.',
   price: 100,
-  isUsable: "single",
+  isUsable: 'single',
   effect: {
     type: 'heal',
     value: 50,
@@ -874,7 +874,7 @@ itemsData.set(uuidv4(), {
   name: 'Greater Health Potion',
   description: 'A powerful potion that restores a large amount of health.',
   price: 100,
-  isUsable: "single",
+  isUsable: 'single',
   effect: {
     type: 'heal',
     value: 100,
@@ -885,7 +885,7 @@ itemsData.set(uuidv4(), {
   name: 'Strength Elixir',
   description: 'Temporarily increases your attack power.',
   price: 150,
-  isUsable: "single",
+  isUsable: 'single',
   effect: {
     type: 'buff',
     value: 10,
@@ -897,7 +897,7 @@ itemsData.set(uuidv4(), {
   name: 'Swiftness Potion',
   description: 'Increases your dodge chance temporarily.',
   price: 120,
-  isUsable: "single",
+  isUsable: 'single',
   effect: {
     type: 'buff',
     value: 0.15,
@@ -909,7 +909,7 @@ itemsData.set(uuidv4(), {
   name: 'Defense Tonic',
   description: 'Temporarily increases your defense.',
   price: 130,
-  isUsable: "single",
+  isUsable: 'single',
   effect: {
     type: 'buff',
     value: 8,
@@ -921,7 +921,7 @@ itemsData.set(uuidv4(), {
   name: 'Poison Vial',
   description: 'A deadly poison that deals damage over time.',
   price: 200,
-  isUsable: "single",
+  isUsable: 'single',
   effect: {
     type: 'debuff',
     value: 5,
@@ -933,7 +933,7 @@ itemsData.set(uuidv4(), {
   name: 'Fire Scroll',
   description: 'A scroll that unleashes a powerful fireball.',
   price: 180,
-  isUsable: "single",
+  isUsable: 'single',
   effect: {
     type: 'damage',
     value: 30,
@@ -944,7 +944,7 @@ itemsData.set(uuidv4(), {
   name: 'Regeneration Potion',
   description: 'Gradually restores health over time.',
   price: 160,
-  isUsable: "single",
+  isUsable: 'single',
   effect: {
     type: 'heal',
     value: 5,
@@ -956,7 +956,7 @@ itemsData.set(uuidv4(), {
   name: 'Critical Strike Elixir',
   description: 'Temporarily increases your critical hit chance.',
   price: 140,
-  isUsable: "single",
+  isUsable: 'single',
   effect: {
     type: 'buff',
     value: 0.2,

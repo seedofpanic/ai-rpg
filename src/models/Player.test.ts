@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Player } from './Player';
 import { Vector2 } from '../utils/vector2';
+import { itemsData } from './itemsData';
 
 describe('Player', () => {
   let player: Player;
@@ -20,9 +21,18 @@ describe('Player', () => {
   });
 
   it('should add items to inventory', () => {
-    player.addItemToInventory({ itemId: 'sword', quantity: 1 });
-    expect(player.inventory).toHaveLength(1);
-    expect(player.inventory[0]).toEqual({ itemId: 'sword', quantity: 1 });
+    const baseInventoryLength = player.inventory.length;
+    const itemId = Array.from(itemsData).find(
+      ([_, item]) => item.name === 'Sword',
+    )?.[0];
+    if (!itemId) {
+      throw new Error('Sword not found');
+    }
+    player.addItemToInventory({ itemId, quantity: 1 });
+    expect(player.inventory).toHaveLength(baseInventoryLength + 1);
+    expect(player.inventory).toEqual(
+      expect.arrayContaining([{ itemId, quantity: 1 }]),
+    );
   });
 
   it('should remove items from inventory', () => {

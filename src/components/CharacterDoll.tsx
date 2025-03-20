@@ -71,13 +71,18 @@ const EffectItem = styled.div<{ $type: string }>`
   margin: 2px 0;
   border-radius: 3px;
   font-size: 12px;
-  background-color: ${props => {
+  background-color: ${(props) => {
     switch (props.$type) {
-      case 'heal': return 'rgba(76, 175, 80, 0.3)';
-      case 'buff': return 'rgba(33, 150, 243, 0.3)';
-      case 'debuff': return 'rgba(244, 67, 54, 0.3)';
-      case 'damage': return 'rgba(255, 152, 0, 0.3)';
-      default: return 'rgba(255, 255, 255, 0.1)';
+      case 'heal':
+        return 'rgba(76, 175, 80, 0.3)';
+      case 'buff':
+        return 'rgba(33, 150, 243, 0.3)';
+      case 'debuff':
+        return 'rgba(244, 67, 54, 0.3)';
+      case 'damage':
+        return 'rgba(255, 152, 0, 0.3)';
+      default:
+        return 'rgba(255, 255, 255, 0.1)';
     }
   }};
   color: white;
@@ -217,22 +222,32 @@ const CharacterDoll: React.FC<CharacterDollProps> = observer(({ player }) => {
         </SlotTooltip>
       )}
       <EffectsContainer>
-        <h4 style={{ margin: '0 0 5px 0', fontSize: '14px' }}>Active Effects</h4>
-        {Array.from(player.magicEffects.getActiveEffects().entries()).map(([targetId, effects]) => (
-          effects.map((effect, index) => (
-            <EffectItem key={`${targetId}-${index}`} $type={effect.type}>
-              <span>{effect.source}</span>
-              <EffectValue>
-                {effect.type === 'heal' && `+${effect.value} HP`}
-                {effect.type === 'buff' && `+${effect.value} AP`}
-                {effect.type === 'debuff' && `-${effect.value} AP`}
-                {effect.type === 'damage' && `-${effect.value} HP`}
-              </EffectValue>
-            </EffectItem>
-          ))
-        ))}
+        <h4 style={{ margin: '0 0 5px 0', fontSize: '14px' }}>
+          Active Effects
+        </h4>
+        {Array.from(player.magicEffects.getActiveEffects().entries()).map(
+          ([targetId, effects]) =>
+            effects.map((effect, index) => (
+              <EffectItem key={`${targetId}-${index}`} $type={effect.type}>
+                <span>{effect.source}</span>
+                <EffectValue>
+                  {effect.type === 'heal' && `+${effect.value} HP`}
+                  {effect.type === 'buff' && `+${effect.value} AP`}
+                  {effect.type === 'debuff' && `-${effect.value} AP`}
+                  {effect.type === 'damage' && `-${effect.value} HP`}
+                </EffectValue>
+              </EffectItem>
+            )),
+        )}
         {player.magicEffects.getActiveEffects().size === 0 && (
-          <div style={{ textAlign: 'center', color: '#888', fontSize: '12px', padding: '5px' }}>
+          <div
+            style={{
+              textAlign: 'center',
+              color: '#888',
+              fontSize: '12px',
+              padding: '5px',
+            }}
+          >
             No active effects
           </div>
         )}
