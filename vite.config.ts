@@ -11,3 +11,4 @@ export default defineConfig({
   },
   base: "/ai-rpg/",
 });
+

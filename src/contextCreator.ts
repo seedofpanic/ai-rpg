@@ -49,14 +49,14 @@ ${npcContext.location.description}
 
 Environment:
 - Nearby Characters: ${npcContext.location.npcs
-    .map((npcId) => {
+    ?.map((npcId) => {
       const npc = npcStore.npcs[npcId];
       return `${npc.name} ${npc.race} ${npc.role} ${npc.background} (is ${npc.isAlive() ? 'Alive' : 'Dead'})`;
     })
     .join(', ')}
 
 Relationships with other Characters:
-${Object.entries(npcContext.relationships)
+${Object.entries(npcContext.relationships || [])
   .map(([name, relation]) => `- ${name}: ${relation}`)
   .join('\n')}
 
@@ -64,7 +64,7 @@ Relationship with Player: ${npcContext.getPlayerRelation()}. Increase selling pr
 
 Other Locations:
 ${npcStore.locations
-  .map((loc) => {
+  ?.map((loc) => {
     const npcs = ` Characters in ${loc.name}: ${loc.npcs
       .map((npcId) => {
         const npc = npcStore.npcs[npcId];
@@ -92,7 +92,7 @@ Player:
 - Race: ${player.race}
 - Class: ${player.class}
 - Type: ${player.type}
-- Equipment: ${Object.entries(player.equipment)
+- Equipment: ${Object.entries(player.equipment || {})
     .map(
       ([slot, itemId]) =>
         `- ${slot}: ${itemsData.get(itemId)?.name || 'Empty'}`,
@@ -102,7 +102,7 @@ Player:
 Player's Active Quests:
 ${
   gameStore.questLog
-    .filter((quest) => !quest.completed && quest.questGiverId === npcId)
+    ?.filter((quest) => !quest.completed && quest.questGiverId === npcId)
     .map((quest) => {
       const { action, quantity } = quest;
       let status = 'In Progress';
@@ -245,7 +245,6 @@ ${systemMessage ? '' : "Player's message: "}${message}`;
           })
           .join('\n')
       : '';
-  console.log('Total dialog tokens count:', tokensCount);
 
   return `${beforeDialog}${dialogContext}${afterDialog}`;
 };

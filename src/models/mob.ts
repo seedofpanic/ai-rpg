@@ -153,7 +153,7 @@ export class Mob {
         const quantity = Math.floor(Math.random() * (max - min + 1)) + min;
 
         // Find the item ID by name
-        const itemEntry = Array.from(itemsData.entries()).find(
+        const itemEntry = Array.from(itemsData).find(
           ([_, item]) => item.name === lootEntry.itemName,
         );
 
