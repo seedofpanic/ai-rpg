@@ -222,7 +222,11 @@ export const modelTools: Tool = {
       parameters: {
         type: SchemaType.OBJECT,
         properties: {
-          message: { type: SchemaType.STRING, nullable: false },
+          message: { 
+            type: SchemaType.STRING, 
+            description: "The player's message transformed to match their intellect level.",
+            nullable: false 
+          },
         },
       },
     },

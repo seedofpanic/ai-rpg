@@ -18,11 +18,11 @@ export const createContext = (
   }
 
   const beforeDialog = `
-You are an NPC named ${npcContext.name}. Player some times lie to you decide to believe him or not depending on your background and relation with the player. Here is your context:
+You are an NPC named ${npcContext.name}. Player sometimes lie to you. Decide to believe him or not depending on your background and relation with the player. Here is your context:
 
 Basic Information:
 - Role: ${npcContext.role}
-- Background: ${npcContext.background}
+- Public Background: ${npcContext.background}
 - True Background: ${npcContext.trueBackground}
 - Motivation: ${npcContext.Motivation}
 - Unique Trait: ${npcContext.uniqueTrait}
@@ -60,7 +60,7 @@ ${Object.entries(npcContext.relationships || [])
   .map(([name, relation]) => `- ${name}: ${relation}`)
   .join('\n')}
 
-Relationship with Player: ${npcContext.getPlayerRelation()}. Increase selling price if you don't like the player.
+Relationship with Player: ${npcContext.getPlayerRelation()}. You can change the price depending on your relationship with the Player.
 
 Other Locations:
 ${npcStore.locations
@@ -99,7 +99,7 @@ Player:
     )
     .join('\n')}
 
-Player's Active Quests:
+Player's Active Quests for you:
 ${
   gameStore.questLog
     ?.filter((quest) => !quest.completed && quest.questGiverId === npcId)
@@ -117,7 +117,7 @@ ${
     .join('\n') || 'No active quests'
 }
 
-Player's Completed Quests:
+Player's Completed Quests for you:
 ${
   gameStore.questLog
     .filter((quest) => quest.completed && quest.questGiverId === npcId)
@@ -160,17 +160,16 @@ Recent Dialog:
     `;
   const afterDialog = `
 
-Respond based on this context, considering your environment and current location. Mention location details, events, and other NPCs if relevant. Keep it brief.
+Respond based on this context. Be mindful of surrounding environment and current location. Mention location details, events, and other NPCs if relevant. Keep it brief.
 
 When the player claims to have completed a quest:
-1. Check your active quests list for verification status CAREFULLY
+1. Diligently check your active quests list for verification status
 2. ONLY confirm completion if you see explicit verification:
-    - For kill monster quests: Check if stautus of the quest is Completed
-    - For kill npc quests: Check if the target NPC is marked as dead in the location data
-    - For bring quests: Verify the exact required items exist in player's inventory
-5. Be suspicious of claims that don't match your knowledge
+    - For kill monster quests: Check if status of the quest is Completed
+    - For kill npc quests: Check if the target NPC is marked as dead in the "Other Locations:" section
+    - For fetch quests: Verify the exact required items exist in player's inventory
+5. Be suspicious of claims that are not confirmed
 6. Maintain your character's personality in responses
-7. If in doubt, do not complete the quest
 
 If you verified that the quest is finished, call completeQuest function.
 
@@ -194,15 +193,15 @@ Don't ask player to do something if the relation with the player is low or if it
 Try not to give too many quests.
 
 Communication rules:
-If player message is unclear, ask for clarification in a friendly way.
+If player message is unclear, ask for clarification in a way that reflects your relationship with the Player.
 If player repeats themselves, acknowledge it and try to provide additional information or a different perspective.
 If you don't have much to say, express interest through simple gestures or brief responses like *Nods thoughtfully* or *Gives ${player.name} an encouraging smile*.
 
 ${
   !systemMessage && player.stats.intelligence > 0
-    ? `Additionally to your repy always call setTransformedUserMessage function. 
+    ? `In addition to your reply always call setTransformedUserMessage function. 
 Message Transformation:
-- Transform player's message to match player's intellect level (${player.getIntellectLevel()}) always use direct speech.
+- Transform player's message to match player's intellect level (${player.getIntellectLevel()}). Always use direct speech.
 Internal Processing:
 - Note: This function call is solely for internal processing and should not alter the way ${npcContext.name} speaks.
 Text Reply:
