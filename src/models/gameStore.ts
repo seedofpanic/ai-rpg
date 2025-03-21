@@ -9,6 +9,7 @@ import { Quest } from './Quest';
 import { locationsStore } from './location';
 import { v4 as uuidv4 } from 'uuid';
 import { BackgroundTemplate, getBackgroundsData } from './backgroundsData';
+import { Vector2 } from 'utils/vector2';
 export class GameStore {
   isDialogueOpen: boolean = false;
   activeNpcId: string | null = null;
@@ -119,6 +120,14 @@ export class GameStore {
     locationsStore.generateLocations();
     this.addMainQuest();
     this.startGameActions();
+
+    if (import.meta.env.VITE_CI) {
+      mobStore.initializeMobs();
+      const npc = npcStore.generateRandomNPC(locationsStore.locations[0]);
+      npc.position = new Vector2(this.player.position.x + 30, this.player.position.y + 30);
+      npcStore.npcs[npc.id] = npc;
+      npcStore.npcIds.push(npc.id);
+    }
   }
 
   addMainQuest() {

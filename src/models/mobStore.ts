@@ -8,7 +8,6 @@ class MobStore {
 
   constructor() {
     makeAutoObservable(this);
-    this.initializeMobs();
   }
 
   initializeMobs() {
