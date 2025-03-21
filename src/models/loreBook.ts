@@ -165,4 +165,10 @@ Lighting a candle for Ishnel when traveling at night.
 Offering a coin to Chiva before gambling.
 Tossing a fishbone into the sea for Brokon before a storm.
 Never speaking of Sigmar or the Sleeping One.
+
+Grenthollow village description:
+Grenthollow lies at the edge of the Zone of Unstable Magic — a small, mist-veiled village that somehow endures while the wilderness around it festers.
+Monsters prowl the forests and fields nearby, twisted by wild magic and hunger. Yet the village remains untouched, as if protected by something... or someone.
+The people are quiet, reserved. They speak little of the vanished. They never wander far after dark.
+A strange calm clings to Grenthollow — a peace paid for in blood.
 `;
