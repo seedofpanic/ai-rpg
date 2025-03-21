@@ -54,7 +54,11 @@ const initializeModel = () => {
         - *<action>* <text> *<action>*
         - <text> *<action>*
         
-        IMPORTANT: When using the setTransformedUserMessage function, you must ALWAYS follow it with a complete text response. Never end your response with only a function call.
+        ${
+          gameStore.player.stats.intelligence > 0
+            ? "IMPORTANT: When using the setTransformedUserMessage function, you must ALWAYS follow it with a complete text response. Never end your response with only a function call."
+            : ""
+        }
       `,
       toolConfig: {
         functionCallingConfig: {
