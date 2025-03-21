@@ -4,8 +4,18 @@ import { Location } from './location';
 import { Player } from './Player';
 import { v4 as uuidv4 } from 'uuid';
 import { itemsData } from './itemsData';
+import { MOB_STATS } from './mobStats';
 
-export type MobType = 'wolf' | 'bandit' | 'zombie' | 'skeleton';
+export type MobType =
+  | 'wolf'
+  | 'bandit'
+  | 'zombie'
+  | 'skeleton'
+  | 'ghost'
+  | 'goblin'
+  | 'boar'
+  | 'spider'
+  | 'bat';
 
 // Loot tables for each mob type
 const MOB_LOOT: Record<
@@ -40,59 +50,48 @@ const MOB_LOOT: Record<
     { itemName: 'Bow', chance: 0.3, quantity: [1, 1] },
     { itemName: 'Ancient Coin', chance: 0.3, quantity: [1, 5] },
   ],
+  ghost: [
+    { itemName: 'Ghostly Essence', chance: 0.9, quantity: [1, 3] },
+    { itemName: 'Spirit Stone', chance: 0.5, quantity: [1, 2] },
+    { itemName: 'Ghostly Potion', chance: 0.7, quantity: [1, 2] },
+  ],
+  goblin: [
+    { itemName: 'Goblin Pelt', chance: 0.8, quantity: [1, 1] },
+    { itemName: 'Goblin Fang', chance: 0.6, quantity: [1, 2] },
+    { itemName: 'Raw Meat', chance: 0.9, quantity: [1, 3] },
+    { itemName: 'Leather', chance: 0.4, quantity: [1, 2] },
+  ],
+  boar: [
+    { itemName: 'Boar Pelt', chance: 0.8, quantity: [1, 1] },
+    { itemName: 'Boar Fang', chance: 0.6, quantity: [1, 2] },
+    { itemName: 'Raw Meat', chance: 0.9, quantity: [1, 3] },
+    { itemName: 'Leather', chance: 0.4, quantity: [1, 2] },
+  ],
+  spider: [
+    { itemName: 'Spider Silk', chance: 0.8, quantity: [1, 1] },
+    { itemName: 'Spider Fang', chance: 0.6, quantity: [1, 2] },
+    { itemName: 'Raw Meat', chance: 0.9, quantity: [1, 3] },
+    { itemName: 'Leather', chance: 0.4, quantity: [1, 2] },
+  ],
+  bat: [
+    { itemName: 'Bat Wing', chance: 0.8, quantity: [1, 1] },
+    { itemName: 'Bat Fang', chance: 0.6, quantity: [1, 2] },
+    { itemName: 'Raw Meat', chance: 0.9, quantity: [1, 3] },
+    { itemName: 'Leather', chance: 0.4, quantity: [1, 2] },
+  ],
 };
 
-export const mobTypes: MobType[] = ['wolf', 'bandit', 'zombie', 'skeleton'];
-
-export const MOB_STATS: Record<
-  MobType,
-  {
-    health: number;
-    attackPower: number;
-    defense: number;
-    speed: number;
-    aggroRange: number;
-    criticalChance: number;
-    dodgeChance: number;
-  }
-> = {
-  wolf: {
-    health: 80,
-    attackPower: 15,
-    defense: 3,
-    speed: 15,
-    aggroRange: 150,
-    criticalChance: 0.15,
-    dodgeChance: 0.1,
-  },
-  bandit: {
-    health: 100,
-    attackPower: 12,
-    defense: 5,
-    speed: 10,
-    aggroRange: 120,
-    criticalChance: 0.1,
-    dodgeChance: 0.05,
-  },
-  zombie: {
-    health: 120,
-    attackPower: 10,
-    defense: 8,
-    speed: 7,
-    aggroRange: 100,
-    criticalChance: 0.05,
-    dodgeChance: 0.02,
-  },
-  skeleton: {
-    health: 90,
-    attackPower: 13,
-    defense: 4,
-    speed: 12,
-    aggroRange: 130,
-    criticalChance: 0.12,
-    dodgeChance: 0.08,
-  },
-};
+export const mobTypes: MobType[] = [
+  'wolf',
+  'bandit',
+  'zombie',
+  'skeleton',
+  'ghost',
+  'goblin',
+  'boar',
+  'spider',
+  'bat',
+];
 
 export class Mob {
   id: string;
@@ -279,13 +278,11 @@ export class Mob {
     }
   }
 
-  static generateRandomMob(location: Location): Mob {
-    const randomType = mobTypes[Math.floor(Math.random() * mobTypes.length)];
-
+  static generateRandomMob(location: Location, mobType: MobType): Mob {
     const x = location.x + Math.floor(Math.random() * (location.width - 40));
     const y = location.y + Math.floor(Math.random() * (location.height - 40));
 
-    return new Mob(randomType, x, y, location);
+    return new Mob(mobType, x, y, location);
   }
 
   setInventory(inventory: { itemId: string; quantity: number }[]): void {

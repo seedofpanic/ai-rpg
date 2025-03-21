@@ -87,7 +87,7 @@ const PlayerInventory: React.FC<PlayerInventoryProps> = ({ player }) => {
   };
 
   const isUsableItem = (item: ItemData): boolean => {
-    return item.isUsable || false;
+    return !!item.isUsable || false;
   };
 
   const getStatBonus = (base: number, total: number) => {

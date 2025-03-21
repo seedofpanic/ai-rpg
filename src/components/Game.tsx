@@ -8,7 +8,7 @@ import QuestLog from './QuestLog';
 import { observer } from 'mobx-react-lite';
 import { gameStore } from '../models/gameStore'; // Import gameStore
 import CombatLog, { combatLogStore } from './CombatLog'; // Import CombatLog
-import { npcStore } from 'models/npcs';
+import { npcStore } from 'models/npcStore';
 import LootDialog from './LootDialog';
 import { mobStore } from '../models/mobStore';
 
@@ -133,6 +133,10 @@ const Game: React.FC = () => {
       if (!mob.isAlive()) {
         combatLogStore.push(`${mob.name} has been defeated!`);
         gameStore.updateQuest(mob);
+        setTimeout(() => {
+          mobStore.removeMob(mob.id);
+          mobStore.respawnMob(mob);
+        }, 60000);
         return;
       }
     } else if (npc) {
@@ -161,15 +165,6 @@ const Game: React.FC = () => {
       gameStore.closeDialogue();
     }
   }, [npcContext?.relation]);
-
-  // Add mob respawn effect
-  useEffect(() => {
-    const respawnInterval = setInterval(() => {
-      mobStore.respawnMobs();
-    }, 30000); // Check for respawns every 30 seconds
-
-    return () => clearInterval(respawnInterval);
-  }, []);
 
   return (
     <GameContainer

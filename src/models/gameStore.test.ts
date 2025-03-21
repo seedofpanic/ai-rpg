@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { GameStore } from './gameStore';
-import { npcStore } from './npcs';
+import { npcStore } from './npcStore';
 import { Player } from './Player';
 import { NPC } from './npc';
 
@@ -71,11 +71,12 @@ describe('GameStore', () => {
       questGiverId: 'npc-1',
       killCount: 0,
     };
+    const questsCount = gameStore.questLog.length;
     // Try to add the same quest twice
     gameStore.addQuest(quest);
     gameStore.addQuest(quest);
     // Verify quest was only added once
-    expect(gameStore.questLog.length).toBe(1);
+    expect(gameStore.questLog.length).toBe(questsCount + 1);
   });
 
   it('should complete a bring quest and handle rewards correctly', () => {
@@ -105,7 +106,7 @@ describe('GameStore', () => {
     gameStore.completeQuest('quest-1');
 
     // Verify quest completion and rewards
-    expect(gameStore.questLog[0].completed).toBe(true);
+    expect(gameStore.questLog.find((q) => q.id === 'quest-1')?.completed).toBe(true);
     expect(player.gold).toBe(initialGold + 100);
     expect(player.inventory.some((item) => item.itemId === 'reward-item')).toBe(
       true,
@@ -151,9 +152,9 @@ describe('GameStore', () => {
     };
 
     gameStore.addQuest(quest);
-    expect(gameStore.questLog[0].completed).toBe(false);
+    expect(gameStore.questLog.find((q) => q.id === 'quest-1')?.completed).toBe(false);
     gameStore.completeQuest('quest-1');
-    expect(gameStore.questLog[0].completed).toBe(true);
+    expect(gameStore.questLog.find((q) => q.id === 'quest-1')?.completed).toBe(true);
   });
 
   it('should handle game reset correctly', () => {

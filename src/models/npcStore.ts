@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { NPC } from './npc'; // Import NPC from npc.ts
-import { locations } from './location'; // Import locations from location.ts
-import { Vector2 } from 'utils/vector2';
+import { Location } from './location';
+import { BackgroundTemplate } from './backgroundsData';
 
 const getRandomElement = <T>(arr: T[]): T => {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -10,29 +10,9 @@ const getRandomElement = <T>(arr: T[]): T => {
 class NPCStore {
   npcs: Record<string, NPC> = {};
   npcIds: string[] = [];
-  locations = locations;
 
   constructor() {
     makeAutoObservable(this);
-    this.initializeNPCs();
-  }
-
-  initializeNPCs() {
-    const generatedNPCs = Array.from({ length: 10 });
-    if (import.meta.env.VITE_CI) {
-      const npc = NPC.generateRandomNPC(this.locations);
-      npc.position = new Vector2(820, 570);
-      this.npcs[npc.id] = npc;
-    } else {
-      for (const _ of generatedNPCs) {
-        const npc = NPC.generateRandomNPC(this.locations);
-        this.npcs[npc.id] = npc;
-      }
-    }
-    this.npcIds = Object.keys(this.npcs);
-
-    // After all NPCs are created, assign kill needs
-    this.assignKillNeeds();
   }
 
   assignKillNeeds() {
@@ -52,6 +32,18 @@ class NPCStore {
   getNpcGreating(npcId: string): string {
     const npc = this.npcs[npcId];
     return `Hello, I am ${npc.name}, the ${npc.role}. How can I help you?`;
+  }
+
+  generateRandomNPC(loc: Location, background?: BackgroundTemplate): NPC {
+    const npc = NPC.generateRandomNPC(loc, background);
+    this.npcs[npc.id] = npc;
+    this.npcIds.push(npc.id);
+    return npc;
+  }
+
+  reset() {
+    this.npcs = {};
+    this.npcIds = [];
   }
 }
 

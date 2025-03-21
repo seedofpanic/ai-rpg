@@ -2,7 +2,7 @@ import { getRelationChange, MessageType, NPC } from 'models/npc';
 import { gameStore } from 'models/gameStore';
 import { v4 as uuidv4 } from 'uuid';
 import { FunctionCall } from '@google/generative-ai';
-import { npcStore } from 'models/npcs';
+import { npcStore } from 'models/npcStore';
 import { MobType, mobTypes } from 'models/mob';
 import { itemsData } from 'models/itemsData';
 

@@ -8,15 +8,16 @@ describe('NPC', () => {
   let location: Location;
 
   beforeEach(() => {
-    location = {
+    location = new Location({
       name: 'Market Square',
       description: 'A bustling trading square in the city center.',
       x: 100,
       y: 100,
       width: 500,
       height: 500,
-      npcs: [],
-    };
+      npcsTemplate: [],
+      monstersTemplate: [],
+    });
 
     npc = new NPC(
       'npc-1',
@@ -27,11 +28,16 @@ describe('NPC', () => {
       'Merchant',
       'Friendly',
       ['Knows everything about goods and prices'],
-      'A skilled trader.',
-      'A secretive past.',
-      'To become the wealthiest merchant.',
-      'Sharp negotiation skills.',
-      'Gold is power.',
+      {
+        background: 'A skilled trader.',
+        trueBackground: 'A skilled trader.',
+        motivation: 'A skilled trader.',
+        uniqueTrait: 'A skilled trader.',
+        beliefs: 'A skilled trader.',
+        name: 'TestNPC',
+        title: 'Merchant',
+        race: 'Human',
+      },
       {},
       location,
       undefined,

@@ -4,15 +4,15 @@ import NPC from './NPC';
 import Mob from './Mob';
 import PlayerView from './PlayerView';
 import { observer } from 'mobx-react-lite';
-import { npcStore } from '../models/npcs';
+import { npcStore } from '../models/npcStore';
 import { mobStore } from '../models/mobStore';
-import { locations } from '../models/location'; // Import locations
+import { locationsStore } from '../models/location'; // Import locations
 import { Player } from '../models/Player'; // Import Player
-import { MOB_STATS } from '../models/mob';
+import { MOB_STATS } from '../models/mobStats';
 
 const MapContainer = styled.div`
-  width: 2000px;
-  height: 1500px;
+  width: 3700px;
+  height: 2000px;
   background-color: #2a9d8f;
   position: relative;
 `;
@@ -48,7 +48,7 @@ interface MapProps {
 const Map: React.FC<MapProps> = ({ onNpcInteraction, player, onNpcHover }) => {
   return (
     <MapContainer>
-      {locations.map((location, index) => (
+      {locationsStore.locations.map((location, index) => (
         <LocationContainer
           key={index}
           x={location.x}

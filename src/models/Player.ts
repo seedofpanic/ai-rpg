@@ -171,7 +171,7 @@ export class Player {
     }
 
     const reducedDamage = Math.max(0, amount - this.defense);
-    this.health = Math.max(0, this.baseHealth - reducedDamage);
+    this.health = Math.max(0, this.health - reducedDamage);
     console.log(`${this.name} took ${reducedDamage} damage.`);
     combatLogStore.push(`${this.name} took ${reducedDamage} damage.`);
   }

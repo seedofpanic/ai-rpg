@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 const LogContainer = styled.div`
   position: fixed;
-  bottom: 0;
+  bottom: 15px;
   left: 0;
   width: 50%;
   max-height: 200px;

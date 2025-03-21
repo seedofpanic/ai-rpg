@@ -56,8 +56,8 @@ const initializeModel = () => {
         
         ${
           gameStore.player.stats.intelligence > 0
-            ? "IMPORTANT: When using the setTransformedUserMessage function, you must ALWAYS follow it with a complete text response. Never end your response with only a function call."
-            : ""
+            ? 'IMPORTANT: When using the setTransformedUserMessage function, you must ALWAYS follow it with a complete text response. Never end your response with only a function call.'
+            : ''
         }
       `,
       toolConfig: {
@@ -124,11 +124,15 @@ const sendMessageGemini = async (
     const response = await result.response;
     const functionCalls = response.functionCalls() || [];
     let responseText = response.text();
-    
+
     // Check for incomplete responses - if there's a setTransformedUserMessage function call but no text
-    const hasSetTransformedUserMessage = functionCalls.some(fc => fc.name === 'setTransformedUserMessage');
+    const hasSetTransformedUserMessage = functionCalls.some(
+      (fc) => fc.name === 'setTransformedUserMessage',
+    );
     if (hasSetTransformedUserMessage && !responseText.trim()) {
-      console.warn('Incomplete response detected: function call without text response');
+      console.warn(
+        'Incomplete response detected: function call without text response',
+      );
       // If we have only a function call without text, we could:
       // 1. Retry the request
       // 2. Generate a fallback response

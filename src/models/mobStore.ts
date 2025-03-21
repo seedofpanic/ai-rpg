@@ -1,11 +1,10 @@
 import { makeAutoObservable } from 'mobx';
-import { Mob } from './mob';
-import { locations } from './location';
+import { Mob, MobType, mobTypes } from './mob';
+import { locationsStore, Location } from './location';
 
 class MobStore {
   mobs: Record<string, Mob> = {};
   mobIds: string[] = [];
-  locations = locations;
 
   constructor() {
     makeAutoObservable(this);
@@ -14,22 +13,15 @@ class MobStore {
 
   initializeMobs() {
     // Generate 5 random mobs initially
-    const generatedMobs = Array.from({ length: 5 });
-
     if (import.meta.env.VITE_CI) {
-      const mob = Mob.generateRandomMob(this.locations[0]);
+      const randomMobType =
+        mobTypes[Math.floor(Math.random() * mobTypes.length)];
+      const mob = Mob.generateRandomMob(
+        locationsStore.locations[0],
+        randomMobType,
+      );
       this.mobs[mob.id] = mob;
-    } else {
-      for (const _ of generatedMobs) {
-        // Randomly select a location for each mob
-        const location =
-          this.locations[Math.floor(Math.random() * this.locations.length)];
-        const mob = Mob.generateRandomMob(location);
-        this.mobs[mob.id] = mob;
-      }
     }
-
-    this.mobIds = Object.keys(this.mobs);
   }
 
   addMob(mob: Mob) {
@@ -47,20 +39,32 @@ class MobStore {
   }
 
   // Spawn a new mob in a specific location
-  spawnMob(location = this.locations[0]) {
-    const mob = Mob.generateRandomMob(location);
+  spawnMob(location = locationsStore.locations[0], mobType: MobType) {
+    const mob = Mob.generateRandomMob(location, mobType);
     this.addMob(mob);
     return mob;
   }
 
   // Respawn mobs periodically if there are fewer than the initial count
-  respawnMobs() {
-    const minMobs = 5;
-    if (this.mobIds.length < minMobs) {
-      const location =
-        this.locations[Math.floor(Math.random() * this.locations.length)];
-      this.spawnMob(location);
-    }
+  respawnMob(mob: Mob) {
+    const location = mob.location;
+    const possibleMobTypes = location.monstersTemplate.map(
+      (template) => template.type,
+    );
+    const randomMobType =
+      possibleMobTypes[Math.floor(Math.random() * possibleMobTypes.length)];
+    this.spawnMob(location, randomMobType);
+  }
+
+  generateRandomMob(loc: Location, mobType: MobType): Mob {
+    const mob = Mob.generateRandomMob(loc, mobType);
+    this.addMob(mob);
+    return mob;
+  }
+
+  reset() {
+    this.mobs = {};
+    this.mobIds = [];
   }
 }
 

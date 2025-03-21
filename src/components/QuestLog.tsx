@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
 import { gameStore } from '../models/gameStore';
-import { npcStore } from '../models/npcs';
+import { npcStore } from '../models/npcStore';
 import QuestItem from './QuestItem';
 
 const QuestLogContainer = styled.div`
@@ -60,7 +60,11 @@ const QuestLog: React.FC = () => {
               <QuestItem
                 key={quest.id}
                 quest={quest}
-                npcName={npcStore.npcs[quest.questGiverId]?.name}
+                npcName={
+                  quest.questGiverId
+                    ? npcStore.npcs[quest.questGiverId]?.name
+                    : null
+                }
               />
             ))
           )}

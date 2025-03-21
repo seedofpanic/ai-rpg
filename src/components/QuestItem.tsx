@@ -61,32 +61,49 @@ const QuestProgress = styled.div`
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 `;
 
+const QuestFrom = styled.div`
+  font-size: 0.8em;
+  color: #adb5bd;
+  margin-top: 5px;
+  padding: 2px 0;
+`;
+
 interface QuestItemComponentProps {
   quest: Quest;
-  npcName: string;
+  npcName: string | null;
 }
 
 const QuestItem: React.FC<QuestItemComponentProps> = ({ quest, npcName }) => {
+  const getProgress = () => {
+    if (quest.action === 'kill') {
+      return `${quest.killCount}/${quest.quantity} ${quest.subject} killed`;
+    } else if (quest.action === 'bring') {
+      return `${gameStore.player.inventory.find((slot) => slot.itemId === quest.subject)?.quantity || 0}/${quest.quantity} ${itemsData.get(quest.subject)?.name || ''} collected`;
+    } else if (quest.action === 'find') {
+      return `${quest.subject} found`;
+    }
+    return 'Unknown action';
+  };
+
   return (
     <QuestItemContainer $completed={quest.completed} data-testid="quest-item">
       <QuestStatus $completed={quest.completed} data-testid="quest-status">
         {quest.completed ? 'Completed' : 'Active'}
       </QuestStatus>
-      <QuestTitle data-testid="quest-title">
-        {quest.title}
-        <QuestGiver data-testid="quest-giver">
-          (from {npcName || 'Unknown'})
-        </QuestGiver>
-      </QuestTitle>
+      <QuestTitle data-testid="quest-title">{quest.title}</QuestTitle>
+      <QuestFrom>
+        {npcName ? (
+          <QuestGiver data-testid="quest-giver">(from {npcName})</QuestGiver>
+        ) : (
+          'Main Quest'
+        )}
+      </QuestFrom>
       <QuestDescription data-testid="quest-description">
         {quest.description}
       </QuestDescription>
       {!quest.completed && (
         <QuestProgress data-testid="quest-progress">
-          Progress:{' '}
-          {quest.action === 'kill'
-            ? `${quest.killCount}/${quest.quantity} ${quest.subject} killed`
-            : `${gameStore.player.inventory.find((slot) => slot.itemId === quest.subject)?.quantity || 0}/${quest.quantity} ${itemsData.get(quest.subject)?.name || ''} collected`}
+          Progress: {getProgress()}
         </QuestProgress>
       )}
       {quest.rewards && (

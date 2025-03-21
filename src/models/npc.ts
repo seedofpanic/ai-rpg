@@ -2,12 +2,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { makeAutoObservable } from 'mobx';
 import { itemsData } from './itemsData';
 import { Location } from './location'; // Import related types
-import { backgroundsData } from './backgroundsData';
+import { BackgroundTemplate, getRandomBackground } from './backgroundsData';
 import { Player } from './Player';
 import { Vector2 } from '../utils/vector2'; // Import Vector2
 import { combatLogStore } from 'components/CombatLog';
 import { roleSpecificItems } from './roleItems';
 import { roleSpecificNeeds } from './roleNeeds';
+import { gameStore } from './gameStore';
 
 export interface InventoryItem {
   itemId: string;
@@ -40,6 +41,20 @@ interface Message {
   moodChange?: { state: string; change: number };
 }
 
+type NpcRole =
+  | 'Merchant'
+  | 'Alchemist'
+  | 'Guard'
+  | 'Baker'
+  | 'Blacksmith'
+  | 'Fisherman'
+  | 'Hunter'
+  | 'Farmer'
+  | 'Tailor'
+  | 'Jeweler'
+  | 'Priest'
+  | 'Tinker';
+
 const names = [
   'Mikhail',
   'Vasily',
@@ -62,7 +77,7 @@ const names = [
   'Natalya',
   'Galina',
 ];
-const roles = [
+const roles: NpcRole[] = [
   'Merchant',
   'Alchemist',
   'Guard',
@@ -203,6 +218,7 @@ export class NPC {
   dodgeChance: number; // New attribute
   aggroTimer?: ReturnType<typeof setTimeout>;
   needs: Need[];
+  additionalInstructions?: string;
 
   // utils
   lastUpdateTime: number = Date.now();
@@ -219,11 +235,7 @@ export class NPC {
     role: string,
     personality: string,
     knowledge: string[],
-    background: string,
-    trueBackground: string,
-    Motivation: string,
-    uniqueTrait: string,
-    beliefs: string,
+    background: BackgroundTemplate,
     relationships: Record<string, string>,
     location: Location,
     state?: string,
@@ -244,11 +256,12 @@ export class NPC {
     this.role = role;
     this.personality = personality;
     this.knowledge = knowledge;
-    this.background = background;
-    this.trueBackground = trueBackground;
-    this.Motivation = Motivation;
-    this.uniqueTrait = uniqueTrait;
-    this.beliefs = beliefs;
+    this.background = background.background;
+    this.trueBackground = background.trueBackground;
+    this.Motivation = background.motivation;
+    this.uniqueTrait = background.uniqueTrait;
+    this.beliefs = background.beliefs;
+    this.additionalInstructions = background.additionalInstructions;
     this.relationships = relationships;
     this.location = location;
     this.dialogueHistory = null;
@@ -265,20 +278,23 @@ export class NPC {
     makeAutoObservable(this);
   }
 
-  static generateRandomNPC(locs: Location[]): NPC {
+  static generateRandomNPC(
+    loc: Location,
+    background?: BackgroundTemplate,
+  ): NPC {
     const id = uuidv4();
-    const backgroundIndex = Math.floor(Math.random() * backgroundsData.length);
-    const background = backgroundsData.splice(backgroundIndex, 1)[0];
-    const name = background?.name || getRandomElement(names);
-    const race = background?.race || 'Human';
+    const backgroundIndex = Math.floor(Math.random() * gameStore.backgroundsData.length);
+    const selectedBackground =
+      gameStore.backgroundsData.splice(backgroundIndex, 1)[0] || background || getRandomBackground();
+    const name = selectedBackground?.name || getRandomElement(names);
+    const race = selectedBackground?.race || 'Human';
     const role = getRandomElement(roles);
     const personality = getRandomElement(personalities);
     const knowledge = Array.from({ length: 3 }, () =>
       getRandomElement(knowledgePool),
     );
-    const location = getRandomElement(locs);
-    const x = location.x + Math.floor(Math.random() * (location.width - 40));
-    const y = location.y + Math.floor(Math.random() * (location.height - 40));
+    const x = loc.x + Math.floor(Math.random() * (loc.width - 40));
+    const y = loc.y + Math.floor(Math.random() * (loc.height - 40));
 
     // Generate role-specific needs
     const roleNeeds = roleSpecificNeeds[role] || [
@@ -302,13 +318,9 @@ export class NPC {
       role,
       personality,
       knowledge,
-      background?.background || '',
-      background?.trueBackground || '',
-      background?.motivation || '',
-      background?.uniqueTrait || '',
-      background?.beliefs || '',
+      selectedBackground,
       {},
-      location,
+      loc,
       undefined,
       generateRoleSpecificInventory(role),
       Math.floor(Math.random() * 3000) + 2000,
@@ -321,7 +333,6 @@ export class NPC {
       needs,
     );
 
-    location.npcs.push(npc.id);
     return npc;
   }
 

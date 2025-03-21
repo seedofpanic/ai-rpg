@@ -155,7 +155,7 @@ const NPCHeader = styled.div`
 `;
 
 const ShopContainer = styled.div`
-  height: 100%;
+  flex: 0.5;
   background-color: rgba(38, 70, 83, 0.95);
   border-radius: 8px;
   padding: 20px;
@@ -164,6 +164,7 @@ const ShopContainer = styled.div`
 `;
 
 const QuestSection = styled.div`
+  flex: 0.5;
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
@@ -200,6 +201,7 @@ const Box = styled.div`
 `;
 
 const BoxRow = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: row;
   width: 100%;

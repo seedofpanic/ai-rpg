@@ -11,15 +11,16 @@ describe('Mob', () => {
 
   beforeEach(() => {
     // Mock location
-    testLocation = {
+    testLocation = new Location({
       name: 'Test Location',
       description: 'A test location',
       x: 0,
       y: 0,
       width: 1000,
       height: 1000,
-      npcs: [],
-    };
+      npcsTemplate: [],
+      monstersTemplate: [],
+    });
 
     // Create a test mob
     testMob = new Mob('wolf', 100, 100, testLocation);
@@ -40,7 +41,7 @@ describe('Mob', () => {
     });
 
     it('should generate a random mob correctly', () => {
-      const randomMob = Mob.generateRandomMob(testLocation);
+      const randomMob = Mob.generateRandomMob(testLocation, 'wolf');
       expect(randomMob).toBeInstanceOf(Mob);
       expect(['wolf', 'bandit', 'zombie', 'skeleton']).toContain(
         randomMob.type,

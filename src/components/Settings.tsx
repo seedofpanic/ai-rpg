@@ -4,14 +4,14 @@ import { gameStore } from '../models/gameStore';
 import { observer } from 'mobx-react';
 import ChevronDown from './icons/ChevronDown';
 
-const SettingsOverlay = styled.div<{ isOpen: boolean }>`
+const SettingsOverlay = styled.div<{ $isOpen: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  display: ${(props) => (props.isOpen ? 'flex' : 'none')};
+  display: ${(props) => (props.$isOpen ? 'flex' : 'none')};
   justify-content: center;
   align-items: center;
   z-index: 1000;
@@ -111,7 +111,7 @@ const Settings: React.FC<SettingsProps> = observer(({ isOpen, onClose }) => {
   };
 
   return (
-    <SettingsOverlay isOpen={isOpen} onClick={onClose}>
+    <SettingsOverlay $isOpen={isOpen} onClick={onClose}>
       <SettingsPanel onClick={(e) => e.stopPropagation()}>
         <SettingsHeader>
           <h2>Settings</h2>

@@ -1,12 +1,14 @@
 import { Player } from './Player';
 import { makeAutoObservable } from 'mobx';
-import { npcStore } from './npcs';
+import { npcStore } from './npcStore';
 import { combatLogStore } from 'components/CombatLog';
 import { itemsData } from './itemsData';
 import { mobStore } from './mobStore';
 import { keysDown } from 'utils/keyboard';
 import { Quest } from './Quest';
-
+import { locationsStore } from './location';
+import { v4 as uuidv4 } from 'uuid';
+import { BackgroundTemplate, getBackgroundsData } from './backgroundsData';
 export class GameStore {
   isDialogueOpen: boolean = false;
   activeNpcId: string | null = null;
@@ -16,6 +18,7 @@ export class GameStore {
   questLog: Quest[] = [];
   hoveredNpcId: string | null = null;
   api: 'gemini' | 'proxy' = 'gemini';
+  backgroundsData: BackgroundTemplate[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -48,12 +51,14 @@ export class GameStore {
             quantity: quest.quantity,
           });
           // add this item to the quest giver inventory
-          const questGiver = npcStore.npcs[quest.questGiverId];
-          if (questGiver) {
-            questGiver.addItem({
-              itemId: quest.subject,
-              quantity: quest.quantity,
-            });
+          if (quest.questGiverId) {
+            const questGiver = npcStore.npcs[quest.questGiverId];
+            if (questGiver) {
+              questGiver.addItem({
+                itemId: quest.subject,
+                quantity: quest.quantity,
+              });
+            }
           }
         }
       }
@@ -111,12 +116,34 @@ export class GameStore {
   startGame(player: Player) {
     this.player = player;
     this.reset();
+    locationsStore.generateLocations();
+    this.addMainQuest();
     this.startGameActions();
   }
 
+  addMainQuest() {
+    this.addQuest({
+      id: uuidv4(),
+      title: 'The Silent Offering',
+      description: `Villagers are disappearing in Grenthollow, a place untouched by the spreading magic.
+Someone is making sacrifices — find out who, and why.`,
+      subject: 'Cultist',
+      quantity: 0,
+      killCount: 0,
+      completed: false,
+      questGiverId: null,
+      action: 'find',
+    });
+  }
+
   reset() {
+    this.questLog.length = 0;
     this.isOver = false;
     combatLogStore.log.length = 0;
+    locationsStore.reset();
+    mobStore.reset();
+    npcStore.reset();
+    this.backgroundsData = getBackgroundsData();
   }
 
   setDialogueOpen(isOpen: boolean) {

@@ -7,7 +7,7 @@ export interface Quest {
   quantity: number;
   action: string;
   completed: boolean;
-  questGiverId: string;
+  questGiverId: string | null;
   rewards?: {
     gold?: number;
     items?: string[];

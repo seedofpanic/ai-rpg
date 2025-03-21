@@ -1,9 +1,9 @@
-import { npcStore } from './models/npcs';
+import { npcStore } from './models/npcStore';
 import { itemsData, itemsDataContext } from './models/itemsData';
 import { lore } from './models/loreBook';
 import { MessageType } from 'models/npc';
 import { gameStore } from './models/gameStore';
-import { mobStore } from './models/mobStore';
+import { locationsStore } from 'models/location';
 
 export const createContext = (
   npcId: string,
@@ -28,6 +28,9 @@ Basic Information:
 - Unique Trait: ${npcContext.uniqueTrait}
 - Beliefs: ${npcContext.beliefs}
 
+Additional instructions:
+${npcContext.additionalInstructions}
+
 Current Needs:
 You are bothered by monsters around.
 ${npcContext.needs.map((need) => `- ${need.type}: ${need.subject} ${need.potentialGoldReward ? `(Potential base Gold Reward: ${need.potentialGoldReward})` : ''} (Priority: ${need.priority.toFixed(1)})`).join('\n')}
@@ -47,14 +50,6 @@ ${itemsDataContext}
 Location: Agnir, Kadera, (${npcContext.location.name}):
 ${npcContext.location.description}
 
-Environment:
-- Nearby Characters: ${npcContext.location.npcs
-    ?.map((npcId) => {
-      const npc = npcStore.npcs[npcId];
-      return `${npc.name} ${npc.race} ${npc.role} ${npc.background} (is ${npc.isAlive() ? 'Alive' : 'Dead'})`;
-    })
-    .join(', ')}
-
 Relationships with other Characters:
 ${Object.entries(npcContext.relationships || [])
   .map(([name, relation]) => `- ${name}: ${relation}`)
@@ -63,11 +58,10 @@ ${Object.entries(npcContext.relationships || [])
 Relationship with Player: ${npcContext.getPlayerRelation()}. You can change the price depending on your relationship with the Player.
 
 Other Locations:
-${npcStore.locations
+${locationsStore.locations
   ?.map((loc) => {
     const npcs = ` Characters in ${loc.name}: ${loc.npcs
-      .map((npcId) => {
-        const npc = npcStore.npcs[npcId];
+      .map((npc) => {
         const isAlive = npc.isAlive();
 
         return `${npc.name} ${npc.role} (is ${isAlive ? 'Alive' : 'Dead'})
@@ -75,10 +69,8 @@ ${npcStore.locations
       })
       .join(', ')}`;
     const mobs = `Monsters in ${loc.name}:
-${mobStore.mobIds
-  .filter((mobId) => mobStore.mobs[mobId].location.name === loc.name)
-  .map((mobId) => {
-    const mob = mobStore.mobs[mobId];
+${loc.monsters
+  .map((mob) => {
     return `- ${mob.name} (${mob.isAlive() ? 'Alive' : 'Dead'}) x1`;
   })
   .join(', ')}`;
@@ -99,6 +91,13 @@ Player:
     )
     .join('\n')}
 
+Player's Active Global Quests:
+${
+  gameStore.questLog
+    ?.filter((quest) => !quest.completed && quest.questGiverId === null)
+    .map((quest) => `- ${quest.title}`)
+    .join('\n') || 'No active global quests'
+}
 Player's Active Quests for you:
 ${
   gameStore.questLog
@@ -191,6 +190,11 @@ Scale reward based on your relation with the player.
 Don't promise gold or items that you don't have.
 Don't ask player to do something if the relation with the player is low or if it doesn't make sense with your background.
 Try not to give too many quests.
+
+Global Quests rules:
+- Global quests are quests that are not related to you, but are related to the world.
+- Global quests are visible in the "Player's Active Global Quests" section.
+
 
 Communication rules:
 If player message is unclear, ask for clarification in a way that reflects your relationship with the Player.

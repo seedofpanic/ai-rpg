@@ -11,15 +11,19 @@ describe('MobStore', () => {
     // Mock the environment variable to ensure consistent testing
     vi.stubEnv('VITE_CI', 'true');
 
-    testLocation = {
+    testLocation = new Location({
       name: 'Test Location',
       description: 'A test location',
       x: 0,
       y: 0,
       width: 1000,
       height: 1000,
-      npcs: [],
-    };
+      npcsTemplate: [],
+      monstersTemplate: [
+        { type: 'wolf', minQuantity: 1, maxQuantity: 1 },
+        { type: 'bandit', minQuantity: 1, maxQuantity: 1 }
+      ],
+    });
 
     mobStore = MobStoreInstance;
   });
@@ -70,7 +74,7 @@ describe('MobStore', () => {
   describe('Mob Spawning', () => {
     it('should spawn a new mob in the specified location', () => {
       const initialMobCount = mobStore.mobIds.length;
-      const newMob = mobStore.spawnMob(testLocation);
+      const newMob = mobStore.spawnMob(testLocation, 'wolf');
 
       expect(newMob).toBeDefined();
       expect(newMob.location).toEqual(testLocation);
@@ -79,23 +83,49 @@ describe('MobStore', () => {
     });
 
     it('should respawn mobs correctly', () => {
-      const initialMobIds = [...mobStore.mobIds];
-
-      // Kill all mobs
-      initialMobIds.forEach((id) => {
-        const mob = mobStore.getMob(id);
-        if (mob) {
-          mob.takeDamage(mob.maxHealth);
-        }
+      // Create a test location with specific monster templates
+      const testLocationWithMonsters = new Location({
+        name: 'Test Location With Monsters',
+        description: 'A test location with monsters',
+        x: 0,
+        y: 0,
+        width: 1000,
+        height: 1000,
+        npcsTemplate: [],
+        monstersTemplate: [
+          { type: 'wolf', minQuantity: 1, maxQuantity: 1 },
+          { type: 'bandit', minQuantity: 1, maxQuantity: 1 }
+        ],
       });
 
-      mobStore.mobIds.length = 0;
-      mobStore.respawnMobs();
+      // Add a mob to the store
+      const initialMob = new Mob('wolf', 100, 100, testLocationWithMonsters);
+      mobStore.addMob(initialMob);
 
-      // Check that new mobs were spawned
-      expect(mobStore.mobIds.length).toBeGreaterThan(0);
-      // Verify that the new mobs are different from the old ones
-      expect(mobStore.mobIds).not.toEqual(initialMobIds);
+      // Kill the mob
+      initialMob.takeDamage(initialMob.maxHealth);
+
+      // Respawn the mob
+      mobStore.respawnMob(initialMob);
+
+      // Get the newly spawned mob (it should be the last one in the array)
+      const newMobId = mobStore.mobIds[mobStore.mobIds.length - 1];
+      const newMob = mobStore.getMob(newMobId);
+
+      // Verify the new mob
+      expect(newMob).toBeDefined();
+      expect(newMob?.id).not.toBe(initialMob.id);
+      expect(newMob?.location).toBe(testLocationWithMonsters);
+      expect(newMob?.isAlive()).toBe(true);
+      expect(newMob?.health).toBe(newMob?.maxHealth);
+      
+      // Verify the mob type is from the location's monster template
+      const possibleTypes = testLocationWithMonsters.monstersTemplate.map(t => t.type);
+      expect(possibleTypes).toContain(newMob?.type);
+
+      // Clean up
+      mobStore.removeMob(initialMob.id);
+      mobStore.removeMob(newMobId);
     });
   });
 });

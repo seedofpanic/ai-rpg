@@ -5,7 +5,7 @@ import Map from './Map';
 import { Player } from '../models/Player';
 
 // Mock the stores and dependencies
-vi.mock('../models/npcs', () => ({
+vi.mock('../models/npcStore', () => ({
   npcStore: {
     npcIds: ['npc1', 'npc2'],
     npcs: {
@@ -64,6 +64,19 @@ vi.mock('../models/location', () => ({
       height: 200,
     },
   ],
+  locationsStore: {
+    locations: [
+      {
+        name: 'Test Town',
+        x: 50,
+        y: 50,
+        width: 200,
+        height: 200,
+        npcsTemplate: [],
+        monstersTemplate: [],
+      },
+    ],
+  },
 }));
 
 vi.mock('../models/mob', () => ({

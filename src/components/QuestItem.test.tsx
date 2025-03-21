@@ -79,7 +79,7 @@ describe('QuestItem Component', () => {
   it('handles collect quest type correctly', () => {
     const collectQuest = {
       ...baseQuest,
-      action: 'collect',
+      action: 'bring',
       subject: 'herb1',
     };
 
