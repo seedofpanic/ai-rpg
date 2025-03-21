@@ -74,9 +74,13 @@ const QuestItem: React.FC<QuestItemComponentProps> = ({ quest, npcName }) => {
       </QuestStatus>
       <QuestTitle data-testid="quest-title">
         {quest.title}
-        <QuestGiver data-testid="quest-giver">(from {npcName || 'Unknown'})</QuestGiver>
+        <QuestGiver data-testid="quest-giver">
+          (from {npcName || 'Unknown'})
+        </QuestGiver>
       </QuestTitle>
-      <QuestDescription data-testid="quest-description">{quest.description}</QuestDescription>
+      <QuestDescription data-testid="quest-description">
+        {quest.description}
+      </QuestDescription>
       {!quest.completed && (
         <QuestProgress data-testid="quest-progress">
           Progress:{' '}

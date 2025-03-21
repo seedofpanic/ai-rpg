@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { modelTools } from './modelTools';
-import { SchemaType, Tool, FunctionDeclaration } from '@google/generative-ai';
+import { SchemaType, FunctionDeclaration } from '@google/generative-ai';
 
 type ExtendedSchema = {
   type: SchemaType;
@@ -18,16 +18,18 @@ type ExtendedSchema = {
   required?: string[];
 };
 
-interface ExtendedFunctionDeclaration extends Omit<FunctionDeclaration, 'parameters'> {
+interface ExtendedFunctionDeclaration
+  extends Omit<FunctionDeclaration, 'parameters'> {
   parameters: ExtendedSchema;
 }
 
 describe('modelTools', () => {
   describe('modifyMood tool', () => {
-    const modifyMoodTool = (modelTools as unknown as { functionDeclarations: ExtendedFunctionDeclaration[] })
-      .functionDeclarations.find(
-        (tool) => tool.name === 'modifyMood'
-      );
+    const modifyMoodTool = (
+      modelTools as unknown as {
+        functionDeclarations: ExtendedFunctionDeclaration[];
+      }
+    ).functionDeclarations.find((tool) => tool.name === 'modifyMood');
 
     it('should have correct schema definition', () => {
       expect(modifyMoodTool).toBeDefined();
@@ -69,10 +71,11 @@ describe('modelTools', () => {
   });
 
   describe('giveBringQuest tool', () => {
-    const questTool = (modelTools as unknown as { functionDeclarations: ExtendedFunctionDeclaration[] })
-      .functionDeclarations.find(
-        (tool) => tool.name === 'giveBringQuest'
-      );
+    const questTool = (
+      modelTools as unknown as {
+        functionDeclarations: ExtendedFunctionDeclaration[];
+      }
+    ).functionDeclarations.find((tool) => tool.name === 'giveBringQuest');
 
     it('should have correct schema definition', () => {
       expect(questTool).toBeDefined();
@@ -94,4 +97,4 @@ describe('modelTools', () => {
       expect(questItemSchema?.properties.name.nullable).toBe(false);
     });
   });
-}); 
+});

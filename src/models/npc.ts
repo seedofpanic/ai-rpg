@@ -37,7 +37,7 @@ interface Message {
   text: string;
   type: MessageType;
   tokensCount: number;
-  relationChange?: number;
+  moodChange?: { state: string; change: number };
 }
 
 const names = [
@@ -142,6 +142,37 @@ function generateRoleSpecificInventory(role: string): InventoryItem[] {
 
   return inventory;
 }
+
+export const getRelationChange = (state: string | undefined): number => {
+  if (!state) return 0;
+
+  switch (state) {
+    case 'like':
+      return 4;
+    case 'confused':
+      return -1;
+    case 'offensive':
+      return -50;
+    case 'interesting':
+      return 1;
+    case 'unfriendly':
+      return -2;
+    case 'hostile':
+      return -4;
+    case 'friendly':
+      return 2;
+    case 'neutral':
+      return 0;
+    case 'cautious':
+      return 1;
+    case 'wary':
+      return -1;
+    case 'frugality':
+      return -3;
+    default:
+      return 0;
+  }
+};
 
 export class NPC {
   id: string;
@@ -313,37 +344,6 @@ export class NPC {
       return 'Hateful';
     } else {
       return 'Hostile';
-    }
-  }
-
-  getRelationChange(state: string | undefined): number {
-    if (!state) return 0;
-
-    switch (state) {
-      case 'like':
-        return 4;
-      case 'confused':
-        return -1;
-      case 'offensive':
-        return -50;
-      case 'interesting':
-        return 1;
-      case 'unfriendly':
-        return -2;
-      case 'hostile':
-        return -4;
-      case 'friendly':
-        return 2;
-      case 'neutral':
-        return 0;
-      case 'cautious':
-        return 1;
-      case 'wary':
-        return -1;
-      case 'frugality':
-        return -3;
-      default:
-        return 0;
     }
   }
 

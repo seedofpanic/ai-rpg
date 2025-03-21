@@ -235,12 +235,14 @@ const CharacterDoll: React.FC<CharacterDollProps> = observer(({ player }) => {
         {Array.from(player.magicEffects.getActiveEffects().entries()).map(
           ([targetId, effects]) =>
             effects.map((effect, index) => (
-              <EffectItem 
-                key={`${targetId}-${index}`} 
+              <EffectItem
+                key={`${targetId}-${index}`}
                 $type={effect.type}
                 data-testid={`effect-item-${effect.type}-${index}`}
               >
-                <span data-testid={`effect-source-${index}`}>{effect.source}</span>
+                <span data-testid={`effect-source-${index}`}>
+                  {effect.source}
+                </span>
                 <EffectValue data-testid={`effect-value-${index}`}>
                   {effect.type === 'heal' && `+${effect.value} HP`}
                   {effect.type === 'buff' && `+${effect.value} AP`}

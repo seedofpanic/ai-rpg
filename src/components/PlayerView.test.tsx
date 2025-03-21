@@ -8,7 +8,7 @@ describe('PlayerView Component', () => {
     const x = 100;
     const y = 200;
     render(<PlayerView x={x} y={y} />);
-    
+
     const playerElement = screen.getByTestId('player-view');
     expect(playerElement).toBeInTheDocument();
     expect(playerElement).toHaveStyle({ left: '100px', top: '200px' });
@@ -16,7 +16,7 @@ describe('PlayerView Component', () => {
 
   it('updates position when props change', () => {
     const { rerender } = render(<PlayerView x={0} y={0} />);
-    
+
     let playerElement = screen.getByTestId('player-view');
     expect(playerElement).toHaveStyle({ left: '0px', top: '0px' });
 
@@ -24,4 +24,4 @@ describe('PlayerView Component', () => {
     playerElement = screen.getByTestId('player-view');
     expect(playerElement).toHaveStyle({ left: '50px', top: '75px' });
   });
-}); 
+});

@@ -1,4 +1,4 @@
-import { MessageType, NPC } from 'models/npc';
+import { getRelationChange, MessageType, NPC } from 'models/npc';
 import { gameStore } from 'models/gameStore';
 import { v4 as uuidv4 } from 'uuid';
 import { FunctionCall } from '@google/generative-ai';
@@ -56,8 +56,16 @@ const parseSellItems = (npcContext: NPC, data: SellItemsData) => {
   }
 };
 
-const parseCompletedQuests = (data: CompletedQuestsData) => {
-  gameStore.completeQuest(data.questId);
+const parseCompletedQuests = (data: CompletedQuestsData, npcContext: NPC) => {
+  const quest = gameStore.completeQuest(data.questId);
+
+  if (quest) {
+    npcContext.addDialogHistory({
+      text: `Quest completed: ${quest.title}`,
+      type: MessageType.Action,
+      tokensCount: 10,
+    }); // Save to dialogue history
+  }
 };
 
 interface QuestData {
@@ -132,6 +140,8 @@ export const parseNpcMessage = (
   npcContext: NPC,
   functionCalls: FunctionCall[],
 ) => {
+  let stateChange;
+
   for (const functionCall of functionCalls) {
     if (functionCall.name === 'giveKillMonsterQuest') {
       addQuests('kill monsters', functionCall.args as QuestData, npcContext);
@@ -140,13 +150,21 @@ export const parseNpcMessage = (
     } else if (functionCall.name === 'giveKillNpcQuest') {
       addQuests('kill NPC', functionCall.args as QuestData, npcContext);
     } else if (functionCall.name === 'completeQuest') {
-      parseCompletedQuests(functionCall.args as CompletedQuestsData);
+      parseCompletedQuests(
+        functionCall.args as CompletedQuestsData,
+        npcContext,
+      );
     } else if (functionCall.name === 'setBuyItemsList') {
       parseBuyItems(npcContext, functionCall.args as BuyItemsData);
     } else if (functionCall.name === 'setSellItemsList') {
       parseSellItems(npcContext, functionCall.args as SellItemsData);
     } else if (functionCall.name === 'modifyMood') {
       npcContext.setState((functionCall.args as { state: string }).state);
+      const relationChange = getRelationChange(npcContext.state);
+      npcContext.changeRelation(relationChange); // Change relation based on response
+      if (npcContext.state) {
+        stateChange = { state: npcContext.state, change: relationChange };
+      }
     } else if (functionCall.name === 'setTransformedUserMessage') {
       npcContext.replaceUserMessage(
         (functionCall.args as { message: string }).message,
@@ -154,13 +172,10 @@ export const parseNpcMessage = (
     }
   }
 
-  const relationChange = npcContext.getRelationChange(npcContext.state);
-  npcContext.changeRelation(relationChange); // Change relation based on response
-
   npcContext.addDialogHistory({
     text,
     type: MessageType.NPC,
     tokensCount,
-    relationChange,
+    moodChange: stateChange,
   }); // Save to dialogue history
 };

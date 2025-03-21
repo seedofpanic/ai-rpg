@@ -7,10 +7,20 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: "./vitest.setup.ts",
     include: ["src/**/*.test.{ts,tsx}"],
-    exclude: ["src/setupTests.ts", "src/contextCreator.test.ts", "src/playwright.config.ts", "src/vitest.config.ts"],
+    exclude: [
+      "src/setupTests.ts",
+      "src/contextCreator.test.ts",
+      "src/playwright.config.ts",
+      "src/vitest.config.ts",
+    ],
     coverage: {
       include: ["src/**/*.{ts,tsx}"],
-      exclude: ["src/setupTests.ts", "src/playwright.config.ts", "src/vitest.config.ts", "src/contextCreator.ts"],
+      exclude: [
+        "src/setupTests.ts",
+        "src/playwright.config.ts",
+        "src/vitest.config.ts",
+        "src/contextCreator.ts",
+      ],
       reporter: ["text", "json", "html"],
     },
   },

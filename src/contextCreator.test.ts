@@ -18,50 +18,50 @@ vi.mock('./models/npcs', () => ({
             type: 'quest',
             subject: 'Test quest',
             potentialGoldReward: 100,
-            priority: 1.0
-          }
+            priority: 1.0,
+          },
         ],
         inventory: [
           {
             itemId: 'test-item',
-            quantity: 1
-          }
+            quantity: 1,
+          },
         ],
         gold: 1000,
         knowledge: ['Test knowledge'],
         location: {
           name: 'Test Location',
-          description: 'Test location description'
+          description: 'Test location description',
         },
-        getPlayerRelation: () => "10",
+        getPlayerRelation: () => '10',
         sellingItems: [],
         buyingItems: [],
-      }
-    }
-  }
+      },
+    },
+  },
 }));
 
 vi.mock('./models/gameStore', () => ({
   gameStore: {
     player: {
-      name: 'Test Player'
+      name: 'Test Player',
     },
     questLog: [],
-  }
+  },
 }));
 
 vi.mock('./models/itemsData', () => ({
   itemsData: {
-    get: (id: string) => ({
+    get: (_: string) => ({
       name: 'Test Item',
-      price: 100
-    })
+      price: 100,
+    }),
   },
-  itemsDataContext: 'Test Item|test-item|Test description'
+  itemsDataContext: 'Test Item|test-item|Test description',
 }));
 
 vi.mock('./models/loreBook', () => ({
-  lore: 'Test lore'
+  lore: 'Test lore',
 }));
 
 describe('contextCreator', () => {
@@ -71,7 +71,7 @@ describe('contextCreator', () => {
 
   it('should create context for valid NPC ID', () => {
     const context = createContext('test-npc', 'Hello');
-    
+
     expect(context).toContain('Test NPC');
     expect(context).toContain('Merchant');
     expect(context).toContain('Test background');
@@ -86,14 +86,20 @@ describe('contextCreator', () => {
   });
 
   it('should throw error for invalid NPC ID', () => {
-    expect(() => createContext('invalid-npc', 'Hello')).toThrow('NPC not found');
+    expect(() => createContext('invalid-npc', 'Hello')).toThrow(
+      'NPC not found',
+    );
   });
 
   it('should include system message flag in context', () => {
     const contextWithSystemMessage = createContext('test-npc', 'Hello', true);
-    const contextWithoutSystemMessage = createContext('test-npc', 'Hello', false);
-    
+    const contextWithoutSystemMessage = createContext(
+      'test-npc',
+      'Hello',
+      false,
+    );
+
     expect(contextWithSystemMessage).toBeDefined();
     expect(contextWithoutSystemMessage).toBeDefined();
   });
-}); 
+});

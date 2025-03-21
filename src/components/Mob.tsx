@@ -175,9 +175,7 @@ const Mob: React.FC<MobProps> = ({
               : mousePos.y + 30,
         }}
       >
-        <MobName>
-          {name}
-        </MobName>
+        <MobName>{name}</MobName>
         <MobType>{type}</MobType>
         <MobDetails>
           Health: {health}/{maxHealth}

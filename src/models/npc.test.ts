@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { MessageType, NPC } from './npc';
+import { getRelationChange, MessageType, NPC } from './npc';
 import { Vector2 } from '../utils/vector2';
 import { Location } from './location';
 
@@ -112,7 +112,7 @@ describe('NPC', () => {
 
   it('should change relation based on state', () => {
     npc.setState('friendly');
-    npc.changeRelation(npc.getRelationChange(npc.state));
+    npc.changeRelation(getRelationChange(npc.state));
     expect(npc.relation).toBe(52); // Default relation +2 for "friendly"
   });
 
@@ -136,7 +136,7 @@ describe('NPC', () => {
 
   it('should correctly calculate relation change based on state', () => {
     npc.setState('like');
-    const relationChange = npc.getRelationChange(npc.state);
+    const relationChange = getRelationChange(npc.state);
     expect(relationChange).toBe(4);
     npc.changeRelation(relationChange);
     expect(npc.relation).toBe(54); // Initial relation 50 + 4

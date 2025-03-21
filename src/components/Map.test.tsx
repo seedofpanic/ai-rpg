@@ -19,7 +19,7 @@ vi.mock('../models/npcs', () => ({
         race: 'human',
         personality: 'friendly',
         relation: 'neutral',
-        isAlive: () => true
+        isAlive: () => true,
       },
       npc2: {
         id: 'npc2',
@@ -31,10 +31,10 @@ vi.mock('../models/npcs', () => ({
         race: 'elf',
         personality: 'stern',
         relation: 'friendly',
-        isAlive: () => true
-      }
-    }
-  }
+        isAlive: () => true,
+      },
+    },
+  },
 }));
 
 vi.mock('../models/mobStore', () => ({
@@ -48,10 +48,10 @@ vi.mock('../models/mobStore', () => ({
         type: 'goblin',
         health: 50,
         isAggressive: true,
-        isAlive: () => true
-      }
-    }
-  }
+        isAlive: () => true,
+      },
+    },
+  },
 }));
 
 vi.mock('../models/location', () => ({
@@ -61,17 +61,17 @@ vi.mock('../models/location', () => ({
       x: 50,
       y: 50,
       width: 200,
-      height: 200
-    }
-  ]
+      height: 200,
+    },
+  ],
 }));
 
 vi.mock('../models/mob', () => ({
   MOB_STATS: {
     goblin: {
-      health: 100
-    }
-  }
+      health: 100,
+    },
+  },
 }));
 
 describe('Map Component', () => {
@@ -116,7 +116,7 @@ describe('Map Component', () => {
     equipment: {
       weapon: null,
       armor: null,
-      accessory: null
+      accessory: null,
     },
     gold: 0,
     quests: [],
@@ -144,13 +144,13 @@ describe('Map Component', () => {
     addEffect: () => {},
     removeEffect: () => {},
     save: () => {},
-    load: () => {}
+    load: () => {},
   } as unknown as Player;
 
   const mockProps = {
     onNpcInteraction: vi.fn(),
     onNpcHover: vi.fn(),
-    player: mockPlayer
+    player: mockPlayer,
   };
 
   it('renders locations correctly', () => {
@@ -163,7 +163,7 @@ describe('Map Component', () => {
     const playerElement = screen.getByTestId('player-view');
     expect(playerElement).toHaveStyle({
       left: '150px',
-      top: '150px'
+      top: '150px',
     });
   });
 
@@ -180,7 +180,7 @@ describe('Map Component', () => {
 
   it('handles NPC interaction', () => {
     render(<Map {...mockProps} />);
-    const npc = screen.getByTestId("npc-view-npc1");
+    const npc = screen.getByTestId('npc-view-npc1');
     fireEvent.click(npc);
     expect(mockProps.onNpcInteraction).toHaveBeenCalledWith('npc1');
   });
@@ -188,10 +188,10 @@ describe('Map Component', () => {
   it('handles NPC hover events', () => {
     render(<Map {...mockProps} />);
     const npc = screen.getByText('Test NPC 1');
-    
+
     fireEvent.mouseEnter(npc);
     expect(mockProps.onNpcHover).toHaveBeenCalledWith('npc1');
-    
+
     fireEvent.mouseLeave(npc);
     expect(mockProps.onNpcHover).toHaveBeenCalledWith(null);
   });

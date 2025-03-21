@@ -37,6 +37,12 @@ const MessageLog = styled.div`
   border-radius: 4px;
 `;
 
+const MessageBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
 const Message = styled.div<{ $type?: MessageType }>`
   margin: 5px 0;
   padding: 5px 10px;
@@ -60,6 +66,9 @@ const Message = styled.div<{ $type?: MessageType }>`
     props.$type === MessageType.Player ? 'auto' : '0'};
   font-style: ${(props) =>
     props.$type === MessageType.Action ? 'italic' : 'normal'};
+  display: flex;
+  align-items: center;
+  gap: 10px;
 
   & strong {
     color: ${(props) => {
@@ -76,6 +85,23 @@ const Message = styled.div<{ $type?: MessageType }>`
     }};
     font-style: italic;
   }
+`;
+
+const MoodChange = styled.span<{ $change: number }>`
+  font-size: 0.8em;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background-color: ${(props) =>
+    props.$change > 0
+      ? 'rgba(42, 157, 143, 0.3)'
+      : props.$change < 0
+        ? 'rgba(231, 111, 81, 0.3)'
+        : 'rgba(108, 117, 125, 0.3)'};
+  color: ${(props) =>
+    props.$change > 0 ? '#2a9d8f' : props.$change < 0 ? '#e76f51' : '#6c757d'};
+  margin-left: auto;
+  white-space: nowrap;
+  color: white;
 `;
 
 const InputContainer = styled.div`
@@ -141,6 +167,7 @@ const QuestSection = styled.div`
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: auto;
 `;
 
 const ShopItem = styled.div`
@@ -176,6 +203,7 @@ const BoxRow = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
+  overflow: auto;
 `;
 
 const LoadingDots = styled.div`
@@ -278,9 +306,18 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
         <Box style={{ flex: '60%' }}>
           <MessageLog ref={messageLogRef}>
             {npcContext.dialogueHistory?.map((message, index) => (
-              <Message data-testid="message" key={index} $type={message.type}>
-                {formatMessageText(message.text)}
-              </Message>
+              <MessageBox key={index}>
+                <Message data-testid="message" $type={message.type}>
+                  <p>{formatMessageText(message.text)}</p>
+                </Message>
+                {message.moodChange && (
+                  <MoodChange $change={message.moodChange.change}>
+                    {message.moodChange.state}:{' '}
+                    {Math.sign(message.moodChange.change) > 0 ? '+' : ''}
+                    {message.moodChange.change}
+                  </MoodChange>
+                )}
+              </MessageBox>
             ))}
             {dialogController.isLoading && (
               <LoadingMessage>
@@ -359,33 +396,33 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
                 <p>No items available to sell.</p>
               )}
             </div>
-            <QuestSection>
-              <h3>Available Quests</h3>
-              {gameStore.questLog
-                .filter(
-                  (quest) => quest.questGiverId === npcId && !quest.completed,
-                )
-                .map((quest) => (
-                  <QuestItem
-                    key={quest.id}
-                    quest={quest}
-                    npcName={npcContext.name}
-                  />
-                ))}
-              <h3>Completed Quests</h3>
-              {gameStore.questLog
-                .filter(
-                  (quest) => quest.questGiverId === npcId && quest.completed,
-                )
-                .map((quest) => (
-                  <QuestItem
-                    key={quest.id}
-                    quest={quest}
-                    npcName={npcContext.name}
-                  />
-                ))}
-            </QuestSection>
           </ShopContainer>
+          <QuestSection>
+            <h3>Available Quests</h3>
+            {gameStore.questLog
+              .filter(
+                (quest) => quest.questGiverId === npcId && !quest.completed,
+              )
+              .map((quest) => (
+                <QuestItem
+                  key={quest.id}
+                  quest={quest}
+                  npcName={npcContext.name}
+                />
+              ))}
+            <h3>Completed Quests</h3>
+            {gameStore.questLog
+              .filter(
+                (quest) => quest.questGiverId === npcId && quest.completed,
+              )
+              .map((quest) => (
+                <QuestItem
+                  key={quest.id}
+                  quest={quest}
+                  npcName={npcContext.name}
+                />
+              ))}
+          </QuestSection>
         </Box>
       </BoxRow>
     </DialogueContainer>

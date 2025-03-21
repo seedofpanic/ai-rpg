@@ -69,6 +69,8 @@ export class GameStore {
           });
         }
       }
+
+      return quest;
     }
   }
 

@@ -99,7 +99,7 @@ test.describe("AI RPG E2E Tests", () => {
 
   test("should allow interaction with NPCs", async ({ page }) => {
     // Interact with an NPC
-    const npc = page.locator('[data-testid="npc-view"]').first();
+    const npc = page.locator('[data-testid^="npc-view"]').first();
     await npc.scrollIntoViewIfNeeded();
     await npc.hover();
     await page.keyboard.press("e");
@@ -128,7 +128,7 @@ test.describe("AI RPG E2E Tests", () => {
     );
 
     // Interact with an NPC
-    const npc = page.locator('[data-testid="npc-view"]').first();
+    const npc = page.locator('[data-testid^="npc-view"]').first();
     await npc.hover();
     await page.keyboard.press("e");
 
