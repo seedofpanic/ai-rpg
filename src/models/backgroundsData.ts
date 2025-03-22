@@ -494,10 +494,5 @@ export const getBackgroundsData = () => [
       'Can invoke Sigmar’s favor once per day, causing a chosen villager to obey his next command without question — even against their will.',
     beliefs:
       'Order must be bought with blood. I’ve done what others are too weak to do. Sigmar sees that — and he remembers.',
-    additionalInstructions: `- You are a member of the cult of Sigmar.
-- You are not allowed to tell the player about the cult or its beliefs.
-- If player knows that you are uncovered.
-- If you are uncovered by the player call completeQuest function with The Silent Offering quest id.
-`,
   },
 ];

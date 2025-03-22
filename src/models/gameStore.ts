@@ -10,6 +10,7 @@ import { locationsStore } from './location';
 import { v4 as uuidv4 } from 'uuid';
 import { BackgroundTemplate, getBackgroundsData } from './backgroundsData';
 import { Vector2 } from 'utils/vector2';
+import { buildStory } from './scenarios/scenarioBuilder';
 export class GameStore {
   isDialogueOpen: boolean = false;
   activeNpcId: string | null = null;
@@ -118,6 +119,7 @@ export class GameStore {
     this.player = player;
     this.reset();
     locationsStore.generateLocations();
+    buildStory();
     this.addMainQuest();
     this.startGameActions();
 

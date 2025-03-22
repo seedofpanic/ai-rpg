@@ -41,7 +41,7 @@ const ToggleButton = styled.button`
 `;
 
 const QuestLog: React.FC = () => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <QuestLogContainer>

@@ -15,6 +15,7 @@ const MapContainer = styled.div`
   height: 2000px;
   background-color: #2a9d8f;
   position: relative;
+  user-select: none;
 `;
 
 const LocationContainer = styled.div<{
