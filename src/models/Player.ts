@@ -1,7 +1,7 @@
 import { combatLogStore } from 'components/CombatLog';
 import { makeAutoObservable } from 'mobx';
 import { Vector2 } from 'utils/vector2';
-import { Equipment, ItemData, itemsData } from './itemsData';
+import { Equipment, itemsData } from './itemsData';
 import { MagicEffects } from './MagicEffects';
 
 interface InventorySlot {
@@ -100,14 +100,6 @@ export class Player {
     }
     this.health = this.maxHealth;
     this.magicEffects = new MagicEffects(this);
-
-    for (let i = 0; i < 50; i++) {
-      const itemId = getRandomElement(itemsData);
-      this.addItemToInventory({
-        itemId: itemId,
-        quantity: Math.floor(Math.random() * 10) + 1,
-      });
-    }
 
     makeAutoObservable(this);
   }
@@ -314,10 +306,3 @@ export class Player {
     }
   }
 }
-
-function getRandomElement(itemsData: Map<string, ItemData>): any {
-  const itemEntries = Array.from(itemsData.entries());
-  return itemEntries[Math.floor(Math.random() * itemEntries.length)][0];
-}
-
-

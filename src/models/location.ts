@@ -4,7 +4,6 @@ import { NPC } from './npc';
 import { v4 as uuidv4 } from 'uuid';
 import { npcStore } from './npcStore';
 import { mobStore } from './mobStore';
-import { backgroundsData } from './backgroundsData';
 import { gameStore } from './gameStore';
 type locationData = Omit<
   Location,

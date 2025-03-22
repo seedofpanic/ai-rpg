@@ -200,7 +200,8 @@ export const modelTools: Tool = {
     },
     {
       name: 'setBuyItemsList',
-      description: 'Add all the items you want to buy to the list. Be mindful about how much gold you have.',
+      description:
+        'Add all the items you want to buy to the list. Be mindful about how much gold you have.',
       parameters: {
         type: SchemaType.OBJECT,
         properties: {

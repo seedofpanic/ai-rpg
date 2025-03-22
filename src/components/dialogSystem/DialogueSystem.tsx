@@ -354,7 +354,9 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
               {npcContext.sellingItems.length ? (
                 npcContext.sellingItems.map((item, index) => (
                   <ShopItem data-testid="trade-item" key={index}>
-                    <span>{itemsData.get(item.itemId)?.name} x{item.quantity || 0}</span>
+                    <span>
+                      {itemsData.get(item.itemId)?.name} x{item.quantity || 0}
+                    </span>
                     <span>{item.price} gold</span>
                     <ShopButton
                       data-testid="buy-item"
@@ -374,7 +376,9 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
                 npcContext.buyingItems.map((item, index) => {
                   return (
                     <ShopItem key={index}>
-                      <span>{itemsData.get(item.itemId)?.name} x{item.quantity || 0}</span>
+                      <span>
+                        {itemsData.get(item.itemId)?.name} x{item.quantity || 0}
+                      </span>
                       <span>{item.price} gold</span>
                       <ShopButton
                         data-testid="sell-item"

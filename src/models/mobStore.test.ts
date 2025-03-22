@@ -21,7 +21,7 @@ describe('MobStore', () => {
       npcsTemplate: [],
       monstersTemplate: [
         { type: 'wolf', minQuantity: 1, maxQuantity: 1 },
-        { type: 'bandit', minQuantity: 1, maxQuantity: 1 }
+        { type: 'bandit', minQuantity: 1, maxQuantity: 1 },
       ],
     });
 
@@ -94,7 +94,7 @@ describe('MobStore', () => {
         npcsTemplate: [],
         monstersTemplate: [
           { type: 'wolf', minQuantity: 1, maxQuantity: 1 },
-          { type: 'bandit', minQuantity: 1, maxQuantity: 1 }
+          { type: 'bandit', minQuantity: 1, maxQuantity: 1 },
         ],
       });
 
@@ -118,9 +118,11 @@ describe('MobStore', () => {
       expect(newMob?.location).toBe(testLocationWithMonsters);
       expect(newMob?.isAlive()).toBe(true);
       expect(newMob?.health).toBe(newMob?.maxHealth);
-      
+
       // Verify the mob type is from the location's monster template
-      const possibleTypes = testLocationWithMonsters.monstersTemplate.map(t => t.type);
+      const possibleTypes = testLocationWithMonsters.monstersTemplate.map(
+        (t) => t.type,
+      );
       expect(possibleTypes).toContain(newMob?.type);
 
       // Clean up

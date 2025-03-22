@@ -124,7 +124,10 @@ export class GameStore {
     if (import.meta.env.VITE_CI) {
       mobStore.initializeMobs();
       const npc = npcStore.generateRandomNPC(locationsStore.locations[0]);
-      npc.position = new Vector2(this.player.position.x + 30, this.player.position.y + 30);
+      npc.position = new Vector2(
+        this.player.position.x + 30,
+        this.player.position.y + 30,
+      );
       npcStore.npcs[npc.id] = npc;
       npcStore.npcIds.push(npc.id);
     }

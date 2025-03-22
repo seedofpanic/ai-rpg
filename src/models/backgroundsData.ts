@@ -11,17 +11,15 @@ export interface BackgroundTemplate {
   additionalInstructions?: string;
 }
 
-let index = 1;
+const index = 1;
 
 export const getRandomBackground = () => {
   return {
     name: `Character ${index}`,
     title: '',
     race: 'Human',
-    background:
-      '',
-    trueBackground:
-      '',
+    background: '',
+    trueBackground: '',
   };
 };
 

@@ -283,9 +283,13 @@ export class NPC {
     background?: BackgroundTemplate,
   ): NPC {
     const id = uuidv4();
-    const backgroundIndex = Math.floor(Math.random() * gameStore.backgroundsData.length);
+    const backgroundIndex = Math.floor(
+      Math.random() * gameStore.backgroundsData.length,
+    );
     const selectedBackground =
-      gameStore.backgroundsData.splice(backgroundIndex, 1)[0] || background || getRandomBackground();
+      gameStore.backgroundsData.splice(backgroundIndex, 1)[0] ||
+      background ||
+      getRandomBackground();
     const name = selectedBackground?.name || getRandomElement(names);
     const race = selectedBackground?.race || 'Human';
     const role = getRandomElement(roles);

@@ -149,34 +149,34 @@ const PlayerInventory: React.FC<PlayerInventoryProps> = ({ player }) => {
             if (!item) return null;
 
             const isEquipment = !!item.equippableSlot;
-          const usable = isUsableItem(item);
+            const usable = isUsableItem(item);
 
-          return (
-            <InventoryItem data-testid="item-view" key={index}>
-              <span>
-                {item.name} (x{quantity})
-              </span>
-              <div>
-                {isEquipment && (
-                  <ItemButton
-                    onClick={() => handleEquip(itemId)}
-                    data-testid="equip-button"
-                  >
-                    Equip
-                  </ItemButton>
-                )}
-                {usable && (
-                  <ItemButton
-                    onClick={() => handleUse(itemId)}
-                    data-testid="use-button"
-                  >
-                    Use
-                  </ItemButton>
-                )}
-              </div>
-            </InventoryItem>
-          );
-        })
+            return (
+              <InventoryItem data-testid="item-view" key={index}>
+                <span>
+                  {item.name} (x{quantity})
+                </span>
+                <div>
+                  {isEquipment && (
+                    <ItemButton
+                      onClick={() => handleEquip(itemId)}
+                      data-testid="equip-button"
+                    >
+                      Equip
+                    </ItemButton>
+                  )}
+                  {usable && (
+                    <ItemButton
+                      onClick={() => handleUse(itemId)}
+                      data-testid="use-button"
+                    >
+                      Use
+                    </ItemButton>
+                  )}
+                </div>
+              </InventoryItem>
+            );
+          })
       ) : (
         <p>No items in inventory.</p>
       )}
