@@ -11,6 +11,28 @@ import { v4 as uuidv4 } from 'uuid';
 import { BackgroundTemplate, getBackgroundsData } from './backgroundsData';
 import { Vector2 } from 'utils/vector2';
 import { buildStory } from './scenarios/scenarioBuilder';
+
+type DayTime = 'morning' | 'afternoon' | 'evening' | 'night';
+type Weather =
+  | 'sunny'
+  | 'cloudy'
+  | 'rainy'
+  | 'foggy'
+  | 'stormy'
+  | 'clear'
+  | 'overcast';
+const weather: Weather[] = [
+  'sunny',
+  'cloudy',
+  'rainy',
+  'foggy',
+  'stormy',
+  'clear',
+  'overcast',
+];
+
+let dayTimeTimer: NodeJS.Timeout | null = null;
+
 export class GameStore {
   isDialogueOpen: boolean = false;
   activeNpcId: string | null = null;
@@ -21,9 +43,36 @@ export class GameStore {
   hoveredNpcId: string | null = null;
   api: 'gemini' | 'proxy' = 'gemini';
   backgroundsData: BackgroundTemplate[] = [];
-
+  dayTime: DayTime = 'morning';
+  weather: Weather = 'sunny';
   constructor() {
     makeAutoObservable(this);
+  }
+
+  updateWeather() {
+    this.weather = weather[Math.floor(Math.random() * weather.length)];
+  }
+
+  startDayTime() {
+    if (dayTimeTimer) {
+      clearTimeout(dayTimeTimer);
+    }
+
+    dayTimeTimer = setTimeout(
+      () => {
+        if (this.dayTime === 'morning') {
+          this.dayTime = 'afternoon';
+        } else if (this.dayTime === 'afternoon') {
+          this.dayTime = 'evening';
+        } else if (this.dayTime === 'evening') {
+          this.dayTime = 'night';
+        } else if (this.dayTime === 'night') {
+          this.dayTime = 'morning';
+        }
+        this.updateWeather();
+      },
+      1000 * 60 * 10,
+    );
   }
 
   addQuest(quest: Quest) {
@@ -122,7 +171,7 @@ export class GameStore {
     buildStory();
     this.addMainQuest();
     this.startGameActions();
-
+    this.startDayTime();
     if (import.meta.env.VITE_CI) {
       mobStore.initializeMobs();
       const npc = npcStore.generateRandomNPC(locationsStore.locations[0]);
@@ -158,6 +207,7 @@ Someone is making sacrifices — find out who, and why.`,
     mobStore.reset();
     npcStore.reset();
     this.backgroundsData = getBackgroundsData();
+    this.dayTime = 'night';
   }
 
   setDialogueOpen(isOpen: boolean) {

@@ -137,9 +137,7 @@ const Game: React.FC = () => {
       combatLogStore.push(`${player.name} attacked ${mob.name}.`);
 
       if (!mob.isAlive()) {
-        player.events.add(
-          `${player.name} defeated some number of ${mob.name}`,
-        );
+        player.events.add(`${player.name} defeated some number of ${mob.name}`);
         combatLogStore.push(`${mob.name} has been defeated!`);
         gameStore.updateQuest(mob);
         setTimeout(() => {

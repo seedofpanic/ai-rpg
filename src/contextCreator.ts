@@ -31,6 +31,9 @@ Basic Information:
 Additional instructions:
 ${npcContext.additionalInstructions}
 
+Family:
+- Children: ${npcContext.family.children.map((child) => `- ${child}`).join('\n')}
+
 Current Needs:
 You are bothered by monsters around.
 ${npcContext.needs.map((need) => `- ${need.type}: ${need.subject} ${need.potentialGoldReward ? `(Potential base Gold Reward: ${need.potentialGoldReward})` : ''} (Priority: ${need.priority.toFixed(1)})`).join('\n')}
@@ -39,6 +42,18 @@ You have only items that are in your inventory:
 ${npcContext.inventory?.map((item) => `- ${itemsData.get(item.itemId)?.name} x${item.quantity} cost ${itemsData.get(item.itemId)?.price} piece`).join('\n') || 'No items in inventory'}
 - Gold: ${npcContext.gold}
 
+Relationships with other Characters:
+${Object.entries(npcContext.relationships || [])
+  .map(([name, relation]) => `- ${name}: ${relation}`)
+  .join('\n')}
+
+Relationship with Player: ${npcContext.getPlayerRelation()}. You can change the price depending on your relationship with the Player.
+
+You are in Grenthollow village that is located in Agnir not far from Kadera, (${npcContext.location.name}):
+${npcContext.location.description}
+
+Now it is ${gameStore.dayTime} and it is ${gameStore.weather}.
+
 Knowledge and Experience:
 ${npcContext.knowledge.map((k) => `- ${k}`).join('\n')}
 Lore and beliefs:
@@ -46,16 +61,6 @@ ${lore}
 
 Game items list name|itemId|description (use itemId from this list to buy or sell items):
 ${itemsDataContext}
-
-The game take place in Grenthollow village that is located in Agnir not far from Kadera, (${npcContext.location.name}):
-${npcContext.location.description}
-
-Relationships with other Characters:
-${Object.entries(npcContext.relationships || [])
-  .map(([name, relation]) => `- ${name}: ${relation}`)
-  .join('\n')}
-
-Relationship with Player: ${npcContext.getPlayerRelation()}. You can change the price depending on your relationship with the Player.
 
 Other Locations:
 ${locationsStore.locations
@@ -92,7 +97,9 @@ Player:
     .join('\n')}
 
 Things that happend with player so far:
-${Array.from(player.events).map((event) => `- ${event}`).join('\n')}
+${Array.from(player.events)
+  .map((event) => `- ${event}`)
+  .join('\n')}
 
 Player's Active Global Quests:
 ${

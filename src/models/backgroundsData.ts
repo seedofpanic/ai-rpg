@@ -2,7 +2,19 @@ export interface BackgroundTemplate {
   name: string;
   lastName?: string;
   title: string;
-  race: string;
+  race:
+    | 'human'
+    | 'elf'
+    | 'dwarf'
+    | 'half-elf'
+    | 'half-orc'
+    | 'tiefling'
+    | 'lizardfolk'
+    | 'goliath'
+    | 'gnome'
+    | 'tortle'
+    | 'halfing'
+    | 'orc';
   background: string;
   trueBackground: string;
   motivation: string;
@@ -23,11 +35,11 @@ export const getRandomBackground = () => {
   };
 };
 
-export const getBackgroundsData = () => [
+export const getBackgroundsData = (): BackgroundTemplate[] => [
   {
     name: 'Daeven',
     title: 'The Ashborn',
-    race: 'Human',
+    race: 'human',
     background:
       'A burned survivor of Bokadar, Daeven is a vengeful warrior known for his ruthless strikes against Manticore.',
     trueBackground:
@@ -41,7 +53,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Ilysha',
     title: 'The Tidemarked',
-    race: 'Elf',
+    race: 'elf',
     background: `A merchant specializing in illicit magical artifacts, Ilysha is known for her ability to smuggle even the rarest contraband through Portvel's docks.`,
     trueBackground: `Ilysha was once a scholar of the Lortan fortress, experimenting with Aktarine Crystals. When the fortress fell to the plague, she faked her death and fled to Portvel, selling magical relics to survive. Over time, she became an influential figure in the city's underworld, striking deals with Manticore while secretly looking for a way to reclaim her lost elven heritage.`,
     motivation: `Find a cure for the Aktrine plague and restore Lortan's lost legacy.`,
@@ -53,7 +65,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Ogrith',
     title: 'The Hollow Monk',
-    race: 'Dwarf',
+    race: 'dwarf',
     background:
       'A nomadic healer traveling across Agnir, offering aid to the sick and wounded while seeking redemption for an unspoken sin.',
     trueBackground:
@@ -68,7 +80,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Varros',
     title: 'The Stormtamer',
-    race: 'Half-Orc',
+    race: 'half-orc',
     background:
       'A legendary explorer and survivalist, said to have survived deep within the Zone of Unstable Magic longer than any other.',
     trueBackground:
@@ -82,7 +94,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Seline',
     title: 'The Weeping Oracle',
-    race: 'Human',
+    race: 'human',
     background:
       'A blind seer in Kadera, known for her cryptic prophecies and hauntingly accurate visions. People come from all over Agnir to hear her wisdom.',
     trueBackground:
@@ -97,7 +109,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Tharos',
     title: 'The Wretched Scholar',
-    race: 'Human',
+    race: 'human',
     background:
       'A disgraced academic in Stifa, obsessed with forbidden knowledge and the fall of Arktown. Considered a madman by most, he claims that something far worse than Manticore is coming.',
     trueBackground:
@@ -112,7 +124,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Velka',
     title: 'The Grave Dancer',
-    race: 'Half-Elf',
+    race: 'half-elf',
     background:
       'A mysterious bard and storyteller who appears at battlefields and tragedy-stricken towns, singing eerily accurate songs about recent horrors.',
     trueBackground:
@@ -126,7 +138,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Jerak',
     title: 'The Rust Baron',
-    race: 'Dwarf',
+    race: 'dwarf',
     background:
       'A successful weaponsmith in Portvel, known for supplying elite mercenaries and bounty hunters with high-quality enchanted gear.',
     trueBackground:
@@ -140,7 +152,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Maelis',
     title: 'The Forger',
-    race: 'Elf',
+    race: 'elf',
     background:
       'A master forger in Luran, known for crafting the finest counterfeit documents and seals, making even the most illegal transactions seem legitimate.',
     trueBackground:
@@ -155,7 +167,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Gorvuk',
     title: 'The Pit Fighter',
-    race: 'Orc',
+    race: 'orc',
     background:
       'A brutal pit fighter and gladiator from Kadera, undefeated in the underground arenas.',
     trueBackground:
@@ -169,7 +181,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Elnara',
     title: 'The Pyromancer',
-    race: 'Half-Elf',
+    race: 'half-elf',
     background: `An arsonist and saboteur in Portvel, responsible for mysterious fires that always seem to target Manticore's enemies.`,
     trueBackground: `Once a simple street thief, Elnara was taken in by Manticore and trained as one of their "cleansers"—operatives who erase problems through fire. However, she has grown disillusioned, secretly planning to burn Manticore's operations to the ground as her final act.`,
     motivation:
@@ -182,7 +194,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Bram',
     title: 'The Divine',
-    race: 'Human',
+    race: 'human',
     background:
       'A self-proclaimed prophet in Stifa, gathering a growing cult of desperate refugees and outcasts.',
     trueBackground:
@@ -196,7 +208,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Haskir',
     title: 'The Strategist',
-    race: 'Lizardfolk',
+    race: 'lizardfolk',
     background:
       'A wandering strategist and sellsword, offering his tactical genius to the highest bidder.',
     trueBackground:
@@ -210,7 +222,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Nerissa',
     title: 'The Ghost',
-    race: 'Undead (Former Human)',
+    race: 'human',
     background:
       'A ghostly figure seen on the outskirts of the Zone of Unstable Magic, laughing in the wind.',
     trueBackground:
@@ -224,7 +236,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Darrik',
     title: 'The Master of Deception',
-    race: 'Kenku',
+    race: 'human',
     background:
       'A wandering spy and master of deception, gathering information for an unknown benefactor.',
     trueBackground:
@@ -239,7 +251,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Torvald',
     title: 'The Master of Deception',
-    race: 'Dwarf',
+    race: 'dwarf',
     background:
       'A wandering knight in corroded armor, still seeking his last battle.',
     trueBackground:
@@ -252,7 +264,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Vala',
     title: 'The Blind Assassin',
-    race: 'Tiefling',
+    race: 'tiefling',
     background:
       'A blind assassin who never misses her target, feared across Agnir.',
     trueBackground:
@@ -266,7 +278,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Mira',
     title: 'The Herbalist',
-    race: 'Human',
+    race: 'human',
     background:
       'A mysterious herbalist living deep in the swamps, rumored to know the cure to any poison or disease.',
     trueBackground:
@@ -280,7 +292,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Kaelith',
     title: 'The Crystal Weaver',
-    race: 'Elf',
+    race: 'elf',
     background:
       'A mysterious artisan in Portvel who creates intricate jewelry said to hold magical properties.',
     trueBackground:
@@ -295,7 +307,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Rook',
     title: 'The Shadow Walker',
-    race: 'Half-Orc',
+    race: 'half-orc',
     background:
       'A notorious thief in Kadera who can steal anything without being seen.',
     trueBackground: `Rook was born in the slums of Kadera and learned to survive by becoming invisible to those in power. He discovered he could manipulate shadows after being exposed to a small Aktarine fragment as a child. Now he uses this ability to steal from the rich and powerful, particularly targeting Manticore's operations.`,
@@ -308,7 +320,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Luna',
     title: 'The Dream Walker',
-    race: 'Half-Elf',
+    race: 'half-elf',
     background:
       'A traveling storyteller who claims to share the dreams of those she meets.',
     trueBackground: `Luna was born with a rare condition that allows her to enter and experience others' dreams. When she touched an Aktarine crystal fragment, this ability was enhanced, allowing her to not only see dreams but also manipulate them. She now travels Agnir, helping people confront their nightmares while searching for answers about her own mysterious past.`,
@@ -322,7 +334,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Grimm',
     title: 'The Beast Tamer',
-    race: 'Human',
+    race: 'human',
     background:
       'A mysterious figure who travels with a pack of mutated creatures from the Zone of Unstable Magic.',
     trueBackground:
@@ -337,7 +349,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Zara',
     title: 'The Time Weaver',
-    race: 'Elf',
+    race: 'elf',
     background:
       'A reclusive scholar who claims to see glimpses of possible futures.',
     trueBackground:
@@ -351,7 +363,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Tharla',
     title: 'Ash-Daughter',
-    race: 'Dwarf',
+    race: 'dwarf',
     background:
       'A smith exiled from her clan, forging strange weapons powered by forbidden magic.',
     trueBackground:
@@ -366,7 +378,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Vaelith',
     title: 'Sigmar’s Echo',
-    race: 'Half-Elf',
+    race: 'half-elf',
     background: 'A wandering prophet who speaks in riddles and broken prayers.',
     trueBackground:
       'Vaelith was a child when the explosion destroyed Arktown. His mind was touched by Sigmar’s trapped divine essence through a rift in the Zone. Now, part of his soul exists outside time. He spreads fragmented visions, sometimes helping, sometimes disturbing those who listen.',
@@ -379,7 +391,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Kethran',
     title: 'Crimson Broker',
-    race: 'Human',
+    race: 'human',
     background:
       'A charming trader dealing in rare relics and forbidden knowledge.',
     trueBackground:
@@ -393,7 +405,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Ilenya',
     title: 'Warden of Lortan',
-    race: 'Elf',
+    race: 'elf',
     background:
       'A silent sentinel guarding the ruins of a once-great elven fortress.',
     trueBackground:
@@ -408,7 +420,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Gruln',
     title: 'The Chained Flame',
-    race: 'Orc',
+    race: 'orc',
     background: 'A fire-worshipping zealot exiled by his clan.',
     trueBackground:
       'Gruln once served the spirit Zak-Zarak as a battle-shaman. During a raid, he touched raw Aktarine and was granted horrifying visions of war and fire beyond reckoning. Believing these to be divine messages, he now wanders Agnir, seeking a prophesied weapon forged in both divine fire and Aktarine crystal.',
@@ -423,7 +435,7 @@ export const getBackgroundsData = () => [
     name: 'Nyra',
     lastName: 'Valen',
     title: 'Silken Thorn',
-    race: 'Human',
+    race: 'human',
     background:
       'A noble-turned-assassin known for targeting corrupt officials.',
     trueBackground:
@@ -438,7 +450,7 @@ export const getBackgroundsData = () => [
     name: 'Tobbe',
     lastName: 'Greel',
     title: 'Tinker of Portvel',
-    race: 'Gnome',
+    race: 'gnome',
     background: 'An eccentric inventor who sells curious gadgets at the docks.',
     trueBackground:
       'Tobbe was once a respected engineer until he uncovered Manticore’s experiments on animals using Aktarine. Disgusted, he began creating devices that disrupt Aktarine’s energy. Posing as a harmless oddball, he smuggles tools to rebels and spies operating within Portvel.',
@@ -452,7 +464,7 @@ export const getBackgroundsData = () => [
   {
     name: 'Wret',
     title: 'The Mirror-Mouth',
-    race: 'unknown',
+    race: 'human',
     background:
       'A broken thing wearing rags, seen muttering at the edge of the Zone.',
     trueBackground:
@@ -467,7 +479,7 @@ export const getBackgroundsData = () => [
     name: 'Dareon',
     lastName: 'Vox',
     title: 'The Cleanser',
-    race: 'Human (Rok)',
+    race: 'human',
     background:
       'An Imperial “technopriest” sent to assess Agnir’s magical anomalies.',
     trueBackground:
@@ -483,7 +495,7 @@ export const getBackgroundsData = () => [
     name: 'Harl',
     lastName: 'Derven',
     title: 'Headman of Grenthollow',
-    race: 'Human',
+    race: 'human',
     background:
       'The firm but fair leader of Grenthollow, a remote village on the edge of the Zone of Unstable Magic. Known for keeping his people safe through hard times.',
     trueBackground:

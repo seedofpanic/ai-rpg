@@ -172,4 +172,42 @@ Monsters prowl the forests and fields nearby, twisted by wild magic and hunger. 
 The people are quiet, reserved. They speak little of the vanished. They never wander far after dark.
 A strange calm clings to Grenthollow — a peace paid for in blood.
 There are some people disappeared in Grenthollow lately. It seems like some one in the village is involved in this. It doesn't seem to be monsters doings.
+
+Races of Agnir:
+
+Humans
+The most widespread and politically dominant race in the known world. In Agnir, humans range from rural villagers with old animist beliefs to devout citizens of the Kingdom of Rok, who worship a pantheon of imported gods. They are ambitious, inventive, and often entangled in the power games of empires and crime syndicates like Manticore. Their short lifespans drive a hunger for legacy, conquest, and discovery.
+
+Elfs
+Once proud guardians of knowledge and nature, the elves of Agnir are a fading people. The destruction of Lortan by the Aktarine Plague wiped out many of their kind. They worship Valissia, the goddess of day and night, and often seek solace in isolation or long-lost ruins. Modern elves carry a tragic weight, struggling to reclaim what was lost—or to let go of it entirely.
+
+Dwarfs
+Dwarves live deep beneath the Agnir Peninsula or in scattered mountain enclaves. Known for elemental worship based on clan traditions, they are unmatched smiths and builders. Some dark sects, like the Circle of Blood Dwarves, practice secret rites. Many dwarves perished when Bokadar was annihilated in the draconid-Manticore war, and survivors harbor deep resentment and caution.
+
+Half-Elfs
+Caught between two legacies, half-elves are often wanderers, diplomats, or outcasts. With neither the longevity of elves nor the adaptability of humans, they carve their own paths—some joining organizations like the Stalkers of the Aktarine Mist, others serving as mediators between fractured realms. Their dual heritage gives them a unique understanding of the world’s beauty and cruelty.
+
+Half-Orcs
+Children of war and survival, half-orcs are a common sight in frontier towns and ruined cities. Their orcish strength and human pragmatism make them fierce warriors or valuable mercenaries. Many reject both heritages, forging new identities among pirates, stalkers, or even noble houses of Rok. Some revere Mruuk-Hash, the orcish war spirit, through blood rites or martial traditions.
+
+Tieflings
+Marked by infernal heritage, tieflings in Agnir are rare and mistrusted. Many trace their bloodlines to ancient summoning rituals or infernal pacts made during times of desperation. Their appearance draws suspicion, especially after the rise of demonic portals in Rok. Some tieflings find purpose in chaos; others seek redemption or mastery of their cursed powers.
+
+Lizardfolks
+Thought to be descendants or distant kin of the draconids, lizardfolk in Agnir keep to the southern swamps and coastal ruins. They speak in ancient tongues and follow ancestral rites tied to tides, stars, and storms. Though coldly logical, they are deeply spiritual. Some were coerced into the war that destroyed Stifa, and now wander as mercenaries or hermits.
+
+Goliaths
+Towering and hardy, goliaths come from the Northern Mountains beyond the reach of most empires. Followers of Kratos, the war god, they value strength, endurance, and glory. A few joined the Imperial legions or acted as mercenaries for Rok’s expansion into Agnir. Their deep sense of honor makes them respected allies—and terrifying enemies.
+
+Gnomes
+Curious, eccentric, and often underestimated, gnomes are tinkerers, illusionists, and explorers. Some followed Benne into the Kingdom of Rok, contributing to the rise of Aktarine-powered technology. In Agnir, gnomes are rare but invaluable—serving as inventors, spies, or archivists of forbidden knowledge. Their passion for discovery often leads them into danger.
+
+Tortles
+Tortles are rare nomads believed to be ancient custodians of coastal knowledge. Their hard shells and slow movements hide deep wisdom and surprising resilience. Some say they remember the world before the fall of ancient empires. In Agnir, they live near forgotten shores or serve as neutral arbiters among feuding factions. They revere the sea as a living god.
+
+Halflings
+Small in stature, halflings are nimble survivors who thrive in overlooked corners of the world. In Agnir, they tend to avoid large cities ruled by Manticore, preferring quiet villages, caravans, or hidden enclaves. Known for their optimism and resilience, halflings have a knack for avoiding the worst of Agnir’s chaos—though some become notorious tricksters, thieves, or scouts.
+
+Orcs
+Full-blooded orcs are powerful and spiritual, deeply tied to elemental spirits and ancestral traditions. Divided into warlike and peaceful tribes, they inhabit the deserts to the west or remote frontier regions. Mruuk-Hash, Ar-Ran-Zul, and Zak-Zarak are among their most revered spirits. Though often portrayed as savages by Rok propaganda, orcs have rich oral histories and complex societies. Some tribes fiercely resist imperial and Manticore encroachment.
 `;

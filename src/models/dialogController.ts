@@ -92,8 +92,9 @@ export class DialogController {
       const textToAdd = `Player bought ${itemData.name} for ${item.price} gold from ${this.npcContext.name}`;
       if (
         this.npcContext.dialogueHistory &&
-        this.npcContext.dialogueHistory[this.npcContext.dialogueHistory?.length - 1]
-          .text !== textToAdd
+        this.npcContext.dialogueHistory[
+          this.npcContext.dialogueHistory?.length - 1
+        ].text !== textToAdd
       ) {
         this.npcContext.addDialogHistory({
           text: textToAdd,

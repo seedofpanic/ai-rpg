@@ -56,26 +56,85 @@ type NpcRole =
   | 'Tinker';
 
 const names = [
-  'Mikhail',
-  'Vasily',
-  'Peter',
-  'Anna',
-  'Ivan',
-  'Alexey',
-  'Dmitry',
-  'Nikolay',
-  'Elena',
-  'Olga',
+  'Jesse',
+  'Michael',
+  'Nicolas',
+  'Gabriel',
+  'Gilead',
+  'Levi',
+  'Joseph',
+  'Stephen',
+  'Shiloh',
+  'Obed',
+  'Christina',
+  'Talitha',
+  'Ithra',
   'Maria',
-  'Sergey',
-  'Andrey',
-  'Tatyana',
-  'Yulia',
-  'Alexander',
-  'Vladimir',
-  'Ekaterina',
-  'Natalya',
-  'Galina',
+  'Melea',
+  'Kathleen',
+  'Magdalene',
+  'Melita',
+  'Zimrah',
+  'Athalia',
+  'Jared',
+  'Marcus',
+  'Elhanan',
+  'Kir',
+  'Ramiah',
+  'Lucius',
+  'Parmenus',
+  'Mose',
+  'Zebedee',
+  'Stephen',
+  'Salome',
+  'Hali',
+  'Zelah',
+  'Clementina',
+  'Melea',
+  'Hadashah',
+  'Lael',
+  'Elisabeth',
+  'Sherah',
+  'Elia',
+  'Jakin',
+  'Jehoshua',
+  'Berechiah',
+  'Jahaziah',
+  'Mose',
+  'Jamin',
+  'Ebenezer',
+  'Cornelius',
+  'Elasah',
+  'Thaddeus',
+  'Jubilee',
+  'Tamara',
+  'Lydia',
+  'Shiloh',
+  'Zipporah',
+  'Abiel',
+  'Bethel',
+  'Adah',
+  'Amethyst',
+  'Charis',
+  'Levi',
+  'Simon',
+  'Ishmael',
+  'Enan',
+  'Nedabiah',
+  'Dodavah',
+  'Jared',
+  'Stephen',
+  'Ebenezer',
+  'Barak',
+  'Martha',
+  'Jemimah',
+  'Zilpah',
+  'Katharine',
+  'Damaris',
+  'Lasha',
+  'Gethsemane',
+  'Galilee',
+  'Beulah',
 ];
 const roles: NpcRole[] = [
   'Merchant',
@@ -133,6 +192,10 @@ function generateRoleSpecificInventory(role: string): InventoryItem[] {
   const roleConfig = roleSpecificItems[role];
   if (roleConfig) {
     for (const item of roleConfig.items) {
+      if (Math.random() < 0.5) {
+        continue;
+      }
+
       let quantity = 1;
       if (item.quantity) {
         const [min, max] = item.quantity;
@@ -140,19 +203,13 @@ function generateRoleSpecificInventory(role: string): InventoryItem[] {
       }
       addItemByName(item.name, quantity);
     }
-    // add random items from itemsData
-    const baseSize = Math.floor(Math.random() * 3) + 2;
-    for (let i = 0; i < baseSize; i++) {
-      const randomItem = getRandomElement(itemEntries);
-      inventory.push({ itemId: randomItem[0], quantity: 1 });
-    }
-  } else {
-    // Random inventory for unknown roles
-    const baseSize = Math.floor(Math.random() * 3) + 2;
-    for (let i = 0; i < baseSize; i++) {
-      const randomItem = getRandomElement(itemEntries);
-      inventory.push({ itemId: randomItem[0], quantity: 1 });
-    }
+  }
+
+  // Add 0-5 random items
+  const baseSize = Math.floor(Math.random() * 6);
+  for (let i = 0; i < baseSize; i++) {
+    const randomItem = getRandomElement(itemEntries);
+    inventory.push({ itemId: randomItem[0], quantity: 1 });
   }
 
   return inventory;
@@ -189,6 +246,10 @@ export const getRelationChange = (state: string | undefined): number => {
   }
 };
 
+interface Family {
+  children: string[];
+}
+
 export class NPC {
   id: string;
   type = 'npc';
@@ -219,6 +280,7 @@ export class NPC {
   aggroTimer?: ReturnType<typeof setTimeout>;
   needs: Need[];
   additionalInstructions?: string;
+  family: Family;
 
   // utils
   lastUpdateTime: number = Date.now();
@@ -275,7 +337,18 @@ export class NPC {
     this.criticalChance = criticalChance;
     this.dodgeChance = dodgeChance;
     this.needs = needs;
+    this.family = {
+      children: [],
+    };
+    NPC.generateFamily(this);
     makeAutoObservable(this);
+  }
+
+  static generateFamily(npc: NPC) {
+    npc.family.children = Array.from(
+      { length: Math.floor(Math.random() * 5) },
+      () => getRandomElement(names),
+    );
   }
 
   static generateRandomNPC(

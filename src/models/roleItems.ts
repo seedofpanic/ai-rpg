@@ -35,18 +35,7 @@ export const roleSpecificItems: RoleItems = {
     ],
   },
   Guard: {
-    items: [
-      { name: 'Sword' },
-      { name: 'Shield' },
-      { name: 'Helmet' },
-      { name: 'Guard Badge' },
-      { name: 'Torch', quantity: [1, 2] },
-      { name: 'Guard Whistle' },
-      { name: 'Chain Cuffs' },
-      { name: 'Chain Mail' },
-      { name: 'Plate Armor' },
-      { name: 'Spear' },
-    ],
+    items: [],
   },
   Baker: {
     items: [
