@@ -5,12 +5,15 @@ import { v4 as uuidv4 } from 'uuid';
 import { npcStore } from './npcStore';
 import { mobStore } from './mobStore';
 import { gameStore } from './gameStore';
+import { Vector2 } from 'utils/vector2';
 type locationData = Omit<
   Location,
   'id' | 'npcs' | 'monsters' | 'generateNPCs' | 'generateMonsters'
 >;
 
 const requiredNPCs = ['Harl'];
+
+const CLOSE_LOCATION_RADIUS = 100;
 
 export class Location {
   id = uuidv4();
@@ -39,32 +42,8 @@ export class Location {
     this.npcsTemplate = data.npcsTemplate;
     this.monstersTemplate = data.monstersTemplate;
 
-    this.generateNPCs();
-    this.generateMonsters();
-  }
-
-  generateNPCs() {
-    for (const template of this.npcsTemplate) {
-      const quantity =
-        Math.floor(
-          Math.random() * (template.maxQuantity - template.minQuantity + 1),
-        ) + template.minQuantity;
-      for (let i = 0; i < quantity; i++) {
-        this.npcs.push(npcStore.generateRandomNPC(this));
-      }
-    }
-  }
-
-  generateMonsters() {
-    for (const template of this.monstersTemplate) {
-      const quantity =
-        Math.floor(
-          Math.random() * (template.maxQuantity - template.minQuantity + 1),
-        ) + template.minQuantity;
-      for (let i = 0; i < quantity; i++) {
-        this.monsters.push(mobStore.generateRandomMob(this, template.type));
-      }
-    }
+    locationsStore.generateNPCs(this);
+    locationsStore.generateMonsters(this);
   }
 }
 
@@ -73,6 +52,41 @@ class LocationsStore {
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  generateNPCs(location: Location) {
+    for (const template of location.npcsTemplate) {
+      const quantity =
+        Math.floor(
+          Math.random() * (template.maxQuantity - template.minQuantity + 1),
+        ) + template.minQuantity;
+      for (let i = 0; i < quantity; i++) {
+        location.npcs.push(npcStore.generateRandomNPC(location));
+      }
+    }
+  }
+
+  generateMonsters(location: Location) {
+    for (const template of location.monstersTemplate) {
+      const quantity =
+        Math.floor(
+          Math.random() * (template.maxQuantity - template.minQuantity + 1),
+        ) + template.minQuantity;
+      for (let i = 0; i < quantity; i++) {
+        location.monsters.push(mobStore.generateRandomMob(location, template.type));
+      }
+    }
+  }
+
+  getCloseLocationByPosition(position: Vector2) {
+    return this.locations.filter((location) => {
+      return (
+        position.x >= location.x - CLOSE_LOCATION_RADIUS &&
+        position.x <= location.x + location.width + CLOSE_LOCATION_RADIUS &&
+        position.y >= location.y - CLOSE_LOCATION_RADIUS &&
+        position.y <= location.y + location.height + CLOSE_LOCATION_RADIUS
+      );
+    });
   }
 
   addLocation(location: locationData) {

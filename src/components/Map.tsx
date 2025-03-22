@@ -63,8 +63,8 @@ const Map: React.FC<MapProps> = ({ onNpcInteraction, player, onNpcHover }) => {
       {npcStore.npcIds.map((id) => {
         const npc = npcStore.npcs[id];
 
-        return (
-          <NPC
+          return (
+            <NPC
             isAlive={npc.isAlive()}
             key={npc.id}
             id={npc.id}
@@ -82,7 +82,7 @@ const Map: React.FC<MapProps> = ({ onNpcInteraction, player, onNpcHover }) => {
             onMouseEnter={() => onNpcHover(id)}
             onMouseLeave={() => onNpcHover(null)}
           />
-        );
+          );
       })}
       {mobStore.mobIds.map((id) => {
         const mob = mobStore.mobs[id];
@@ -101,7 +101,7 @@ const Map: React.FC<MapProps> = ({ onNpcInteraction, player, onNpcHover }) => {
             isAlive={mob.isAlive()}
             onClick={() => onNpcInteraction(id)}
           />
-        );
+          );
       })}
     </MapContainer>
   );

@@ -47,7 +47,7 @@ ${lore}
 Game items list name|itemId|description (use itemId from this list to buy or sell items):
 ${itemsDataContext}
 
-Location: Agnir, Kadera, Grenthollow village, (${npcContext.location.name}):
+The game take place in Grenthollow village that is located in Agnir not far from Kadera, (${npcContext.location.name}):
 ${npcContext.location.description}
 
 Relationships with other Characters:

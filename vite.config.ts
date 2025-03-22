@@ -10,4 +10,12 @@ export default defineConfig({
     open: true,
   },
   base: "/ai-rpg/",
+  build: {
+    rollupOptions: {
+      input: {
+        main: "index.html",
+        "how-to-play": "how-to-play.html",
+      },
+    },
+  },
 });

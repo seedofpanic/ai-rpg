@@ -3,6 +3,7 @@ import { makeAutoObservable } from 'mobx';
 import { Vector2 } from 'utils/vector2';
 import { Equipment, itemsData } from './itemsData';
 import { MagicEffects } from './MagicEffects';
+import { locationsStore, Location } from './location';
 
 interface InventorySlot {
   itemId: string;
