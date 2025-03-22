@@ -488,8 +488,11 @@ export class NPC {
     }
   }
 
-  removeBuyItem(item: TradeItem) {
-    this.buyingItems = this.buyingItems.filter((i) => i.itemId !== item.itemId);
+  removeBuyItem(item: TradeItem, quantity: number) {
+    const existingItem = this.buyingItems.find((i) => i.itemId === item.itemId);
+    if (existingItem?.quantity) {
+      existingItem.quantity -= quantity;
+    }
   }
 
   removeSellItem(item: TradeItem) {

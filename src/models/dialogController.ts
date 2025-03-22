@@ -111,7 +111,7 @@ export class DialogController {
 
       gameStore.player.updateGold(item.price);
       this.npcContext.updateGold(-item.price);
-      this.npcContext.removeBuyItem(item);
+      this.npcContext.removeBuyItem(item, 1);
       gameStore.player?.removeItemFromInventory({
         itemId: item.itemId,
         quantity: 1,

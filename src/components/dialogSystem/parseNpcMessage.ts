@@ -37,6 +37,10 @@ interface SellItemsData {
 }
 
 const parseBuyItems = (npcContext: NPC, data: BuyItemsData) => {
+  if (!data.items) {
+    return;
+  }
+
   for (const item of data.items) {
     npcContext.setBuyItems({
       itemId: item.itemId,
@@ -47,6 +51,10 @@ const parseBuyItems = (npcContext: NPC, data: BuyItemsData) => {
 };
 
 const parseSellItems = (npcContext: NPC, data: SellItemsData) => {
+  if (!data.items) {
+    return;
+  }
+
   for (const item of data.items) {
     npcContext.setSellItem({
       itemId: item.itemId,

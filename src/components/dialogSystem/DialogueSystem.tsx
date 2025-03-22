@@ -354,7 +354,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
               {npcContext.sellingItems.length ? (
                 npcContext.sellingItems.map((item, index) => (
                   <ShopItem data-testid="trade-item" key={index}>
-                    <span>{itemsData.get(item.itemId)?.name}</span>
+                    <span>{itemsData.get(item.itemId)?.name} x{item.quantity || 0}</span>
                     <span>{item.price} gold</span>
                     <ShopButton
                       data-testid="buy-item"
@@ -372,21 +372,17 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
               <h3>Sell</h3>
               {npcContext.buyingItems.length ? (
                 npcContext.buyingItems.map((item, index) => {
-                  const hasItem = gameStore.player?.inventory.some(
-                    (invItem) =>
-                      invItem.itemId === item.itemId && invItem.quantity > 0,
-                  );
                   return (
                     <ShopItem key={index}>
-                      <span>{itemsData.get(item.itemId)?.name}</span>
+                      <span>{itemsData.get(item.itemId)?.name} x{item.quantity || 0}</span>
                       <span>{item.price} gold</span>
                       <ShopButton
                         data-testid="sell-item"
                         onClick={() => dialogController.handleSellItem(item)}
-                        disabled={!hasItem}
+                        disabled={!item.quantity}
                         style={{
-                          opacity: hasItem ? 1 : 0.5,
-                          cursor: hasItem ? 'pointer' : 'not-allowed',
+                          opacity: item.quantity ? 1 : 0.5,
+                          cursor: item.quantity ? 'pointer' : 'not-allowed',
                         }}
                       >
                         Sell

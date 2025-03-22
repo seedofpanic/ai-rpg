@@ -180,7 +180,7 @@ export const modelTools: Tool = {
     },
     {
       name: 'setSellItemsList',
-      description: 'Set a list of items that you want to sell',
+      description: 'Add all the items you want to sell to the list.',
       parameters: {
         type: SchemaType.OBJECT,
         properties: {
@@ -190,6 +190,7 @@ export const modelTools: Tool = {
               type: SchemaType.OBJECT,
               properties: {
                 itemId: { type: SchemaType.STRING, nullable: false },
+                quantity: { type: SchemaType.NUMBER, nullable: false },
                 price: { type: SchemaType.NUMBER, nullable: false },
               },
             },
@@ -199,7 +200,7 @@ export const modelTools: Tool = {
     },
     {
       name: 'setBuyItemsList',
-      description: 'Set a list of items that you want to buy',
+      description: 'Add all the items you want to buy to the list. Be mindful about how much gold you have.',
       parameters: {
         type: SchemaType.OBJECT,
         properties: {
@@ -209,6 +210,7 @@ export const modelTools: Tool = {
               type: SchemaType.OBJECT,
               properties: {
                 itemId: { type: SchemaType.STRING, nullable: false },
+                quantity: { type: SchemaType.NUMBER, nullable: false },
                 price: { type: SchemaType.NUMBER, nullable: false },
               },
             },

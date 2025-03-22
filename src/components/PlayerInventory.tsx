@@ -137,11 +137,18 @@ const PlayerInventory: React.FC<PlayerInventoryProps> = ({ player }) => {
       <h3>Inventory</h3>
       <p>Gold: {player.gold}</p>
       {player.inventory.length > 0 ? (
-        player.inventory.map(({ itemId, quantity }, index) => {
-          const item = itemsData.get(itemId);
-          if (!item) return null;
+        player.inventory
+          .slice()
+          .sort((a, b) => {
+            const itemA = itemsData.get(a.itemId);
+            const itemB = itemsData.get(b.itemId);
+            return (itemA?.name || '').localeCompare(itemB?.name || '');
+          })
+          .map(({ itemId, quantity }, index) => {
+            const item = itemsData.get(itemId);
+            if (!item) return null;
 
-          const isEquipment = !!item.equippableSlot;
+            const isEquipment = !!item.equippableSlot;
           const usable = isUsableItem(item);
 
           return (
