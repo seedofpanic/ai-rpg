@@ -16,10 +16,7 @@ interface DialogueSystemProps {
 }
 
 const DialogueContainer = styled.div`
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: fixed;
   background-color: rgba(38, 70, 83, 0.95);
   border-radius: 8px;
   padding: 20px;

@@ -69,18 +69,24 @@ const Game: React.FC = () => {
   });
   const [dialogueSize] = useState({ width: 900, height: 600 });
   const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [lootingNpcId, setLootingNpcId] = useState<string | null>(null);
 
-  const handleMouseDown = () => {
+  const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
+    // Calculate the offset between mouse position and dialog position
+    setDragOffset({
+      x: e.clientX - dialoguePosition.left,
+      y: e.clientY - dialoguePosition.top
+    });
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (isDragging) {
       setDialoguePosition({
-        top: e.clientY - 20,
-        left: e.clientX + 100,
+        top: e.clientY - dragOffset.y,
+        left: e.clientX - dragOffset.x,
       });
     }
   };
@@ -181,15 +187,6 @@ const Game: React.FC = () => {
             player={gameStore.player}
             onNpcHover={(npcId) => gameStore.setHoveredNpcId(npcId)}
           />
-          {gameStore.isDialogueOpen && gameStore.currentNpcId && (
-            <DialogueSystem
-              onTitleMouseDown={handleMouseDown}
-              npcId={gameStore.currentNpcId}
-              onClose={handleCloseDialogue}
-              position={dialoguePosition}
-              size={dialogueSize}
-            />
-          )}
           <PlayerInventory player={gameStore.player} />{' '}
           {/* Add PlayerInventory */}
           <CombatLog />
@@ -201,6 +198,15 @@ const Game: React.FC = () => {
               }
               player={gameStore.player}
               onClose={handleCloseLoot}
+            />
+          )}
+          {gameStore.isDialogueOpen && gameStore.currentNpcId && (
+            <DialogueSystem
+              onTitleMouseDown={handleMouseDown}
+              npcId={gameStore.currentNpcId}
+              onClose={handleCloseDialogue}
+              position={dialoguePosition}
+              size={dialogueSize}
             />
           )}
         </>
