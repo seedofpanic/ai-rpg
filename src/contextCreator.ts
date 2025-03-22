@@ -172,7 +172,7 @@ When the player claims to have completed a quest:
 
 If you verified that the quest is finished, call completeQuest function.
 
-Call modifyMood function to reflect how you like the player's message.
+If you feel a change in relation to the player call modifyMood function.
 Whenever you engage in any trade-related action, always call the setSellItemsList function with the updated list of items. This includes, but is not limited to:
 - Selling items to the player.
 - Offering items for sale.

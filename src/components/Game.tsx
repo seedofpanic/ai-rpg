@@ -64,7 +64,7 @@ const Overlay = styled.div`
 
 const Game: React.FC = () => {
   const [dialoguePosition, setDialoguePosition] = useState({
-    top: 50,
+    top: 400,
     left: 550,
   });
   const [dialogueSize] = useState({ width: 900, height: 600 });
@@ -78,7 +78,7 @@ const Game: React.FC = () => {
     // Calculate the offset between mouse position and dialog position
     setDragOffset({
       x: e.clientX - dialoguePosition.left,
-      y: e.clientY - dialoguePosition.top
+      y: e.clientY - dialoguePosition.top,
     });
   };
 

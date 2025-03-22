@@ -171,4 +171,5 @@ Grenthollow lies at the edge of the Zone of Unstable Magic — a small, mist-vei
 Monsters prowl the forests and fields nearby, twisted by wild magic and hunger. Yet the village remains untouched, as if protected by something... or someone.
 The people are quiet, reserved. They speak little of the vanished. They never wander far after dark.
 A strange calm clings to Grenthollow — a peace paid for in blood.
+There are some people disappeared in Grenthollow lately. It seems like some one in the village is involved in this. It doesn't seem to be monsters doings.
 `;

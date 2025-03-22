@@ -17,6 +17,9 @@ interface DialogueSystemProps {
 
 const DialogueContainer = styled.div`
   position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: rgba(38, 70, 83, 0.95);
   border-radius: 8px;
   padding: 20px;
@@ -256,6 +259,8 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
   const [input, setInput] = useState('');
   const messageLogRef = useRef<HTMLDivElement>(null);
 
+  const npcContext = dialogController.npcContext;
+
   useEffect(() => {
     dialogController.initializeDialog(npcId);
   }, [npcId]);
@@ -264,7 +269,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
     if (messageLogRef.current) {
       messageLogRef.current.scrollTop = messageLogRef.current.scrollHeight;
     }
-  }, [npcId]);
+  }, [npcContext?.dialogueHistory?.length]);
 
   const handleSend = async () => {
     if (input.trim() === '' || dialogController.isLoading) return;
@@ -279,8 +284,6 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
       handleSend();
     }
   };
-
-  const npcContext = dialogController.npcContext;
 
   if (!npcContext) return null;
 
