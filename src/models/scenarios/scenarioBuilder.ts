@@ -15,7 +15,7 @@ export const buildStory = () => {
     - If you are uncovered by the player call completeQuest function with The Silent Offering quest id.
   `;
 
-  mainCulprit.relation = Math.random() * 30 + 10;
+  mainCulprit.relation = Math.floor(Math.random() * 30 + 10);
   const witnessId = npcsIdsPool.splice(
     Math.floor(Math.random() * npcsIdsPool.length),
     1,
@@ -23,8 +23,9 @@ export const buildStory = () => {
   const witness = npcStore.npcs[witnessId];
 
   witness.additionalInstructions = `- You witnessed ${mainCulprit.name} sacrificing a villager.
-    - Don't tell anything about that before player ask you about it.
-    - Don't tell anything about it before player complete at least one quest for you.
+- Ask player to do a quest for you to find out what you know.
+- Don't tell anything about that before player ask you about it.
+- Don't tell anything about it before player complete at least one quest for you.
   `;
 
   const worriedGuyId = npcsIdsPool.splice(
@@ -34,13 +35,15 @@ export const buildStory = () => {
   const worriedGuy = npcStore.npcs[worriedGuyId];
 
   worriedGuy.additionalInstructions = `- You are worried because you know that ${witness.name} witnessed something connected to people disappearing in Grenthollow.
-    - Don't tell anything about it before player complete at least one quest for you.
+- Ask player to do a quest for you to find out what you know.
+- Don't tell anything about it before player complete at least one quest for you.
   `;
 
   npcsIdsPool.forEach((id) => {
     const npc = npcStore.npcs[id];
     npc.additionalInstructions = `- You know that ${worriedGuy.name} acts suspiciously he probably knows something about people disappearing in Grenthollow.
-        - Don't tell anything about it before player complete at least one quest for you.
+- Ask player to do a quest for you to find out what you know.
+- Don't tell anything about it before player complete at least one quest for you.
     `;
   });
 };

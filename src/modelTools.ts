@@ -4,12 +4,12 @@ import { mobTypes } from 'models/mob';
 export const modelTools: Tool = {
   functionDeclarations: [
     {
-      name: 'modifyMood',
-      description: 'Update NPC mood/reaction based on player message',
+      name: 'giveReaction',
+      description: 'Give reaction to the player message',
       parameters: {
         type: SchemaType.OBJECT,
         properties: {
-          state: {
+          reaction: {
             type: SchemaType.STRING,
             description: 'The emotional state/reaction of the NPC',
             enum: [
@@ -29,7 +29,7 @@ export const modelTools: Tool = {
             nullable: false,
           },
         },
-        required: ['state'],
+        required: ['reaction'],
       },
     },
     {

@@ -166,8 +166,8 @@ export const parseNpcMessage = (
       parseBuyItems(npcContext, functionCall.args as BuyItemsData);
     } else if (functionCall.name === 'setSellItemsList') {
       parseSellItems(npcContext, functionCall.args as SellItemsData);
-    } else if (functionCall.name === 'modifyMood') {
-      npcContext.setState((functionCall.args as { state: string }).state);
+    } else if (functionCall.name === 'giveReaction') {
+      npcContext.setState((functionCall.args as { reaction: string }).reaction);
       const relationChange = getRelationChange(npcContext.state);
       npcContext.changeRelation(relationChange); // Change relation based on response
       if (npcContext.state) {
