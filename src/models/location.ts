@@ -73,7 +73,9 @@ class LocationsStore {
           Math.random() * (template.maxQuantity - template.minQuantity + 1),
         ) + template.minQuantity;
       for (let i = 0; i < quantity; i++) {
-        location.monsters.push(mobStore.generateRandomMob(location, template.type));
+        location.monsters.push(
+          mobStore.generateRandomMob(location, template.type),
+        );
       }
     }
   }
