@@ -14,7 +14,7 @@ import { buildStory } from './scenarios/scenarioBuilder';
 
 type DayTime = 'morning' | 'afternoon' | 'evening' | 'night';
 type Weather =
-  | 'sunny'
+  | 'clear sky'
   | 'cloudy'
   | 'rainy'
   | 'foggy'
@@ -22,7 +22,7 @@ type Weather =
   | 'clear'
   | 'overcast';
 const weather: Weather[] = [
-  'sunny',
+  'clear sky',
   'cloudy',
   'rainy',
   'foggy',
@@ -44,7 +44,7 @@ export class GameStore {
   api: 'gemini' | 'proxy' = 'gemini';
   backgroundsData: BackgroundTemplate[] = [];
   dayTime: DayTime = 'morning';
-  weather: Weather = 'sunny';
+  weather: Weather = 'clear sky';
   constructor() {
     makeAutoObservable(this);
   }
