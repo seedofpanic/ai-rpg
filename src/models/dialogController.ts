@@ -82,19 +82,29 @@ export class DialogController {
 
       gameStore.player.updateGold(-item.price);
       this.npcContext.updateGold(item.price);
-      this.npcContext.removeBuyItem(item);
+      this.npcContext.removeBuyItem(item, 1);
 
       this.npcContext.removeItem({ itemId: item.itemId, quantity: 1 });
       gameStore.player?.addItemToInventory({
         itemId: item.itemId,
         quantity: 1,
       });
-      this.npcContext.addDialogHistory({
-        text: `Player bought ${itemData.name} for ${item.price} gold from ${this.npcContext.name}`,
-        type: MessageType.Action,
-        tokensCount: 20,
-      });
+      const textToAdd = `Player bought ${itemData.name} for ${item.price} gold from ${this.npcContext.name}`;
+      if (
+        this.npcContext.dialogueHistory &&
+        this.npcContext.dialogueHistory[this.npcContext.dialogueHistory?.length - 1]
+          .text !== textToAdd
+      ) {
+        this.npcContext.addDialogHistory({
+          text: textToAdd,
+          type: MessageType.Action,
+          tokensCount: 20,
+        });
+      }
       console.log(`Bought ${itemData.name} for ${item.price} gold.`);
+      gameStore.player.events.add(
+        `${gameStore.player.name} traded with ${this.npcContext.name}`,
+      );
     } else {
       console.log('Not enough gold.');
     }
@@ -123,6 +133,9 @@ export class DialogController {
         tokensCount: 20,
       });
       console.log(`Sold ${itemData.name} for ${item.price} gold.`);
+      gameStore.player.events.add(
+        `${gameStore.player.name} traded with ${this.npcContext.name}`,
+      );
     }
   }
 }

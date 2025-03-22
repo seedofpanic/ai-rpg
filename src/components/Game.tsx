@@ -137,6 +137,9 @@ const Game: React.FC = () => {
       combatLogStore.push(`${player.name} attacked ${mob.name}.`);
 
       if (!mob.isAlive()) {
+        player.events.add(
+          `${player.name} defeated some number of ${mob.name}`,
+        );
         combatLogStore.push(`${mob.name} has been defeated!`);
         gameStore.updateQuest(mob);
         setTimeout(() => {
@@ -149,9 +152,11 @@ const Game: React.FC = () => {
       // Player attacks NPC
       player.attack(npc);
       combatLogStore.push(`${player.name} attacked ${npc.name}.`);
+      player.events.add(`${player.name} attacked ${npc.name}`);
 
       if (!npc.isAlive()) {
         combatLogStore.push(`${npc.name} has been defeated!`);
+        player.events.add(`${player.name} killed ${npc.name}`);
         gameStore.updateQuest(npc);
         return;
       }

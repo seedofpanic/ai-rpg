@@ -35,6 +35,7 @@ export class Player {
   baseDodgeChance: number;
   private cachedEquipmentStats: EquipmentStats;
   magicEffects: MagicEffects;
+  events = new Set<string>();
   stats: {
     strength: number;
     dexterity: number;

@@ -91,6 +91,9 @@ Player:
     )
     .join('\n')}
 
+Things that happend with player so far:
+${Array.from(player.events).map((event) => `- ${event}`).join('\n')}
+
 Player's Active Global Quests:
 ${
   gameStore.questLog
@@ -194,7 +197,6 @@ Try not to give too many quests.
 Global Quests rules:
 - Global quests are quests that are not related to you, but are related to the world.
 - Global quests are visible in the "Player's Active Global Quests" section.
-
 
 Communication rules:
 If player message is unclear, ask for clarification in a way that reflects your relationship with the Player.
