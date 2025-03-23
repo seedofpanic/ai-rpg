@@ -42,8 +42,8 @@ export const buildStory = () => {
   npcsIdsPool.forEach((id) => {
     const npc = npcStore.npcs[id];
     npc.additionalInstructions = `- You know that ${worriedGuy.name} acts suspiciously he probably knows something about people disappearing in Grenthollow.
-- Ask player to do a quest for you to find out what you know.
-- Don't tell anything about it before player complete at least one quest for you.
+- Ask player to do a quest for you to find out what you know about ${worriedGuy.name}.
+- Don't tell anything regarding ${worriedGuy.name} it before player complete at least one quest for you.
     `;
   });
 };
