@@ -461,12 +461,6 @@ itemsData.set(uuidv4(), {
 });
 
 itemsData.set(uuidv4(), {
-  name: 'Stamina Potion',
-  description: 'Restores physical energy.',
-  price: 55,
-});
-
-itemsData.set(uuidv4(), {
   name: 'Antidote',
   description: 'Cures poison effects.',
   price: 70,
