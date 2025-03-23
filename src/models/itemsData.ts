@@ -315,6 +315,11 @@ itemsData.set(uuidv4(), {
   description: 'A scroll containing the Healing spell.',
   price: 80,
   isUsable: 'single',
+  effect: {
+    type: 'heal',
+    value: 20,
+    duration: 5000,
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -329,6 +334,11 @@ itemsData.set(uuidv4(), {
   description: 'A salve that restores health over time.',
   price: 45,
   isUsable: 'single',
+  effect: {
+    type: 'heal',
+    value: 30,
+    duration: 5000,
+  },
 });
 
 itemsData.set(uuidv4(), {
@@ -540,24 +550,10 @@ itemsData.set(uuidv4(), {
   price: 95,
 });
 
-// Alchemist-specific Items
-itemsData.set(uuidv4(), {
-  name: 'Healing Salve',
-  description: 'A medicinal ointment for wounds.',
-  price: 65,
-});
-
 itemsData.set(uuidv4(), {
   name: 'Alchemist Kit',
   description: 'A complete set of alchemy tools.',
   price: 180,
-});
-
-// Guard-specific Items
-itemsData.set(uuidv4(), {
-  name: 'Guard Badge',
-  description: 'Official badge of the city guard.',
-  price: 50,
 });
 
 itemsData.set(uuidv4(), {
