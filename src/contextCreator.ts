@@ -182,7 +182,7 @@ When the player claims to have completed a quest:
 
 If you verified that the quest is finished, call completeQuest function.
 
-To show your reaction to the player's message call giveReaction function.
+Always call giveReaction function to show how do you feel about the player's message.
 Whenever you engage in any trade-related action, always call the setSellItemsList function with the updated list of items. This includes, but is not limited to:
 - Selling items to the player.
 - Offering items for sale.

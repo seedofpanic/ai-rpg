@@ -11,8 +11,9 @@ export const buildStory = () => {
   )[0];
   const mainCulprit = npcStore.npcs[mainCulpritId];
 
+  const questId = uuidv4();
   gameStore.addQuest({
-    id: uuidv4(),
+    id: questId,
     title: 'The Silent Offering',
     description: `Villagers are disappearing in Grenthollow, a place untouched by the spreading magic.
 Someone is making sacrifices — find out who, and why.`,
@@ -27,7 +28,7 @@ Someone is making sacrifices — find out who, and why.`,
   mainCulprit.additionalInstructions = `- You are a member of the cult of Sigmar. You worship Sigmar.
     - You are not allowed to tell the player about the cult or its beliefs.
     - If player knows that you are uncovered.
-    - If you are uncovered by the player call completeQuest function with The Silent Offering quest id.
+    - If you are uncovered by the player call completeQuest function with id ${questId}.
   `;
 
   mainCulprit.relation = Math.floor(Math.random() * 30 + 10);
