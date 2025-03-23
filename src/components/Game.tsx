@@ -139,7 +139,7 @@ const Game: React.FC = () => {
       if (!mob.isAlive()) {
         player.events.add(`${player.name} defeated some number of ${mob.name}`);
         combatLogStore.push(`${mob.name} has been defeated!`);
-        gameStore.updateQuest(mob);
+        gameStore.updateQuest(mob.type);
         setTimeout(() => {
           mobStore.removeMob(mob.id);
           mobStore.respawnMob(mob);
@@ -155,7 +155,7 @@ const Game: React.FC = () => {
       if (!npc.isAlive()) {
         combatLogStore.push(`${npc.name} has been defeated!`);
         player.events.add(`${player.name} killed ${npc.name}`);
-        gameStore.updateQuest(npc);
+        gameStore.updateQuest(npc.name, npc.id);
         return;
       }
     }

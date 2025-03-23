@@ -80,7 +80,7 @@ const QuestItem: React.FC<QuestItemComponentProps> = ({ quest, npcName }) => {
     } else if (quest.action === 'bring') {
       return `${gameStore.player.inventory.find((slot) => slot.itemId === quest.subject)?.quantity || 0}/${quest.quantity} ${itemsData.get(quest.subject)?.name || ''} collected`;
     } else if (quest.action === 'find') {
-      return `${quest.subject} found`;
+      return `In progress`;
     }
     return 'Unknown action';
   };
