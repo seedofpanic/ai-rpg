@@ -89,7 +89,7 @@ export class DialogController {
         itemId: item.itemId,
         quantity: 1,
       });
-      const textToAdd = `Player bought ${itemData.name} for ${item.price} gold from ${this.npcContext.name}`;
+      const textToAdd = `Player bought ${itemData.name} for ${item.price} gold from ${this.npcContext.background.name}`;
       if (
         this.npcContext.dialogueHistory &&
         this.npcContext.dialogueHistory[
@@ -104,7 +104,7 @@ export class DialogController {
       }
       console.log(`Bought ${itemData.name} for ${item.price} gold.`);
       gameStore.player.events.add(
-        `${gameStore.player.name} traded with ${this.npcContext.name}`,
+        `${gameStore.player.name} traded with ${this.npcContext.background.name}`,
       );
     } else {
       console.log('Not enough gold.');
@@ -129,13 +129,13 @@ export class DialogController {
       });
       this.npcContext.addItem({ itemId: item.itemId, quantity: 1 });
       this.npcContext.addDialogHistory({
-        text: `Player sold ${itemData.name} for ${item.price} gold to ${this.npcContext.name}`,
+        text: `Player sold ${itemData.name} for ${item.price} gold to ${this.npcContext.background.name}`,
         type: MessageType.Action,
         tokensCount: 20,
       });
       console.log(`Sold ${itemData.name} for ${item.price} gold.`);
       gameStore.player.events.add(
-        `${gameStore.player.name} traded with ${this.npcContext.name}`,
+        `${gameStore.player.name} traded with ${this.npcContext.background.name}`,
       );
     }
   }

@@ -178,6 +178,45 @@ export const modelTools: Tool = {
       },
     },
     {
+      name: 'giveInformationQuest',
+      description: 'Give a quest to the player',
+      parameters: {
+        type: SchemaType.OBJECT,
+        properties: {
+          quests: {
+            type: SchemaType.ARRAY,
+            items: {
+              type: SchemaType.OBJECT,
+              properties: {
+                name: { type: SchemaType.STRING, nullable: false },
+                description: { type: SchemaType.STRING, nullable: false },
+                subject: {
+                  type: SchemaType.STRING,
+                  nullable: false,
+                  description:
+                    'Information that needs to be provided by the player to complete the quest',
+                },
+                reward: {
+                  type: SchemaType.OBJECT,
+                  properties: {
+                    gold: { type: SchemaType.NUMBER },
+                    item: {
+                      type: SchemaType.OBJECT,
+                      properties: {
+                        itemId: { type: SchemaType.STRING },
+                        quantity: { type: SchemaType.NUMBER },
+                      },
+                    },
+                  },
+                  nullable: false,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    {
       name: 'completeQuest',
       description: 'Complete a quest',
       parameters: {
@@ -244,6 +283,21 @@ export const modelTools: Tool = {
             nullable: false,
           },
         },
+      },
+    },
+    {
+      name: 'memorizeImportantInformation',
+      description: 'Memorize important information from ueser message.',
+      parameters: {
+        type: SchemaType.OBJECT,
+        properties: {
+          information: {
+            type: SchemaType.STRING,
+            description: 'Important information from user message.',
+            nullable: false,
+          },
+        },
+        required: ['information'],
       },
     },
   ],

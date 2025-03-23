@@ -2,7 +2,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { makeAutoObservable } from 'mobx';
 import { itemsData } from './itemsData';
 import { Location } from './location'; // Import related types
-import { BackgroundTemplate, getRandomBackground } from './backgroundsData';
+import {
+  BackgroundTemplate,
+  getRandomBackground,
+  Need,
+} from './backgroundsData';
 import { Player } from './Player';
 import { Vector2 } from '../utils/vector2'; // Import Vector2
 import { combatLogStore } from 'components/CombatLog';
@@ -13,13 +17,6 @@ import { gameStore } from './gameStore';
 export interface InventoryItem {
   itemId: string;
   quantity: number;
-}
-
-export interface Need {
-  type: string;
-  priority: number;
-  subject: string;
-  potentialGoldReward: number;
 }
 
 export interface TradeItem {
@@ -158,20 +155,6 @@ const personalities = [
   'Modest',
   'Ambitious',
 ];
-const knowledgePool = [
-  'Knows everything about goods and prices in the city',
-  'Aware of the latest city events',
-  'Has connections with other merchants',
-  'Expert in potion making and alchemy',
-  'Knows many rare recipes',
-  'Studies the magical properties of plants',
-  'Master in blacksmithing',
-  'Knows the best fishing spots',
-  'Experienced hunter',
-  'Knows everything about agriculture',
-  'Master of sewing and tailoring',
-  'Expert in jewelry making',
-];
 
 function getRandomElement<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -254,24 +237,15 @@ export class NPC {
   id: string;
   type = 'npc';
   position: Vector2;
-  name: string;
   speed = 10;
-  race: string;
-  role: string;
-  personality: string;
-  knowledge: string[];
-  relationships: Record<string, string>;
+  background: BackgroundTemplate;
+  relationships: string[] | undefined;
   location: Location;
   dialogueHistory: Message[] | null;
   state?: string;
   inventory?: InventoryItem[];
   gold: number;
   relation: number;
-  background: string;
-  trueBackground: string;
-  Motivation: string;
-  uniqueTrait: string;
-  beliefs: string;
   health: number;
   attackPower: number;
   defense: number; // New attribute
@@ -281,6 +255,7 @@ export class NPC {
   needs: Need[];
   additionalInstructions?: string;
   family: Family;
+  memory: string[] = [];
 
   // utils
   lastUpdateTime: number = Date.now();
@@ -289,54 +264,32 @@ export class NPC {
   buyingItems: TradeItem[] = [];
 
   constructor(
-    id: string,
     x: number,
     y: number,
-    name: string,
-    race: string,
-    role: string,
-    personality: string,
-    knowledge: string[],
     background: BackgroundTemplate,
-    relationships: Record<string, string>,
     location: Location,
-    state?: string,
     inventory?: InventoryItem[],
     gold: number = 0,
-    relation: number = 0,
     health: number = 100,
     attackPower: number = 10,
     defense: number = 5,
     criticalChance: number = 0.1,
     dodgeChance: number = 0.05,
-    needs: Need[] = [],
   ) {
-    this.id = id;
+    this.id = uuidv4();
     this.position = new Vector2(x, y);
-    this.name = name;
-    this.race = race;
-    this.role = role;
-    this.personality = personality;
-    this.knowledge = knowledge;
-    this.background = background.background;
-    this.trueBackground = background.trueBackground;
-    this.Motivation = background.motivation;
-    this.uniqueTrait = background.uniqueTrait;
-    this.beliefs = background.beliefs;
-    this.additionalInstructions = background.additionalInstructions;
-    this.relationships = relationships;
+    this.background = background;
     this.location = location;
     this.dialogueHistory = null;
-    this.state = state;
     this.inventory = inventory;
     this.gold = gold;
-    this.relation = relation;
+    this.relation = background.relation || Math.floor(Math.random() * 80) + 10;
     this.health = health;
     this.attackPower = attackPower;
     this.defense = defense;
     this.criticalChance = criticalChance;
     this.dodgeChance = dodgeChance;
-    this.needs = needs;
+    this.needs = background.needs || [];
     this.family = {
       children: [],
     };
@@ -355,7 +308,6 @@ export class NPC {
     loc: Location,
     background?: BackgroundTemplate,
   ): NPC {
-    const id = uuidv4();
     const backgroundIndex = Math.floor(
       Math.random() * gameStore.backgroundsData.length,
     );
@@ -363,13 +315,9 @@ export class NPC {
       gameStore.backgroundsData.splice(backgroundIndex, 1)[0] ||
       background ||
       getRandomBackground();
-    const name = selectedBackground?.name || getRandomElement(names);
-    const race = selectedBackground?.race || 'Human';
     const role = getRandomElement(roles);
     const personality = getRandomElement(personalities);
-    const knowledge = Array.from({ length: 3 }, () =>
-      getRandomElement(knowledgePool),
-    );
+
     const x = loc.x + Math.floor(Math.random() * (loc.width - 40));
     const y = loc.y + Math.floor(Math.random() * (loc.height - 40));
 
@@ -386,28 +334,25 @@ export class NPC {
       potentialGoldReward: needConfig.potentialGoldReward,
     }));
 
+    selectedBackground.name ||= getRandomElement(names);
+    selectedBackground.race ||= 'human';
+    selectedBackground.role ||= role;
+    selectedBackground.relation = Math.floor(Math.random() * 100) + 1;
+    selectedBackground.needs = needs;
+    selectedBackground.personality ||= personality;
+
     const npc = new NPC(
-      id,
       x,
       y,
-      name,
-      race,
-      role,
-      personality,
-      knowledge,
       selectedBackground,
-      {},
       loc,
-      undefined,
       generateRoleSpecificInventory(role),
       Math.floor(Math.random() * 3000) + 2000,
-      Math.floor(Math.random() * 100) + 1,
       100,
       10,
       5,
       0.1,
       0.05,
-      needs,
     );
 
     return npc;
@@ -482,7 +427,7 @@ export class NPC {
   attack(target: { takeDamage: (damage: number) => void; name: string }) {
     const isCritical = Math.random() < this.criticalChance;
     const damage = isCritical ? this.attackPower * 2 : this.attackPower;
-    combatLogStore.push(`${this.name} attacked ${target.name}.`);
+    combatLogStore.push(`${this.background.name} attacked ${target.name}.`);
     target.takeDamage(damage);
   }
 
@@ -490,14 +435,16 @@ export class NPC {
     this.changeRelation(-50);
     const isDodged = Math.random() < this.dodgeChance;
     if (isDodged) {
-      console.log(`${this.name} dodged the attack!`);
-      combatLogStore.push(`${this.name} dodged the attack!`);
+      console.log(`${this.background.name} dodged the attack!`);
+      combatLogStore.push(`${this.background.name} dodged the attack!`);
       return;
     }
     const reducedDamage = Math.max(0, amount - this.defense);
     this.health = Math.max(0, this.health - reducedDamage);
-    console.log(`${this.name} took ${reducedDamage} damage.`);
-    combatLogStore.push(`${this.name} took ${reducedDamage} damage.`);
+    console.log(`${this.background.name} took ${reducedDamage} damage.`);
+    combatLogStore.push(
+      `${this.background.name} took ${reducedDamage} damage.`,
+    );
   }
 
   isAlive() {
@@ -597,7 +544,10 @@ export class NPC {
       Jeweler: 7,
     };
 
-    const basePriority = killPriorities[this.role] || 7;
+    const basePriority =
+      this.background.role && killPriorities[this.background.role]
+        ? killPriorities[this.background.role]
+        : 7;
     this.needs.push({
       type: 'kill',
       priority: basePriority + Math.random() * 3,
@@ -624,5 +574,9 @@ export class NPC {
     if (playerMessageIndex !== undefined) {
       this.dialogueHistory[playerMessageIndex].text = message;
     }
+  }
+
+  addMemory(information: string) {
+    this.memory.push(information);
   }
 }

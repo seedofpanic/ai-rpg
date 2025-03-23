@@ -9,13 +9,13 @@ interface NPCProps {
   name: string;
   health: number;
   maxHealth: number;
-  role: string;
+  role?: string;
   location: {
     name: string;
     description: string;
   };
   race: string;
-  personality: string;
+  personality?: string;
   relation: number;
   onClick: () => void;
   onMouseEnter: () => void;

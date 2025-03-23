@@ -17,7 +17,7 @@ export const buildStory = () => {
     title: 'The Silent Offering',
     description: `Villagers are disappearing in Grenthollow, a place untouched by the spreading magic.
 Someone is making sacrifices — find out who, and why.`,
-    subject: mainCulprit.name,
+    subject: mainCulprit.background.name,
     quantity: 0,
     killCount: 0,
     completed: false,
@@ -38,10 +38,10 @@ Someone is making sacrifices — find out who, and why.`,
   )[0];
   const witness = npcStore.npcs[witnessId];
 
-  witness.additionalInstructions = `- You witnessed ${mainCulprit.name} sacrificing a villager. He got him drunk brought to his house and sacrificed him.
+  witness.additionalInstructions = `- You witnessed ${mainCulprit.background.name} sacrificing a villager. He got him drunk brought to his house and sacrificed him.
 - Ask player to do a quest for you to find out what you know.
-You want the player to investigate ${mainCulprit.name}, but you don’t want to share everything you know upfront.
-You must not mention ${mainCulprit.name} at all until the player completes at least one quest for you.
+You want the player to investigate ${mainCulprit.background.name}, but you don’t want to share everything you know upfront.
+You must not mention ${mainCulprit.background.name} at all until the player completes at least one quest for you.
   `;
 
   const worriedGuyId = npcsIdsPool.splice(
@@ -50,17 +50,17 @@ You must not mention ${mainCulprit.name} at all until the player completes at le
   )[0];
   const worriedGuy = npcStore.npcs[worriedGuyId];
 
-  worriedGuy.additionalInstructions = `- You are worried because you know that ${witness.name} witnessed something connected to people disappearing in Grenthollow.
+  worriedGuy.additionalInstructions = `- You are worried because you know that ${witness.background.name} witnessed something connected to people disappearing in Grenthollow.
 Ask player to do a quest for you to find out what you know.
-You want the player to investigate ${witness.name}, but you don’t want to share everything you know upfront.
-You must not mention ${witness.name} at all until the player completes at least one quest for you.
+You want the player to investigate ${witness.background.name}, but you don’t want to share everything you know upfront.
+You must not mention ${witness.background.name} at all until the player completes at least one quest for you.
   `;
 
   npcsIdsPool.forEach((id) => {
     const npc = npcStore.npcs[id];
-    npc.additionalInstructions = `You suspect that ${worriedGuy.name} is involved in the disappearances in Grenthollow.
-You want the player to investigate ${worriedGuy.name}, but you don’t want to share everything you know upfront.
-You must not mention ${worriedGuy.name} at all until the player completes at least one quest for you.
+    npc.additionalInstructions = `You suspect that ${worriedGuy.background.name} is involved in the disappearances in Grenthollow.
+You want the player to investigate ${worriedGuy.background.name}, but you don’t want to share everything you know upfront.
+You must not mention ${worriedGuy.background.name} at all until the player completes at least one quest for you.
     `;
   });
 };

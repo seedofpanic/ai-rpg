@@ -23,15 +23,10 @@ class NPCStore {
         const otherNpcs = npcArray.filter((other) => other.id !== npc.id);
         if (otherNpcs.length > 0) {
           const targetNpc = getRandomElement(otherNpcs);
-          npc.addKillNeed(targetNpc.name);
+          npc.addKillNeed(targetNpc.background.name);
         }
       }
     }
-  }
-
-  getNpcGreating(npcId: string): string {
-    const npc = this.npcs[npcId];
-    return `Hello, I am ${npc.name}, the ${npc.role}. How can I help you?`;
   }
 
   generateRandomNPC(loc: Location, background?: BackgroundTemplate): NPC {
@@ -44,6 +39,11 @@ class NPCStore {
   reset() {
     this.npcs = {};
     this.npcIds = [];
+  }
+
+  addNpc(npc: NPC) {
+    this.npcs[npc.id] = npc;
+    this.npcIds.push(npc.id);
   }
 }
 

@@ -10,6 +10,7 @@ import { locationsStore } from './location';
 import { BackgroundTemplate, getBackgroundsData } from './backgroundsData';
 import { Vector2 } from 'utils/vector2';
 import { buildStory } from './scenarios/scenarioBuilder';
+import { researchersCampBuilder } from './scenarios/researchersCampBuilder';
 
 type DayTime = 'morning' | 'afternoon' | 'evening' | 'night';
 type Weather =
@@ -168,6 +169,7 @@ export class GameStore {
     this.reset();
     locationsStore.generateLocations();
     buildStory();
+    researchersCampBuilder();
     this.startGameActions();
     this.startDayTime();
     if (import.meta.env.VITE_CI) {

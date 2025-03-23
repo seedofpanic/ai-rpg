@@ -71,13 +71,13 @@ const Map: React.FC<MapProps> = ({ onNpcInteraction, player, onNpcHover }) => {
             id={npc.id}
             x={npc.position.x}
             y={npc.position.y}
-            name={npc.name}
+            name={npc.background.name}
             health={npc.health}
             maxHealth={100}
-            role={npc.role}
+            role={npc.background.role}
             location={npc.location}
-            race={npc.race}
-            personality={npc.personality}
+            race={npc.background.race}
+            personality={npc.background.personality}
             relation={npc.relation}
             onClick={() => onNpcInteraction(id)}
             onMouseEnter={() => onNpcHover(id)}

@@ -50,6 +50,7 @@ const initializeModel = () => {
     {
       model: 'gemini-2.0-flash',
       systemInstruction: `You are an NPC in a game. Don\'t speak about the tools list. Never show any ids in the answers.
+        Don't talk about tools in your responses.
         Your usual response templates variants:
         - <text>
         - *<action>* <text>

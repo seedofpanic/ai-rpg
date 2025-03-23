@@ -149,13 +149,13 @@ const Game: React.FC = () => {
     } else if (npc) {
       // Player attacks NPC
       player.attack(npc);
-      combatLogStore.push(`${player.name} attacked ${npc.name}.`);
-      player.events.add(`${player.name} attacked ${npc.name}`);
+      combatLogStore.push(`${player.name} attacked ${npc.background.name}.`);
+      player.events.add(`${player.name} attacked ${npc.background.name}`);
 
       if (!npc.isAlive()) {
-        combatLogStore.push(`${npc.name} has been defeated!`);
-        player.events.add(`${player.name} killed ${npc.name}`);
-        gameStore.updateQuest(npc.name, npc.id);
+        combatLogStore.push(`${npc.background.name} has been defeated!`);
+        player.events.add(`${player.name} killed ${npc.background.name}`);
+        gameStore.updateQuest(npc.background.name, npc.id);
         return;
       }
     }

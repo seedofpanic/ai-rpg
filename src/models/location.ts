@@ -273,16 +273,27 @@ class LocationsStore {
       name: 'Swamp',
       description:
         'A murky swamp filled with twisted trees and mysterious lights. The air is thick with fog.',
-      x: 1000,
+      x: 1200,
       y: 1100,
-      width: 600,
-      height: 500,
+      width: 500,
+      height: 700,
       npcsTemplate: [],
       monstersTemplate: [
         { type: 'boar', minQuantity: 2, maxQuantity: 4 },
         { type: 'spider', minQuantity: 3, maxQuantity: 6 },
         { type: 'ghost', minQuantity: 1, maxQuantity: 2 },
       ],
+    });
+
+    this.addLocation({
+      name: 'Researchers camp',
+      description: 'A camp of researchers who are studying the zone.',
+      x: 50,
+      y: 1100,
+      width: 800,
+      height: 800,
+      npcsTemplate: [],
+      monstersTemplate: [],
     });
 
     this.addRequiredNPCs();

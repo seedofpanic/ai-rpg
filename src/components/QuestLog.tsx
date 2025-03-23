@@ -62,7 +62,7 @@ const QuestLog: React.FC = () => {
                 quest={quest}
                 npcName={
                   quest.questGiverId
-                    ? npcStore.npcs[quest.questGiverId]?.name
+                    ? npcStore.npcs[quest.questGiverId]?.background.name
                     : null
                 }
               />

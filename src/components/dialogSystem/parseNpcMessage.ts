@@ -1,10 +1,11 @@
 import { getRelationChange, MessageType, NPC } from 'models/npc';
 import { gameStore } from 'models/gameStore';
 import { v4 as uuidv4 } from 'uuid';
-import { FunctionCall } from '@google/generative-ai';
+import { FunctionCall, FunctionDeclarationsTool } from '@google/generative-ai';
 import { npcStore } from 'models/npcStore';
 import { MobType, mobTypes } from 'models/mob';
 import { itemsData } from 'models/itemsData';
+import { modelTools } from 'modelTools';
 
 interface QuestData {
   action: string;
@@ -84,6 +85,7 @@ interface QuestData {
     monsterType?: string;
     npcId?: string;
     quantity?: number;
+    subject?: string;
     reward: {
       gold?: number;
       item?: {
@@ -99,6 +101,7 @@ export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
     let subject = '';
     let quantity = 1;
     let action;
+    let title = '';
 
     // Set subject and quantity based on quest type
     if (type === 'kill monsters' && quest.monsterType) {
@@ -108,6 +111,7 @@ export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
       }
       quantity = quest.quantity || 1;
       action = 'kill';
+      title = `${type} ${quantity} ${itemsData.get(subject)?.name || subject}`;
     } else if (type === 'kill NPC' && quest.npcId) {
       subject = quest.npcId;
       if (!npcStore.npcs[subject]) {
@@ -115,6 +119,7 @@ export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
       }
       quantity = 1;
       action = 'kill';
+      title = `${type} ${itemsData.get(subject)?.name || subject}`;
     } else if (type === 'bring items') {
       subject = quest.itemId || '';
       if (!itemsData.has(subject)) {
@@ -122,11 +127,20 @@ export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
       }
       quantity = quest.quantity || 1;
       action = 'bring';
+      title = `${type} ${quantity} ${itemsData.get(subject)?.name || subject}`;
+    } else if (type === 'information') {
+      subject = quest.subject || '';
+      action = 'information';
+      title = `${quest.name}`;
+    }
+
+    if (!title) {
+      return;
     }
 
     gameStore.addQuest({
       id: uuidv4(),
-      title: `${type} ${quantity} ${itemsData.get(subject)?.name || subject}`,
+      title,
       description: quest.description,
       subject,
       quantity,
@@ -150,6 +164,7 @@ export const parseNpcMessage = (
 ) => {
   let stateChange;
 
+  console.log('functionCalls', functionCalls);
   for (const functionCall of functionCalls) {
     if (functionCall.name === 'giveKillMonsterQuest') {
       addQuests('kill monsters', functionCall.args as QuestData, npcContext);
@@ -157,6 +172,8 @@ export const parseNpcMessage = (
       addQuests('bring items', functionCall.args as QuestData, npcContext);
     } else if (functionCall.name === 'giveKillNpcQuest') {
       addQuests('kill NPC', functionCall.args as QuestData, npcContext);
+    } else if (functionCall.name === 'giveInformationQuest') {
+      addQuests('information', functionCall.args as QuestData, npcContext);
     } else if (functionCall.name === 'completeQuest') {
       parseCompletedQuests(
         functionCall.args as CompletedQuestsData,
@@ -177,7 +194,16 @@ export const parseNpcMessage = (
       npcContext.replaceUserMessage(
         (functionCall.args as { message: string }).message,
       );
+    } else if (functionCall.name === 'memorizeImportantInformation') {
+      npcContext.addMemory(
+        (functionCall.args as { information: string }).information,
+      );
     }
+  }
+
+  for (const tool of (modelTools as FunctionDeclarationsTool)
+    .functionDeclarations || []) {
+    text = text.replace(tool.name, '');
   }
 
   npcContext.addDialogHistory({

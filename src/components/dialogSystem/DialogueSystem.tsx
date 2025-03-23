@@ -287,6 +287,10 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
 
   if (!npcContext) return null;
 
+  const availableQuests = gameStore.questLog.filter(
+    (quest) => quest.questGiverId === npcId && !quest.completed,
+  );
+
   return (
     <DialogueContainer
       data-testid="dialog-container"
@@ -301,8 +305,8 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
     >
       <CloseButton onClick={onClose}>×</CloseButton>
       <NPCHeader onMouseDown={onTitleMouseDown}>
-        {npcContext?.name} {npcContext.role} {npcContext.getPlayerRelation()}{' '}
-        {npcContext.state}
+        {npcContext?.background.name} {npcContext.background.role}{' '}
+        {npcContext.getPlayerRelation()} {npcContext.state}
       </NPCHeader>
       <BoxRow>
         <Box style={{ flex: '60%' }}>
@@ -323,7 +327,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
             ))}
             {dialogController.isLoading && (
               <LoadingMessage>
-                <span>{npcContext.name} is thinking</span>
+                <span>{npcContext.background.name} is thinking</span>
                 <LoadingDots />
               </LoadingMessage>
             )}
@@ -367,7 +371,13 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
                   </ShopItem>
                 ))
               ) : (
-                <p>No items available.</p>
+                <Button
+                  onClick={() => {
+                    setInput('Show me your wares');
+                  }}
+                >
+                  Ask to see wares
+                </Button>
               )}
             </div>
             <div data-testid="items-to-buy">
@@ -395,23 +405,35 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
                   );
                 })
               ) : (
-                <p>No items available to sell.</p>
+                <Button
+                  onClick={() => {
+                    setInput('What will you buy? Check my inventory');
+                  }}
+                >
+                  Ask to sell something
+                </Button>
               )}
             </div>
           </ShopContainer>
           <QuestSection>
             <h3>Available Quests</h3>
-            {gameStore.questLog
-              .filter(
-                (quest) => quest.questGiverId === npcId && !quest.completed,
-              )
-              .map((quest) => (
+            {availableQuests.length ? (
+              availableQuests.map((quest) => (
                 <QuestItem
                   key={quest.id}
                   quest={quest}
-                  npcName={npcContext.name}
+                  npcName={npcContext.background.name}
                 />
-              ))}
+              ))
+            ) : (
+              <Button
+                onClick={() => {
+                  setInput('Do you have a task for me?');
+                }}
+              >
+                Ask for a quest
+              </Button>
+            )}
             <h3>Completed Quests</h3>
             {gameStore.questLog
               .filter(
@@ -421,7 +443,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
                 <QuestItem
                   key={quest.id}
                   quest={quest}
-                  npcName={npcContext.name}
+                  npcName={npcContext.background.name}
                 />
               ))}
           </QuestSection>

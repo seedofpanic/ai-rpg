@@ -104,9 +104,11 @@ const LootDialog: React.FC<LootDialogProps> = observer(
       }
     };
 
+    const name = target instanceof Mob ? target.name : target.background.name;
+
     return (
       <DialogContainer data-testid="loot-dialog">
-        <Title>{target.name}&apos;s Loot</Title>
+        <Title>{name}&apos;s Loot</Title>
         <CloseButton onClick={onClose}>&times;</CloseButton>
 
         <ItemList>

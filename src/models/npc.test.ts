@@ -20,14 +20,8 @@ describe('NPC', () => {
     });
 
     npc = new NPC(
-      'npc-1',
       150,
       150,
-      'TestNPC',
-      'Human',
-      'Merchant',
-      'Friendly',
-      ['Knows everything about goods and prices'],
       {
         background: 'A skilled trader.',
         trueBackground: 'A skilled trader.',
@@ -36,13 +30,13 @@ describe('NPC', () => {
         beliefs: 'A skilled trader.',
         name: 'TestNPC',
         title: 'Merchant',
-        race: 'Human',
+        race: 'human',
+        role: 'Merchant',
+        relation: 50,
+        personality: 'Friendly',
       },
-      {},
       location,
-      undefined,
       [],
-      100,
       50,
       100,
       10,
@@ -53,9 +47,9 @@ describe('NPC', () => {
   });
 
   it('should initialize with default values', () => {
-    expect(npc.name).toBe('TestNPC');
+    expect(npc.background.name).toBe('TestNPC');
     expect(npc.health).toBe(100);
-    expect(npc.gold).toBeGreaterThan(0);
+    expect(npc.gold).toBe(50);
     expect(npc.position).toEqual(new Vector2(150, 150));
   });
 
