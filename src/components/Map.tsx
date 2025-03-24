@@ -12,7 +12,7 @@ import { MOB_STATS } from '../models/mobStats';
 
 const MapContainer = styled.div`
   width: 3700px;
-  height: 2000px;
+  height: 2500px;
   background-color: #2a9d8f;
   position: relative;
   user-select: none;

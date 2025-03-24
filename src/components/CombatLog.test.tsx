@@ -1,9 +1,8 @@
-import { render } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { combatLogStore } from './CombatLog';
 import CombatLog from './CombatLog';
 import { beforeEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom';
-import React from 'react';
 
 describe('CombatLog Component', () => {
   beforeEach(() => {
@@ -16,7 +15,17 @@ describe('CombatLog Component', () => {
 
     const { getByText } = render(<CombatLog />);
 
+    fireEvent.click(screen.getByTestId('combat-log-toggle'));
     expect(getByText('Test message 1')).toBeInTheDocument();
+    expect(getByText('Test message 2')).toBeInTheDocument();
+  });
+
+  it('renders last message when collapsed', () => {
+    combatLogStore.push('Test message 1');
+    combatLogStore.push('Test message 2');
+
+    const { getByText } = render(<CombatLog />);
+
     expect(getByText('Test message 2')).toBeInTheDocument();
   });
 
