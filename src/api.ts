@@ -182,11 +182,15 @@ export const sendMessage = async (
 ) => {
   let retries = 2;
 
-  while (retries-- > 0) {
+  while (retries-- > 0) {    
     const result = await sendMessageGemini(message, npcId, isSystemMessage);
+
     if (result?.text) {
       return result;
     }
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    console.log('Retrying... Remaining retries:', retries);
   }
 
   return null;
