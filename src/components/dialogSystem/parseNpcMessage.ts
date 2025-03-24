@@ -199,7 +199,6 @@ export const parseNpcMessage = (
   let stateChange;
   npcContext.setState('');
 
-  console.log('functionCalls', functionCalls);
   for (const functionCall of functionCalls) {
     const f = functions[functionCall.name as keyof typeof functions];
 

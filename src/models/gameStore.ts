@@ -46,6 +46,7 @@ export class GameStore {
   dayTime: DayTime = 'morning';
   weather: Weather = 'clear sky';
   possibleReplies: Record<string, string[]> = {};
+  lastMessageError: string | null = null;
   constructor() {
     makeAutoObservable(this);
   }
@@ -256,6 +257,10 @@ export class GameStore {
         (q) => q.questGiverId !== questGiverId,
       );
     }
+  }
+
+  setMessageError(lastMessage: string | null) {
+    this.lastMessageError = lastMessage;
   }
 }
 

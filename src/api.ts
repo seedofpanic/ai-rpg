@@ -175,10 +175,19 @@ const sendMessageGemini = async (
   }
 };
 
-export const sendMessage = (
+export const sendMessage = async (
   message: string,
   npcId: string,
   isSystemMessage: boolean = false,
 ) => {
-  return sendMessageGemini(message, npcId, isSystemMessage);
+  let retries = 2;
+
+  while (retries-- > 0) {
+    const result = await sendMessageGemini(message, npcId, isSystemMessage);
+    if (result?.text) {
+      return result;
+    }
+  }
+
+  return null;
 };

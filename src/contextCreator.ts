@@ -275,11 +275,11 @@ ${systemMessage ? '' : "Player's message: "}${message}`;
     .map((d) => {
       let prefix = '';
       if (d.type === MessageType.Player) {
-        prefix = 'Player: ';
+        prefix = 'Player says: ';
       } else if (d.type === MessageType.Action) {
         prefix = '';
       } else {
-        prefix = `${npcContext.background.name}: `;
+        prefix = `${npcContext.background.name} says: `;
       }
       return `${prefix}${d.text}`;
     })

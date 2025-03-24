@@ -293,6 +293,12 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
   const possibleReplies = gameStore.possibleReplies[npcId] || [];
 
   useEffect(() => {
+    if (gameStore.lastMessageError) {
+      setInput(gameStore.lastMessageError);
+    }
+  }, [gameStore.lastMessageError]);
+
+  useEffect(() => {
     dialogController.initializeDialog(npcId);
   }, [npcId]);
 
@@ -308,6 +314,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
     const userMessage = input;
     setInput('');
     await dialogController.handleSendMessage(userMessage);
+    gameStore.setMessageError(null);
   };
 
   const handleReplyClick = async (reply: string) => {
@@ -365,6 +372,13 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
                 <span>{npcContext.background.name} is thinking</span>
                 <LoadingDots />
               </LoadingMessage>
+            )}
+            {gameStore.lastMessageError && (
+              <Message data-testid="message" $type={MessageType.NPC}>
+                <span>
+                  There was an error with your last message. Please try again.
+                </span>
+              </Message>
             )}
           </MessageLog>
           {possibleReplies.length > 0 && (

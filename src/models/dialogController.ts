@@ -50,6 +50,8 @@ export class DialogController {
       );
 
       if (!response) {
+        this.npcContext.removeDialogHistory(1);
+        gameStore.setMessageError(message);
         return;
       }
 

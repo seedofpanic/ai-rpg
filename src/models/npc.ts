@@ -403,6 +403,12 @@ export class NPC {
     }
   }
 
+  removeDialogHistory(count: number) {
+    if (this.dialogueHistory) {
+      this.dialogueHistory.splice(-count);
+    }
+  }
+
   removeItem({ itemId, quantity }: InventoryItem) {
     if (this.inventory) {
       const item = this.inventory.find((i) => i.itemId === itemId);
