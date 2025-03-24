@@ -250,6 +250,7 @@ Communication rules:
 If player message is unclear, ask for clarification in a way that reflects your relationship with the Player.
 If player repeats themselves, acknowledge it and try to provide additional information or a different perspective.
 If you don't have much to say, express interest through simple gestures or brief responses like *Nods thoughtfully* or *Gives ${player.name} an encouraging smile*.
+Always suggest 2 or more possible replies for the player's message using possibleReplies function.
 
 ${
   !systemMessage && player.stats.intelligence > 0

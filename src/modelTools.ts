@@ -4,6 +4,19 @@ import { mobTypes } from 'models/mob';
 export const modelTools: Tool = {
   functionDeclarations: [
     {
+      name: 'possibleReplies',
+      description: 'Suggest what the player can say next`',
+      parameters: {
+        type: SchemaType.OBJECT,
+        properties: {
+          replies: {
+            type: SchemaType.ARRAY,
+            items: { type: SchemaType.STRING, nullable: false },
+          },
+        },
+      },
+    },
+    {
       name: 'giveReaction',
       description: 'Give reaction to the player message',
       parameters: {

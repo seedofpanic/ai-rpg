@@ -156,6 +156,40 @@ export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
   }
 };
 
+const functions = {
+  giveKillMonsterQuest: (args: unknown, npcContext: NPC) =>
+    addQuests('kill monsters', args as QuestData, npcContext),
+  giveBringQuest: (args: unknown, npcContext: NPC) =>
+    addQuests('bring items', args as QuestData, npcContext),
+  giveKillNpcQuest: (args: unknown, npcContext: NPC) =>
+    addQuests('kill NPC', args as QuestData, npcContext),
+  giveInformationQuest: (args: unknown, npcContext: NPC) =>
+    addQuests('information', args as QuestData, npcContext),
+  completeQuest: (args: unknown, npcContext: NPC) =>
+    parseCompletedQuests(args as CompletedQuestsData, npcContext),
+  setBuyItemsList: (args: unknown, npcContext: NPC) =>
+    parseBuyItems(npcContext, args as BuyItemsData),
+  setSellItemsList: (args: unknown, npcContext: NPC) =>
+    parseSellItems(npcContext, args as SellItemsData),
+  giveReaction: (args: unknown, npcContext: NPC) => {
+    npcContext.setState((args as { reaction: string }).reaction);
+    const relationChange = getRelationChange(npcContext.state);
+    npcContext.changeRelation(relationChange); // Change relation based on response
+  },
+  setTransformedUserMessage: (args: unknown, npcContext: NPC) => {
+    npcContext.replaceUserMessage((args as { message: string }).message);
+  },
+  memorizeImportantInformation: (args: unknown, npcContext: NPC) => {
+    npcContext.addMemory((args as { information: string }).information);
+  },
+  possibleReplies: (args: unknown, npcContext: NPC) => {
+    gameStore.setPossibleReplies(
+      npcContext.id,
+      (args as { replies: string[] }).replies,
+    );
+  },
+};
+
 export const parseNpcMessage = (
   text: string,
   tokensCount: number,
@@ -163,47 +197,29 @@ export const parseNpcMessage = (
   functionCalls: FunctionCall[],
 ) => {
   let stateChange;
+  npcContext.setState('');
 
   console.log('functionCalls', functionCalls);
   for (const functionCall of functionCalls) {
-    if (functionCall.name === 'giveKillMonsterQuest') {
-      addQuests('kill monsters', functionCall.args as QuestData, npcContext);
-    } else if (functionCall.name === 'giveBringQuest') {
-      addQuests('bring items', functionCall.args as QuestData, npcContext);
-    } else if (functionCall.name === 'giveKillNpcQuest') {
-      addQuests('kill NPC', functionCall.args as QuestData, npcContext);
-    } else if (functionCall.name === 'giveInformationQuest') {
-      addQuests('information', functionCall.args as QuestData, npcContext);
-    } else if (functionCall.name === 'completeQuest') {
-      parseCompletedQuests(
-        functionCall.args as CompletedQuestsData,
-        npcContext,
-      );
-    } else if (functionCall.name === 'setBuyItemsList') {
-      parseBuyItems(npcContext, functionCall.args as BuyItemsData);
-    } else if (functionCall.name === 'setSellItemsList') {
-      parseSellItems(npcContext, functionCall.args as SellItemsData);
-    } else if (functionCall.name === 'giveReaction') {
-      npcContext.setState((functionCall.args as { reaction: string }).reaction);
-      const relationChange = getRelationChange(npcContext.state);
-      npcContext.changeRelation(relationChange); // Change relation based on response
-      if (npcContext.state) {
-        stateChange = { state: npcContext.state, change: relationChange };
-      }
-    } else if (functionCall.name === 'setTransformedUserMessage') {
-      npcContext.replaceUserMessage(
-        (functionCall.args as { message: string }).message,
-      );
-    } else if (functionCall.name === 'memorizeImportantInformation') {
-      npcContext.addMemory(
-        (functionCall.args as { information: string }).information,
-      );
+    const f = functions[functionCall.name as keyof typeof functions];
+
+    if (f) {
+      f(functionCall.args as unknown, npcContext);
+    } else {
+      console.error(`Function ${functionCall.name} not found`);
     }
   }
 
   for (const tool of (modelTools as FunctionDeclarationsTool)
     .functionDeclarations || []) {
     text = text.replace(tool.name, '');
+  }
+
+  if (npcContext.state) {
+    stateChange = {
+      state: npcContext.state,
+      change: getRelationChange(npcContext.state),
+    };
   }
 
   npcContext.addDialogHistory({

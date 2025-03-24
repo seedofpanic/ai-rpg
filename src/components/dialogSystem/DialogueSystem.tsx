@@ -240,6 +240,36 @@ const LoadingMessage = styled(Message)`
   gap: 8px;
 `;
 
+const PossibleRepliesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: rgba(42, 157, 143, 0.2);
+  border-radius: 4px;
+`;
+
+const ReplyButton = styled.button`
+  padding: 8px 12px;
+  background-color: #2a9d8f;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #238677;
+  }
+
+  &:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+  }
+`;
+
 const formatMessageText = (text: string) => {
   return text.split(/(\*[^*]+\*)/).map((part, index) => {
     if (part.startsWith('*') && part.endsWith('*')) {
@@ -260,6 +290,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
   const messageLogRef = useRef<HTMLDivElement>(null);
 
   const npcContext = dialogController.npcContext;
+  const possibleReplies = gameStore.possibleReplies[npcId] || [];
 
   useEffect(() => {
     dialogController.initializeDialog(npcId);
@@ -277,6 +308,10 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
     const userMessage = input;
     setInput('');
     await dialogController.handleSendMessage(userMessage);
+  };
+
+  const handleReplyClick = async (reply: string) => {
+    setInput(reply);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -332,6 +367,19 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
               </LoadingMessage>
             )}
           </MessageLog>
+          {possibleReplies.length > 0 && (
+            <PossibleRepliesContainer>
+              {possibleReplies.map((reply, index) => (
+                <ReplyButton
+                  key={index}
+                  onClick={() => handleReplyClick(reply)}
+                  disabled={dialogController.isLoading}
+                >
+                  {reply}
+                </ReplyButton>
+              ))}
+            </PossibleRepliesContainer>
+          )}
           <InputContainer>
             <Input
               data-testid="message-input"

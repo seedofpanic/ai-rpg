@@ -45,12 +45,17 @@ export class GameStore {
   backgroundsData: BackgroundTemplate[] = [];
   dayTime: DayTime = 'morning';
   weather: Weather = 'clear sky';
+  possibleReplies: Record<string, string[]> = {};
   constructor() {
     makeAutoObservable(this);
   }
 
   updateWeather() {
     this.weather = weather[Math.floor(Math.random() * weather.length)];
+  }
+
+  setPossibleReplies(npcId: string, replies: string[]) {
+    this.possibleReplies[npcId] = replies;
   }
 
   startDayTime() {
