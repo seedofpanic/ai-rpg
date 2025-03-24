@@ -167,11 +167,7 @@ const sendMessageGemini = async (
     return {
       text: responseText,
       functionCalls: functionCalls,
-      tokensCount: (
-        response as unknown as {
-          usageMetadata: { candidatesTokensDetails: { tokensCount: number }[] };
-        }
-      ).usageMetadata.candidatesTokensDetails[0].tokensCount,
+      tokensCount: 0,
     };
   } catch (error) {
     console.error('Error calling Gemini API:', error);

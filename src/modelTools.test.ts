@@ -324,24 +324,4 @@ describe('modelTools', () => {
       expect(properties.price?.nullable).toBe(false);
     });
   });
-
-  describe('setTransformedUserMessage tool', () => {
-    const messageTool = (
-      modelTools as unknown as {
-        functionDeclarations: ExtendedFunctionDeclaration[];
-      }
-    ).functionDeclarations.find(
-      (tool) => tool.name === 'setTransformedUserMessage',
-    );
-
-    it('should have correct schema definition', () => {
-      expect(messageTool).toBeDefined();
-      if (!messageTool) return;
-
-      const params = messageTool.parameters;
-      expect(params.type).toBe(SchemaType.OBJECT);
-      expect(params.properties?.message.type).toBe(SchemaType.STRING);
-      expect(params.properties?.message.nullable).toBe(false);
-    });
-  });
 });

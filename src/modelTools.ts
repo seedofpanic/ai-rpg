@@ -1,7 +1,8 @@
 import { SchemaType, Tool } from '@google/generative-ai';
+import { gameStore } from 'models/gameStore';
 import { mobTypes } from 'models/mob';
 
-export const modelTools: Tool = {
+const modelTools: Tool = {
   functionDeclarations: [
     {
       name: 'possibleReplies',
@@ -284,21 +285,6 @@ export const modelTools: Tool = {
       },
     },
     {
-      name: 'setTransformedUserMessage',
-      description: "Transformed player's message.",
-      parameters: {
-        type: SchemaType.OBJECT,
-        properties: {
-          message: {
-            type: SchemaType.STRING,
-            description:
-              "The player's message transformed to match their intellect level.",
-            nullable: false,
-          },
-        },
-      },
-    },
-    {
       name: 'memorizeImportantInformation',
       description: 'Memorize important information from ueser message.',
       parameters: {
@@ -315,3 +301,23 @@ export const modelTools: Tool = {
     },
   ],
 };
+
+if (gameStore.player.stats?.intelligence > 0) {
+  modelTools.functionDeclarations?.push({
+    name: 'setTransformedUserMessage',
+    description: "Transformed player's message.",
+    parameters: {
+      type: SchemaType.OBJECT,
+      properties: {
+        message: {
+          type: SchemaType.STRING,
+          description:
+            "The player's message transformed to match their intellect level.",
+          nullable: false,
+        },
+      },
+    },
+  });
+}
+
+export { modelTools };

@@ -112,6 +112,10 @@ export class DialogController {
   }
 
   handleSellItem(item: TradeItem): void {
+    if (!gameStore.player.inventory.find((i) => i.itemId === item.itemId)) {
+      return;
+    }
+
     if (this.npcContext === null) return;
     if (this.npcContext.gold >= item.price) {
       const itemData = itemsData.get(item.itemId);
