@@ -7,7 +7,7 @@ const getRandomElement = <T>(arr: T[]): T => {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
-class NPCStore {
+export class NPCStore {
   npcs: Record<string, NPC> = {};
   npcIds: string[] = [];
 
