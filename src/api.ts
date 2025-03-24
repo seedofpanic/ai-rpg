@@ -182,8 +182,15 @@ export const sendMessage = async (
 ) => {
   let retries = 2;
 
-  while (retries-- > 0) {    
-    const result = await sendMessageGemini(message, npcId, isSystemMessage);
+  let result = null;
+
+  while (retries-- > 0) {
+    try {
+      result = await sendMessageGemini(message, npcId, isSystemMessage);
+    } catch (error) {
+      console.error('Error calling Gemini API:', error);
+      return null;
+    }
 
     if (result?.text) {
       return result;

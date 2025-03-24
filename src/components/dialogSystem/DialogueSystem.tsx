@@ -312,9 +312,9 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
     if (input.trim() === '' || dialogController.isLoading) return;
 
     const userMessage = input;
+    gameStore.setMessageError(null);
     setInput('');
     await dialogController.handleSendMessage(userMessage);
-    gameStore.setMessageError(null);
   };
 
   const handleReplyClick = async (reply: string) => {
