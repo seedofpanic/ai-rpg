@@ -92,7 +92,7 @@ const PlayerInventory: React.FC<PlayerInventoryProps> = ({ player }) => {
 
   const getStatBonus = (base: number, total: number) => {
     const bonus = total - base;
-    return bonus > 0 ? `+${bonus}` : '';
+    return bonus > 0 ? `+${Math.floor(bonus)}` : '';
   };
 
   return (
@@ -102,7 +102,8 @@ const PlayerInventory: React.FC<PlayerInventoryProps> = ({ player }) => {
         <StatRow>
           <span>Life:</span>
           <StatValue $bonus={player.health - player.baseHealth}>
-            {player.health} {getStatBonus(player.baseHealth, player.health)}
+            {player.health} {getStatBonus(player.baseHealth, player.health)} /{' '}
+            {player.maxHealth}
           </StatValue>
         </StatRow>
         <StatRow>
