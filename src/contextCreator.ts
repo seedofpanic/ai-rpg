@@ -140,13 +140,14 @@ ${Array.from(player.events)
   .map((event) => `- ${event}`)
   .join('\n')}
 
-Player's Active Global Quests:
+Player's Active Global Quests (don't speak about them in your response):
 ${
   gameStore.questLog
     ?.filter((quest) => !quest.completed && quest.questGiverId === null)
     .map((quest) => `- ${quest.title}`)
     .join('\n') || 'No active global quests'
 }
+
 Player's Active Quests for you:
 ${
   gameStore.questLog
