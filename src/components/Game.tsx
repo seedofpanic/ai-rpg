@@ -11,6 +11,7 @@ import CombatLog, { combatLogStore } from './CombatLog'; // Import CombatLog
 import { npcStore } from 'models/npcStore';
 import LootDialog from './LootDialog';
 import { mobStore } from '../models/mobStore';
+import HelpDialog from './HelpDialog';
 
 const GameContainer = styled.div`
   width: 100vw;
@@ -35,31 +36,6 @@ const HelpButton = styled.button`
   &:hover {
     background-color: #e76f51;
   }
-`;
-
-const HelpDialog = styled.div`
-  line-height: 2rem;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 600px;
-  background-color: rgba(38, 70, 83, 0.95);
-  color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-`;
-
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
 `;
 
 const Game: React.FC = () => {
@@ -215,40 +191,7 @@ const Game: React.FC = () => {
         </>
       )}
       <HelpButton onClick={toggleHelp}>Help</HelpButton>
-      {isHelpOpen && (
-        <>
-          <Overlay onClick={toggleHelp} />
-          <HelpDialog>
-            <h2>Game Controls</h2>
-            <p>WASD or Arrow Keys - Move character</p>
-
-            <h2>Combat</h2>
-            <p>Click on NPCs or mobs to initiate combat</p>
-            <p>Click on dead NPCs or mobs to loot their inventory</p>
-            <h2>Interaction</h2>
-            <p>Click on NPCs to start conversations</p>
-            <p>When talking to NPCs, you can:</p>
-            <p>• Ask about their background and knowledge</p>
-            <p>• Trade items with them</p>
-            <p>• Receive and complete quests</p>
-            <p>• Learn about the world and its lore</p>
-
-            <h2>Game Features</h2>
-            <p>• Quest Log - Track your active quests</p>
-            <p>• Inventory - Manage your items and equipment</p>
-            <p>• Combat Log - View your combat history</p>
-            <p>• Dialogue System - Interact with NPCs through text</p>
-
-            <h2>Tips</h2>
-            <p>
-              • Pay attention to NPC relationships - they affect quest rewards
-            </p>
-            <p>• Some NPCs may lie or have hidden agendas</p>
-            <p>• Explore the world to discover new quests and opportunities</p>
-            <p>• Keep track of your quest objectives in the Quest Log</p>
-          </HelpDialog>
-        </>
-      )}
+      {isHelpOpen && <HelpDialog onClose={toggleHelp} />}
     </GameContainer>
   );
 };

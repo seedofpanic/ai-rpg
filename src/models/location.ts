@@ -15,6 +15,9 @@ const requiredNPCs = ['Harl'];
 
 const CLOSE_LOCATION_RADIUS = 100;
 
+const BASE_X = 300;
+const BASE_Y = 100;
+
 export class Location {
   id = uuidv4();
   name: string;
@@ -102,8 +105,8 @@ class LocationsStore {
       name: 'Village Center',
       description:
         'The heart of the village where villagers gather, trade, and chat. A small well sits in the middle.',
-      x: 300,
-      y: 500,
+      x: BASE_X + 300,
+      y: BASE_Y + 500,
       width: 400,
       height: 300,
       npcsTemplate: [{ role: 'villager', minQuantity: 4, maxQuantity: 8 }],
@@ -114,8 +117,8 @@ class LocationsStore {
       name: "Blacksmith's Forge",
       description:
         'A hot and noisy forge where blacksmith forges weapons and armor',
-      x: 900,
-      y: 500,
+      x: BASE_X + 900,
+      y: BASE_Y + 500,
       width: 200,
       height: 200,
       npcsTemplate: [{ role: 'blacksmith', minQuantity: 1, maxQuantity: 1 }],
@@ -126,8 +129,8 @@ class LocationsStore {
       name: "Herbalist's Hut",
       description:
         'A small wooden hut filled with drying herbs and potions, tucked near the forest edge',
-      x: 100,
-      y: 600,
+      x: BASE_X + 100,
+      y: BASE_Y + 600,
       width: 200,
       height: 200,
       npcsTemplate: [{ role: 'herbalist', minQuantity: 1, maxQuantity: 1 }],
@@ -137,8 +140,8 @@ class LocationsStore {
     this.addLocation({
       name: 'Fields',
       description: 'Plain fields to the north of the village',
-      x: 1200,
-      y: 300,
+      x: BASE_X + 1200,
+      y: BASE_Y + 300,
       width: 500,
       height: 800,
       npcsTemplate: [],
@@ -149,8 +152,8 @@ class LocationsStore {
       name: 'Old Mill',
       description:
         "An abandoned windmill just outside the village. The locals say it's haunted.",
-      x: 1700,
-      y: 1150,
+      x: BASE_X + 1700,
+      y: BASE_Y + 1150,
       width: 200,
       height: 200,
       npcsTemplate: [],
@@ -161,8 +164,8 @@ class LocationsStore {
       name: 'Forest Edge',
       description:
         'The edge of a dense forest. Travelers report strange sounds from within.',
-      x: 1700,
-      y: 300,
+      x: BASE_X + 1700,
+      y: BASE_Y + 300,
       width: 300,
       height: 800,
       npcsTemplate: [],
@@ -176,8 +179,8 @@ class LocationsStore {
       name: "Hunter's Cabin",
       description:
         'A lonely cabin where the village hunter lives and prepares his traps.',
-      x: 900,
-      y: 700,
+      x: BASE_X + 900,
+      y: BASE_Y + 700,
       width: 200,
       height: 200,
       npcsTemplate: [{ role: 'hunter', minQuantity: 1, maxQuantity: 1 }],
@@ -188,8 +191,8 @@ class LocationsStore {
       name: 'Tavern',
       description:
         'A cozy tavern where travelers and locals gather to share stories and drink ale.',
-      x: 50,
-      y: 250,
+      x: BASE_X + 50,
+      y: BASE_Y + 250,
       width: 400,
       height: 250,
       npcsTemplate: [
@@ -203,8 +206,8 @@ class LocationsStore {
       name: 'Ancient Ruins',
       description:
         'Mysterious stone ruins covered in strange symbols. Some say they hold ancient magic.',
-      x: 2000,
-      y: 300,
+      x: BASE_X + 2000,
+      y: BASE_Y + 300,
       width: 600,
       height: 300,
       npcsTemplate: [],
@@ -218,8 +221,8 @@ class LocationsStore {
       name: 'Fishing Dock',
       description:
         'A wooden dock extending into the lake, where fishermen gather to catch fish.',
-      x: 300,
-      y: 800,
+      x: BASE_X + 300,
+      y: BASE_Y + 800,
       width: 200,
       height: 150,
       npcsTemplate: [{ role: 'fisherman', minQuantity: 2, maxQuantity: 4 }],
@@ -230,8 +233,8 @@ class LocationsStore {
       name: 'Cave System',
       description:
         'A network of dark caves that wind deep into the mountains. Strange noises echo from within.',
-      x: 2000,
-      y: 600,
+      x: BASE_X + 2000,
+      y: BASE_Y + 600,
       width: 1000,
       height: 1000,
       npcsTemplate: [],
@@ -246,8 +249,8 @@ class LocationsStore {
       name: 'Market Square',
       description:
         'A bustling marketplace where merchants sell their wares and villagers trade goods.',
-      x: 450,
-      y: 150,
+      x: BASE_X + 450,
+      y: BASE_Y + 150,
       width: 650,
       height: 350,
       npcsTemplate: [
@@ -261,8 +264,8 @@ class LocationsStore {
       name: 'Guard Post',
       description:
         'A fortified post where village guards keep watch over the surrounding area.',
-      x: 700,
-      y: 700,
+      x: BASE_X + 700,
+      y: BASE_Y + 700,
       width: 200,
       height: 200,
       npcsTemplate: [{ role: 'guard', minQuantity: 2, maxQuantity: 4 }],
@@ -273,8 +276,8 @@ class LocationsStore {
       name: 'Swamp',
       description:
         'A murky swamp filled with twisted trees and mysterious lights. The air is thick with fog.',
-      x: 1200,
-      y: 1100,
+      x: BASE_X + 1200,
+      y: BASE_Y + 1100,
       width: 500,
       height: 700,
       npcsTemplate: [],
@@ -288,8 +291,8 @@ class LocationsStore {
     this.addLocation({
       name: 'Researchers camp',
       description: 'A camp of researchers who are studying the zone.',
-      x: 50,
-      y: 1100,
+      x: BASE_X + 50,
+      y: BASE_Y + 1100,
       width: 800,
       height: 800,
       npcsTemplate: [],

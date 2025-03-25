@@ -89,12 +89,6 @@ itemsData.set(uuidv4(), {
 });
 
 itemsData.set(uuidv4(), {
-  name: 'Arrow',
-  description: 'Ammunition for the bow.',
-  price: 10,
-});
-
-itemsData.set(uuidv4(), {
   name: 'Boots',
   description: 'Boots to increase your speed.',
   price: 80,
@@ -223,16 +217,6 @@ itemsData.set(uuidv4(), {
 });
 
 itemsData.set(uuidv4(), {
-  name: 'Battle Axe',
-  description: 'A heavy weapon that deals massive damage.',
-  price: 180,
-  equippableSlot: 'weapon',
-  stats: {
-    attackPower: 15,
-  },
-});
-
-itemsData.set(uuidv4(), {
   name: 'Spear',
   description: 'A versatile weapon with good reach.',
   price: 130,
@@ -251,17 +235,6 @@ itemsData.set(uuidv4(), {
   stats: {
     defense: 5,
     health: 5,
-  },
-});
-
-itemsData.set(uuidv4(), {
-  name: 'Chain Mail',
-  description: 'Medium armor made of interlocking metal rings.',
-  price: 250,
-  equippableSlot: 'chest',
-  stats: {
-    defense: 10,
-    health: 10,
   },
 });
 
@@ -291,13 +264,6 @@ itemsData.set(uuidv4(), {
 });
 
 itemsData.set(uuidv4(), {
-  name: 'Scroll of Fireball',
-  description: 'A scroll containing the Fireball spell.',
-  price: 100,
-  isUsable: 'single',
-});
-
-itemsData.set(uuidv4(), {
   name: 'Scroll of Lightning',
   description: 'A scroll containing the Lightning spell.',
   price: 120,
@@ -314,13 +280,6 @@ itemsData.set(uuidv4(), {
     value: 20,
     duration: 5000,
   },
-});
-
-itemsData.set(uuidv4(), {
-  name: 'Antidote',
-  description: 'Cures poison effects.',
-  price: 40,
-  isUsable: 'single',
 });
 
 itemsData.set(uuidv4(), {
@@ -342,87 +301,12 @@ itemsData.set(uuidv4(), {
 });
 
 itemsData.set(uuidv4(), {
-  name: 'Ring of Protection',
-  description: 'A ring that increases defense.',
-  price: 200,
-  equippableSlot: 'ring',
-  stats: {
-    defense: 3,
-  },
-});
-
-itemsData.set(uuidv4(), {
   name: 'Amulet of Health',
   description: 'An amulet that increases health.',
   price: 250,
   equippableSlot: 'amulet',
   stats: {
     health: 10,
-  },
-});
-
-// Crafting Materials
-itemsData.set(uuidv4(), {
-  name: 'Leather',
-  description: 'Tanned animal hide used for armor crafting.',
-  price: 45,
-});
-
-itemsData.set(uuidv4(), {
-  name: 'Wood',
-  description: 'Quality lumber for crafting.',
-  price: 30,
-});
-
-itemsData.set(uuidv4(), {
-  name: 'Silver Ore',
-  description: 'Raw silver for crafting jewelry and weapons.',
-  price: 200,
-});
-
-itemsData.set(uuidv4(), {
-  name: 'Gold Ore',
-  description: 'Raw gold for crafting precious items.',
-  price: 400,
-});
-
-// Weapons
-itemsData.set(uuidv4(), {
-  name: 'Dagger',
-  description: 'A quick, light weapon for close combat.',
-  price: 75,
-});
-
-itemsData.set(uuidv4(), {
-  name: 'Battle Axe',
-  description: 'A heavy weapon that deals massive damage.',
-  price: 180,
-  equippableSlot: 'weapon',
-  stats: {
-    attackPower: 15,
-  },
-});
-
-itemsData.set(uuidv4(), {
-  name: 'Spear',
-  description: 'A versatile weapon with good reach.',
-  price: 130,
-  equippableSlot: 'weapon',
-  stats: {
-    attackPower: 8,
-    defense: 2,
-  },
-});
-
-// Armor
-itemsData.set(uuidv4(), {
-  name: 'Leather Armor',
-  description: 'Light armor offering basic protection.',
-  price: 120,
-  equippableSlot: 'chest',
-  stats: {
-    defense: 5,
-    health: 5,
   },
 });
 
@@ -436,35 +320,11 @@ itemsData.set(uuidv4(), {
     health: 10,
   },
 });
-itemsData.set(uuidv4(), {
-  name: 'Plate Armor',
-  description: 'Heavy armor offering excellent protection.',
-  price: 500,
-  equippableSlot: 'chest',
-  stats: {
-    defense: 15,
-    health: 20,
-  },
-});
-
-// Consumables
-itemsData.set(uuidv4(), {
-  name: 'Mana Potion',
-  description: 'Restores magical energy.',
-  price: 60,
-});
 
 itemsData.set(uuidv4(), {
   name: 'Antidote',
   description: 'Cures poison effects.',
-  price: 70,
-});
-
-// Magical Items
-itemsData.set(uuidv4(), {
-  name: 'Scroll of Fireball',
-  description: 'A magical scroll that casts a powerful fire spell.',
-  price: 150,
+  price: 20,
 });
 
 itemsData.set(uuidv4(), {
@@ -474,16 +334,6 @@ itemsData.set(uuidv4(), {
   equippableSlot: 'ring',
   stats: {
     defense: 5,
-  },
-});
-
-itemsData.set(uuidv4(), {
-  name: 'Amulet of Health',
-  description: 'Increases maximum health.',
-  price: 300,
-  equippableSlot: 'amulet',
-  stats: {
-    health: 15,
   },
 });
 
@@ -654,13 +504,6 @@ itemsData.set(uuidv4(), {
   price: 150,
 });
 
-// Additional Alchemist-specific Items
-itemsData.set(uuidv4(), {
-  name: 'Crystal Vial',
-  description: 'Special vials for storing volatile potions.',
-  price: 85,
-});
-
 itemsData.set(uuidv4(), {
   name: 'Mortar and Pestle',
   description: 'Essential tools for grinding ingredients.',
@@ -796,17 +639,6 @@ itemsData.set(uuidv4(), {
 });
 
 itemsData.set(uuidv4(), {
-  name: 'Health Potion',
-  description: 'A red potion that restores health.',
-  price: 100,
-  isUsable: 'single',
-  effect: {
-    type: 'heal',
-    value: 50,
-  },
-});
-
-itemsData.set(uuidv4(), {
   name: 'Stolen Goods',
   description: 'Various items of questionable origin.',
   price: 75,
@@ -839,7 +671,7 @@ itemsData.set(uuidv4(), {
 itemsData.set(uuidv4(), {
   name: 'Arrow',
   description: 'A sharp arrow for ranged combat.',
-  price: 5,
+  price: 1,
 });
 
 itemsData.set(uuidv4(), {
@@ -914,7 +746,7 @@ itemsData.set(uuidv4(), {
 });
 
 itemsData.set(uuidv4(), {
-  name: 'Fire Scroll',
+  name: 'Scroll of Fireball',
   description: 'A scroll that unleashes a powerful fireball.',
   price: 180,
   isUsable: 'single',
