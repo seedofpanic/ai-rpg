@@ -1,3 +1,5 @@
+import { researchCampLore } from './lore/researchCamp';
+
 export interface Need {
   type: string;
   priority: number;
@@ -34,6 +36,7 @@ export interface BackgroundTemplate {
   relationships?: string[];
   relation?: number;
   needs?: Need[];
+  lore?: string;
 }
 
 const index = 1;
@@ -524,6 +527,7 @@ export const getBackgroundsData = (): BackgroundTemplate[] => [
 
 export const scienceCampBackgrounds: Record<string, BackgroundTemplate> = {
   Velra: {
+    lore: researchCampLore,
     name: 'Velra',
     lastName: 'Droskin',
     personality: 'Serious, Controlled',
@@ -556,6 +560,7 @@ export const scienceCampBackgrounds: Record<string, BackgroundTemplate> = {
     ],
   },
   Luranic: {
+    lore: researchCampLore,
     name: 'Luranic',
     lastName: 'Vexma',
     title: 'Senior Researcher of Magical Anomalies',
@@ -586,6 +591,7 @@ export const scienceCampBackgrounds: Record<string, BackgroundTemplate> = {
     ],
   },
   Marn: {
+    lore: researchCampLore,
     name: 'Marn',
     lastName: 'Velkorr',
     title: 'Senior Researcher of Psionic and Soul Phenomena',
@@ -616,6 +622,7 @@ export const scienceCampBackgrounds: Record<string, BackgroundTemplate> = {
     ],
   },
   Dralin: {
+    lore: researchCampLore,
     name: 'Dralin',
     lastName: 'Thorne',
     title: 'Senior Researcher of Mutagenic Biology',
@@ -646,6 +653,7 @@ export const scienceCampBackgrounds: Record<string, BackgroundTemplate> = {
     ],
   },
   Kessa: {
+    lore: researchCampLore,
     name: 'Kessa',
     lastName: 'Rellin',
     title: 'Junior Thaumic Field Analyst',
@@ -674,6 +682,7 @@ export const scienceCampBackgrounds: Record<string, BackgroundTemplate> = {
     ],
   },
   Rolen: {
+    lore: researchCampLore,
     name: 'Rolen',
     lastName: 'Dask',
     title: 'Junior Bio-Energetic Researcher',
@@ -703,6 +712,7 @@ export const scienceCampBackgrounds: Record<string, BackgroundTemplate> = {
     ],
   },
   Elvi: {
+    lore: researchCampLore,
     name: 'Elvi',
     lastName: 'Marren',
     title: 'Junior Dream-State Researcher',
@@ -732,6 +742,7 @@ export const scienceCampBackgrounds: Record<string, BackgroundTemplate> = {
     ],
   },
   Nym: {
+    lore: researchCampLore,
     name: 'Nym',
     lastName: 'Callar',
     title: 'Junior Archivist and Translator',
@@ -760,6 +771,7 @@ export const scienceCampBackgrounds: Record<string, BackgroundTemplate> = {
     ],
   },
   Thera: {
+    lore: researchCampLore,
     name: 'Thera',
     lastName: 'Dunne',
     title: 'Junior Mutation Observer',
@@ -791,6 +803,7 @@ export const scienceCampBackgrounds: Record<string, BackgroundTemplate> = {
     ],
   },
   Fen: {
+    lore: researchCampLore,
     name: 'Fen',
     lastName: 'Varn',
     title: 'Junior Environmental Tracker',
@@ -819,6 +832,7 @@ export const scienceCampBackgrounds: Record<string, BackgroundTemplate> = {
     ],
   },
   Dela: {
+    lore: researchCampLore,
     name: 'Dela',
     lastName: 'Hask',
     title: 'Junior Constructs and Artefacts Assistant',
@@ -849,6 +863,7 @@ export const scienceCampBackgrounds: Record<string, BackgroundTemplate> = {
     ],
   },
   Rhagan: {
+    lore: researchCampLore,
     name: 'Rhagan',
     lastName: 'Malcor',
     title: 'Security Commander of the Brave Lions',
@@ -879,6 +894,7 @@ export const scienceCampBackgrounds: Record<string, BackgroundTemplate> = {
     ],
   },
   Serna: {
+    lore: researchCampLore,
     name: 'Serna',
     lastName: 'Valin',
     title: 'Brave Lions Patrol Leader',
@@ -908,6 +924,7 @@ export const scienceCampBackgrounds: Record<string, BackgroundTemplate> = {
     ],
   },
   Jorek: {
+    lore: researchCampLore,
     name: 'Jorek',
     lastName: 'Dalen',
     title: 'Heavy Arms Operator',
@@ -937,6 +954,7 @@ export const scienceCampBackgrounds: Record<string, BackgroundTemplate> = {
     ],
   },
   Elra: {
+    lore: researchCampLore,
     name: 'Elra',
     lastName: 'Movic',
     title: 'Brave Lions Scout',

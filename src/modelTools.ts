@@ -231,6 +231,37 @@ const modelTools: Tool = {
       },
     },
     {
+      name: 'giveDeliverQuest',
+      description:
+        'Give a quest to the player to deliver an item to a specific location',
+      parameters: {
+        type: SchemaType.OBJECT,
+        properties: {
+          questId: { type: SchemaType.STRING, nullable: false },
+          item: {
+            type: SchemaType.OBJECT,
+            nullable: false,
+            properties: {
+              itemId: { type: SchemaType.STRING, nullable: false },
+              quantity: { type: SchemaType.NUMBER, nullable: false },
+              description: {
+                type: SchemaType.STRING,
+                nullable: false,
+                description: 'Unique description of the item',
+              },
+            },
+            required: ['itemId', 'quantity', 'description'],
+          },
+          subject: {
+            type: SchemaType.STRING,
+            nullable: false,
+            description: 'Character to bring the item to',
+          },
+        },
+        required: ['questId', 'item', 'subject'],
+      },
+    },
+    {
       name: 'completeQuest',
       description: 'Complete a quest',
       parameters: {
@@ -297,6 +328,19 @@ const modelTools: Tool = {
           },
         },
         required: ['information'],
+      },
+    },
+    {
+      name: 'spawnMonster',
+      description: 'Spawn a monster',
+      parameters: {
+        type: SchemaType.OBJECT,
+        properties: {
+          monsterType: { type: SchemaType.STRING, nullable: false },
+          quantity: { type: SchemaType.NUMBER, nullable: false },
+          location: { type: SchemaType.STRING, nullable: false },
+        },
+        required: ['monsterType', 'quantity', 'location'],
       },
     },
   ],

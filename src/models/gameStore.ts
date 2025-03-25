@@ -11,6 +11,7 @@ import { BackgroundTemplate, getBackgroundsData } from './backgroundsData';
 import { Vector2 } from 'utils/vector2';
 import { buildStory } from './scenarios/scenarioBuilder';
 import { researchersCampBuilder } from './scenarios/researchersCampBuilder';
+import { Mob, MobType } from './mob';
 
 type DayTime = 'morning' | 'afternoon' | 'evening' | 'night';
 type Weather =
@@ -82,29 +83,23 @@ export class GameStore {
   }
 
   addQuest(quest: Quest) {
-    if (this.questLog.find((q) => q.title === quest.title)) {
-      return false;
-    }
-
     makeAutoObservable(quest);
-    this.questLog.push(quest);
-    return true;
+
+    const index = this.questLog.findIndex((q) => q.title === quest.title);
+    if (index !== -1) {
+      this.questLog[index] = quest;
+    } else {
+      this.questLog.push(quest);
+    }
   }
 
   completeQuest(questId: string) {
     const quest = this.questLog.find((q) => q.id === questId);
     if (quest && !quest.completed) {
       if (quest.action.toLowerCase() === 'bring') {
-        const itemId = itemsData
-          .keys()
-          .find(
-            (id) =>
-              itemsData.get(id)?.name.toLowerCase() ===
-              quest.subject.toLowerCase(),
-          );
-        if (itemId) {
+        if (itemsData.has(quest.subject)) {
           this.player.removeItemFromInventory({
-            itemId: itemId || quest.subject,
+            itemId: quest.subject,
             quantity: quest.quantity,
           });
           // add this item to the quest giver inventory
@@ -241,13 +236,11 @@ export class GameStore {
     }
   }
 
-  updateQuest(subject: string, questGiverId?: string) {
+  updateKillQuest(subject: string, questGiverId?: string) {
     for (const quest of this.questLog) {
       if (quest.subject.toLowerCase() === subject.toLowerCase()) {
         if (quest.questGiverId) {
           quest.killCount++;
-        } else {
-          this.completeQuest(quest.id);
         }
       }
     }
@@ -261,6 +254,21 @@ export class GameStore {
 
   setMessageError(lastMessage: string | null) {
     this.lastMessageError = lastMessage;
+  }
+
+  spawnMonster(monsterType: string, quantity: number, locationName: string) {
+    const location = locationsStore.locations.find(
+      (l) => l.name === locationName,
+    );
+    if (location) {
+      const x = Math.random() * location.width + location.x;
+      const y = Math.random() * location.height + location.y;
+
+      for (let i = 0; i < quantity; i++) {
+        const mob = new Mob(monsterType as MobType, x, y, location);
+        mobStore.addMob(mob);
+      }
+    }
   }
 }
 

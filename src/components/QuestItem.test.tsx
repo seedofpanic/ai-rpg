@@ -72,7 +72,7 @@ describe('QuestItem Component', () => {
 
     const rewardsElement = screen.getByTestId('quest-rewards');
     expect(rewardsElement).toHaveTextContent('100 gold');
-    expect(rewardsElement).toHaveTextContent('2 items');
+    expect(rewardsElement).toHaveTextContent('Item, Test Item');
     expect(rewardsElement).toHaveTextContent('200 XP');
   });
 

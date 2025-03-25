@@ -86,6 +86,11 @@ interface QuestData {
     npcId?: string;
     quantity?: number;
     subject?: string;
+    item?: {
+      itemId: string;
+      quantity: number;
+      description: string;
+    };
     reward: {
       gold?: number;
       item?: {
@@ -102,6 +107,7 @@ export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
     let quantity = 1;
     let action;
     let title = '';
+    let questGiverId = npcContext.id;
 
     // Set subject and quantity based on quest type
     if (type === 'kill monsters' && quest.monsterType) {
@@ -132,6 +138,14 @@ export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
       subject = quest.subject || '';
       action = 'information';
       title = `${quest.name}`;
+    } else if (type === 'deliver') {
+      questGiverId =
+        npcStore.npcIds.find(
+          (id) => npcStore.npcs[id].background.name === quest.subject,
+        ) || npcContext.id;
+      subject = quest.item?.itemId || '';
+      action = 'deliver';
+      title = `${type} x${quest.item?.quantity || 1} ${itemsData.get(quest.item?.itemId || '')?.name || quest.item?.itemId}`;
     }
 
     if (!title) {
@@ -146,7 +160,7 @@ export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
       quantity,
       action: action || '',
       completed: false,
-      questGiverId: npcContext.id,
+      questGiverId,
       rewards: {
         gold: quest.reward.gold,
         items: quest.reward.item ? [quest.reward.item.itemId] : undefined,
@@ -165,6 +179,8 @@ const functions = {
     addQuests('kill NPC', args as QuestData, npcContext),
   giveInformationQuest: (args: unknown, npcContext: NPC) =>
     addQuests('information', args as QuestData, npcContext),
+  giveDeliverQuest: (args: unknown, npcContext: NPC) =>
+    addQuests('deliver', args as QuestData, npcContext),
   completeQuest: (args: unknown, npcContext: NPC) =>
     parseCompletedQuests(args as CompletedQuestsData, npcContext),
   setBuyItemsList: (args: unknown, npcContext: NPC) =>
@@ -187,6 +203,23 @@ const functions = {
       npcContext.id,
       (args as { replies: string[] }).replies,
     );
+  },
+  giveItem: (args: unknown) => {
+    gameStore.player.addItemToInventory(
+      args as { itemId: string; quantity: number },
+    );
+  },
+  giveGold: (args: unknown) => {
+    gameStore.player.addGold((args as { gold: number }).gold);
+  },
+  spawnMonster: (args: unknown) => {
+    const { monsterType, quantity, location } = args as {
+      monsterType: string;
+      quantity: number;
+      location: string;
+    };
+
+    gameStore.spawnMonster(monsterType, quantity, location);
   },
 };
 

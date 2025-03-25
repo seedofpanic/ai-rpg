@@ -1,6 +1,6 @@
 import { npcStore } from './models/npcStore';
 import { itemsData, itemsDataContext } from './models/itemsData';
-import { lore } from './models/loreBook';
+import { lore } from './models/lore/loreBook';
 import { MessageType } from 'models/npc';
 import { gameStore } from './models/gameStore';
 import { locationsStore } from 'models/location';
@@ -45,7 +45,7 @@ ${npcContext.inventory?.map((item) => `- ${itemsData.get(item.itemId)?.name} x${
 - Gold: ${npcContext.gold}
 
 Relationships with other Characters:
-${npcContext.relationships?.map((relationship) => `- ${relationship}`).join('\n') || 'No relationships'}
+${npcContext.background.relationships?.map((relationship) => `- ${relationship}`).join('\n') || 'No relationships'}
 
 Relationship with Player: ${npcContext.getPlayerRelation()}. You can change the price depending on your relationship with the Player.
 
@@ -60,43 +60,7 @@ Now it is ${gameStore.dayTime} and it is ${gameStore.weather}.
 Lore and beliefs:
 ${lore}
 
-${
-  npcContext.location.name === 'Research Camp'
-    ? `
-Common Knowledge About the Camp:
-
-Location & Purpose
-- The camp is a temporary but reinforced outpost established near the edge of the Zone of Unstable Magic.
-- Its official purpose is to study the Zone’s effects, investigate magical anomalies, and report any findings to authorities in Kadera.
-- Most of the structures are tents with a few reinforced huts for containment, research, and storage. Wards and basic magical protections are maintained daily.
-
-The Zone
-- The Zone was created after a catastrophic magical explosion in Arktown. While officials claim it's stable, everyone in the camp knows it's not.
-- Exposure to the Zone is known to cause mutations, hallucinations, or soul-related phenomena. No one fully understands how it works.
-- Strange creatures, shifting terrain, and anomalous weather are common at the edge.
-- Artifacts, glowing crystals, and sometimes remnants of old structures have been recovered from shallow incursions into the Zone.
-
-Safety & Protocol
-- Daily decontamination procedures are required for any team returning from the Zone.
-- Certain areas of the Zone are strictly off-limits, either because of risk—or because “someone higher up” said so.
-- Accidents are covered up. At least two researchers are missing, and the official story doesn't add up. Most quietly assume the Zone got them—or something inside it did.
-- Everyone knows that some of the guards follow different rules, but no one openly questions them unless they want to be reassigned or shut down.
-
-Camp Dynamics
--The camp is divided into Research, Security, and Logistics, with occasional tension between them.
-- Velra Droskin is the camp overseer—respected, but distant and cold. She keeps things running and tolerates little nonsense.
-- The Brave Lions provide security. They used to be famous for honor, but now… not everyone is sure. Some are decent; others are too obedient.
-- The researchers are divided between theory and fieldwork. Some think the Zone can be understood or harnessed—others think it’s a curse that should be sealed and forgotten.
-- There’s an unspoken truth: everyone is watching everyone. Accusations are never voiced, but trust is always conditional.
-
-Rumors Everyone Has Heard
-- A crystal recovered from the Zone has gone missing.
-- The Empire of Rok might be watching from afar, despite no official involvement yet.
-- One of the senior researchers may be slowly going mad… or being “influenced” by the Zone.
-- Some believe that a soul is trapped beneath the camp—a remnant from Arktown whispering through dreams.
-`
-    : ''
-}
+${npcContext.background.lore || ''}
 
 Game items list name|itemId|description (use itemId from this list to buy or sell items):
 ${itemsDataContext}
@@ -205,6 +169,9 @@ Player's inventory:${
     ].join('\n') || '\nNo items in inventory'
   }
 
+${npcContext.background.name} memories:
+${npcContext.memory?.map((memory) => `- ${memory}`).join('\n') || 'No memories'}
+
 Recent Dialog:
     `;
   const afterDialog = `
@@ -235,6 +202,7 @@ If you give a quest, or ask for something, or command player to do something, or
 - if you want player to bring you some items, call giveBringQuest function.
 - if you want player to kill some NPC, call giveKillNpcQuest function.
 - if you want player to find some information, call giveInformationQuest function.
+- if you want player to deliver a letter or an item to a specific character, call giveDeliverQuest function.
 
 Quests rules:
 When assigning kill quests, only target monsters that are currently present in the area. The number of monsters requested must not exceed the actual count of living monsters in the vicinity.
@@ -251,6 +219,8 @@ Communication rules:
 If player message is unclear, ask for clarification in a way that reflects your relationship with the Player.
 If player repeats themselves, acknowledge it and try to provide additional information or a different perspective.
 If you don't have much to say, express interest through simple gestures or brief responses like *Nods thoughtfully* or *Gives ${player.name} an encouraging smile*.
+Keep track of your dialogue history and use it to make your responses more natural.
+Don't explicitly mention your location in your response if you are not asked about it.
 Always suggest 2 or more possible replies for the player's message using possibleReplies function.
 
 ${

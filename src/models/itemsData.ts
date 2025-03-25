@@ -89,12 +89,6 @@ itemsData.set(uuidv4(), {
 });
 
 itemsData.set(uuidv4(), {
-  name: 'Bow',
-  description: 'A bow for ranged attacks.',
-  price: 120,
-});
-
-itemsData.set(uuidv4(), {
   name: 'Arrow',
   description: 'Ammunition for the bow.',
   price: 10,

@@ -19,7 +19,7 @@ export class DialogController {
     if (this.npcContext && this.npcContext.dialogueHistory === null) {
       this.npcContext.initializeDialogueHistory();
       this.handleSendMessage(
-        'You see a player standing in front of you. You can great him or meet him with a blank stare.',
+        'You see a player standing in front of you. Describe your self first from third person perspective (put it in to *description*) and than you can great him or meet him with a blank stare.',
         true,
       );
     }

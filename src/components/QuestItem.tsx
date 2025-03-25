@@ -111,7 +111,7 @@ const QuestItem: React.FC<QuestItemComponentProps> = ({ quest, npcName }) => {
           Rewards: {quest.rewards.gold && `${quest.rewards.gold} gold`}
           {quest.rewards.items &&
             quest.rewards.items.length > 0 &&
-            ` • ${quest.rewards.items.length} item${quest.rewards.items.length > 1 ? 's' : ''}`}
+            `${quest.rewards.items.map((item) => itemsData.get(item)?.name).join(', ')}`}
           {quest.rewards.experience && ` • ${quest.rewards.experience} XP`}
         </QuestRewards>
       )}

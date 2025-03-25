@@ -60,7 +60,7 @@ describe('GameStore', () => {
 
   it('should not add a quest to the quest log if it already exists', () => {
     // Create a sample quest
-    const quest = {
+    const quest = () => ({
       id: 'quest-1',
       title: 'Test Quest',
       description: 'A test quest',
@@ -70,11 +70,11 @@ describe('GameStore', () => {
       completed: false,
       questGiverId: 'npc-1',
       killCount: 0,
-    };
+    });
     const questsCount = gameStore.questLog.length;
     // Try to add the same quest twice
-    gameStore.addQuest(quest);
-    gameStore.addQuest(quest);
+    gameStore.addQuest(quest());
+    gameStore.addQuest(quest());
     // Verify quest was only added once
     expect(gameStore.questLog.length).toBe(questsCount + 1);
   });

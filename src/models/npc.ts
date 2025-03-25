@@ -239,7 +239,6 @@ export class NPC {
   position: Vector2;
   speed = 10;
   background: BackgroundTemplate;
-  relationships: string[] | undefined;
   location: Location;
   dialogueHistory: Message[] | null;
   state?: string;

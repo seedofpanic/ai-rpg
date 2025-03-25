@@ -143,6 +143,10 @@ export class Player {
     }
   }
 
+  addGold(amount: number) {
+    this.gold += amount;
+  }
+
   removeItemFromInventory(item: InventorySlot) {
     const existingItem = this.inventory.find((i) => i.itemId === item.itemId);
     if (existingItem) {
