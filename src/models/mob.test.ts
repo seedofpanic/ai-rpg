@@ -74,6 +74,11 @@ describe('Mob', () => {
       testMob.attack(player);
       expect(player.health).toBeLessThan(initialPlayerHealth);
     });
+
+    it('should be aggrasive if attacked', () => {
+      testMob.takeDamage(10);
+      expect(testMob.isAggressive).toBe(true);
+    });
   });
 
   describe('State Management', () => {
@@ -89,7 +94,7 @@ describe('Mob', () => {
 
       // Move player far away
       player.position = new Vector2(
-        testMob.position.x + testMob.aggroRange * 2,
+        testMob.position.x + testMob.aggroRange * 6,
         testMob.position.y,
       );
       testMob.doActions(player, Date.now() + 200);

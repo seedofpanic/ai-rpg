@@ -21,4 +21,4 @@ describe('itemsData', () => {
     }
     expect(duplicates).toHaveLength(0);
   });
-}); 
+});

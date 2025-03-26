@@ -12,6 +12,7 @@ import { Vector2 } from 'utils/vector2';
 import { buildStory } from './scenarios/scenarioBuilder';
 import { researchersCampBuilder } from './scenarios/researchersCampBuilder';
 import { Mob, MobType } from './mob';
+import { projectileStore } from './projectileStore';
 
 type DayTime = 'morning' | 'afternoon' | 'evening' | 'night';
 type Weather =
@@ -34,6 +35,9 @@ const weather: Weather[] = [
 
 let dayTimeTimer: NodeJS.Timeout | null = null;
 
+let lastUpdateTime = Date.now();
+let gameLoopTimer: NodeJS.Timeout | null = null;
+
 export class GameStore {
   isDialogueOpen: boolean = false;
   activeNpcId: string | null = null;
@@ -48,6 +52,7 @@ export class GameStore {
   weather: Weather = 'clear sky';
   possibleReplies: Record<string, string[]> = {};
   lastMessageError: string | null = null;
+
   constructor() {
     makeAutoObservable(this);
   }
@@ -136,23 +141,25 @@ export class GameStore {
       return;
     }
 
-    if (this.player) {
-      const currentTime = Date.now();
+    const currentTime = Date.now();
+    const delta = currentTime - lastUpdateTime;
+    lastUpdateTime = currentTime;
 
+    if (this.player) {
       // Process NPC actions
       for (const id of npcStore.npcIds) {
         const npc = npcStore.npcs[id];
-        npc.doActions(this.player, currentTime);
+        npc.doActions(this.player, delta);
       }
 
       // Process mob actions
       for (const id of mobStore.mobIds) {
         const mob = mobStore.mobs[id];
-        mob.doActions(this.player, currentTime);
+        mob.doActions(this.player, delta);
       }
 
       // Process player actions
-      this.player.doActions(keysDown, currentTime, this.isDialogueOpen);
+      this.player.doActions(keysDown, delta, this.isDialogueOpen);
 
       if (!this.player.isAlive()) {
         this.over();
@@ -160,7 +167,7 @@ export class GameStore {
       }
     }
 
-    setTimeout(() => {
+    gameLoopTimer = setTimeout(() => {
       this.startGameActions();
     }, 100);
   }
@@ -172,6 +179,7 @@ export class GameStore {
     buildStory();
     researchersCampBuilder();
     this.startGameActions();
+    projectileStore.startTimer();
     this.startDayTime();
     if (import.meta.env.VITE_CI) {
       mobStore.initializeMobs();
@@ -186,12 +194,19 @@ export class GameStore {
   }
 
   reset() {
+    if (gameLoopTimer) {
+      clearTimeout(gameLoopTimer);
+    }
+
+    projectileStore.reset();
+
     this.questLog.length = 0;
     this.isOver = false;
     combatLogStore.log.length = 0;
     locationsStore.reset();
     mobStore.reset();
     npcStore.reset();
+    projectileStore.reset();
     this.backgroundsData = getBackgroundsData();
     this.dayTime = 'night';
   }

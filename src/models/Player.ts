@@ -3,6 +3,8 @@ import { makeAutoObservable } from 'mobx';
 import { Vector2 } from 'utils/vector2';
 import { Equipment, itemsData } from './itemsData';
 import { MagicEffects } from './MagicEffects';
+import { Projectile } from './Projectile';
+import { projectileStore } from './projectileStore';
 
 interface InventorySlot {
   itemId: string;
@@ -18,7 +20,7 @@ interface EquipmentStats {
 }
 
 export class Player {
-  speed = 20;
+  speed = 0.3;
   position: Vector2;
   name: string;
   race: string;
@@ -52,6 +54,8 @@ export class Player {
     charisma: 0,
   };
 
+  private movementCooldown: number = 0;
+
   // Computed stats (including equipment)
   get maxHealth(): number {
     return this.baseHealth + this.cachedEquipmentStats.health;
@@ -75,7 +79,9 @@ export class Player {
 
   // utils
   lastUpdateTime = Date.now();
-  combatMode = false;
+  combatMode: 'melee' | 'ranged' = 'melee';
+  lastShotTime: number = 0;
+  shotCooldown: number = 500; // 500ms between shots
 
   constructor(name: string, race: string, playerClass: string, type: string) {
     this.position = new Vector2(800, 550);
@@ -132,6 +138,14 @@ export class Player {
 
   private updateEquipmentStats() {
     this.cachedEquipmentStats = this.calculateEquipmentStats();
+
+    const weapon = this.equipment['weapon']
+      ? itemsData.get(this.equipment['weapon'])
+      : null;
+
+    if (weapon) {
+      this.combatMode = weapon.mode || 'melee';
+    }
   }
 
   addItemToInventory(item: InventorySlot) {
@@ -209,45 +223,45 @@ export class Player {
     this.position = new Vector2(x, y);
   }
 
-  setCombatMode(combatMode: boolean) {
+  setCombatMode(combatMode: 'melee' | 'ranged') {
     this.combatMode = combatMode;
   }
 
-  doActions(
-    keysDown: Set<string>,
-    currentTime: number,
-    dialogIsAcitve: boolean,
-  ) {
-    const delta = currentTime - this.lastUpdateTime;
-
+  doActions(keysDown: Set<string>, delta: number, dialogIsAcitve: boolean) {
     if (!dialogIsAcitve) {
       this.updateMovement(keysDown, delta);
-      this.magicEffects.update(currentTime);
+      this.magicEffects.update(delta);
     }
   }
 
   updateMovement(keysDown: Set<string>, delta: number) {
     let moveX = 0;
     let moveY = 0;
-    if (delta >= 100) {
-      if (keysDown.has('KeyW')) {
-        moveY = -1;
-      }
-      if (keysDown.has('KeyA')) {
-        moveX = -1;
-      }
-      if (keysDown.has('KeyS')) {
-        moveY = 1;
-      }
-      if (keysDown.has('KeyD')) {
-        moveX = 1;
-      }
+    // this.movementCooldown += ;
+    // console.log(this.movementCooldown);
+
+    // while (this.movementCooldown >= 100) {
+    //   this.movementCooldown -= 100;
+
+    if (keysDown.has('KeyW')) {
+      moveY = -1;
     }
+    if (keysDown.has('KeyA')) {
+      moveX = -1;
+    }
+    if (keysDown.has('KeyS')) {
+      moveY = 1;
+    }
+    if (keysDown.has('KeyD')) {
+      moveX = 1;
+    }
+    // }
 
     if (moveX || moveY) {
-      this.position = this.position.add(
-        new Vector2(moveX, moveY).normalize().multiply(this.speed),
-      );
+      const moveVector = new Vector2(moveX, moveY)
+        .normalize()
+        .multiply(this.speed * delta);
+      this.position = this.position.add(moveVector);
     }
   }
 
@@ -309,5 +323,23 @@ export class Player {
     } else {
       return '';
     }
+  }
+
+  shootArrow(targetPosition: Vector2) {
+    const currentTime = Date.now();
+    if (currentTime - this.lastShotTime < this.shotCooldown) {
+      return;
+    }
+
+    const projectile = new Projectile(
+      this.position,
+      targetPosition,
+      0.5, // speed
+      this.attackPower * 1.5, // damage based on attack power
+      500, // range
+    );
+
+    projectileStore.addProjectile(projectile);
+    this.lastShotTime = currentTime;
   }
 }

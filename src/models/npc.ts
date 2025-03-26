@@ -255,12 +255,12 @@ export class NPC {
   additionalInstructions?: string;
   family: Family;
   memory: string[] = [];
-
-  // utils
-  lastUpdateTime: number = Date.now();
-  attackReady = 0;
   sellingItems: TradeItem[] = [];
   buyingItems: TradeItem[] = [];
+
+  // utils
+  private actionCooldown: number = 0;
+  private attackReady = 0;
 
   constructor(
     x: number,
@@ -450,20 +450,21 @@ export class NPC {
     combatLogStore.push(
       `${this.background.name} took ${reducedDamage} damage.`,
     );
+    this.changeRelation(-50);
   }
 
   isAlive() {
     return this.health > 0;
   }
 
-  doActions(player: Player, currentTime: number) {
+  doActions(player: Player, delta: number) {
     if (!this.isAlive()) {
       return;
     }
 
-    const delta = currentTime - this.lastUpdateTime;
-    if (delta >= 100) {
-      this.lastUpdateTime += 100;
+    this.actionCooldown += delta;
+    if (this.actionCooldown >= 120) {
+      this.actionCooldown -= 120;
 
       if (this.relation === 0) {
         // Calculate direction towards the player

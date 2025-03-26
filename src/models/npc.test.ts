@@ -148,4 +148,9 @@ describe('NPC', () => {
     npc.changeRelation(-200); // Exceed lower bound
     expect(npc.relation).toBe(0);
   });
+
+  it('should be aggrasive if attacked', () => {
+    npc.takeDamage(10);
+    expect(npc.relation).toBe(0);
+  });
 });

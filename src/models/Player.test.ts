@@ -99,11 +99,11 @@ describe('Player', () => {
   });
 
   it('should toggle combat mode correctly', () => {
-    expect(player.combatMode).toBe(false);
-    player.setCombatMode(true);
-    expect(player.combatMode).toBe(true);
-    player.setCombatMode(false);
-    expect(player.combatMode).toBe(false);
+    expect(player.combatMode).toBe('melee');
+    player.setCombatMode('ranged');
+    expect(player.combatMode).toBe('ranged');
+    player.setCombatMode('melee');
+    expect(player.combatMode).toBe('melee');
   });
 
   it('should handle movement based on keys pressed', () => {

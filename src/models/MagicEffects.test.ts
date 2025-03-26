@@ -169,7 +169,7 @@ describe('MagicEffects', () => {
       expect(magicEffects.getActiveEffects().get(player.name)?.length).toBe(1);
 
       // Fast forward time
-      magicEffects.update(Date.now() + 2000);
+      magicEffects.update(2000000);
       expect(magicEffects.getActiveEffects().has(player.name)).toBe(false);
     });
   });

@@ -9,6 +9,8 @@ import { mobStore } from '../models/mobStore';
 import { locationsStore } from '../models/location'; // Import locations
 import { Player } from '../models/Player'; // Import Player
 import { MOB_STATS } from '../models/mobStats';
+import ProjectileView from './ProjectileView';
+import { Vector2 } from 'utils/vector2';
 
 const MapContainer = styled.div`
   width: 3700px;
@@ -47,8 +49,19 @@ interface MapProps {
 }
 
 const Map: React.FC<MapProps> = ({ onNpcInteraction, player, onNpcHover }) => {
+  const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (player.combatMode !== 'ranged') {
+      return;
+    }
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    player.shootArrow(new Vector2(x, y));
+  };
+
   return (
-    <MapContainer>
+    <MapContainer onClick={handleMapClick}>
       {locationsStore.locations.map((location, index) => (
         <LocationContainer
           key={index}
@@ -61,6 +74,7 @@ const Map: React.FC<MapProps> = ({ onNpcInteraction, player, onNpcHover }) => {
         </LocationContainer>
       ))}
       <PlayerView x={player.position.x} y={player.position.y} />
+      <ProjectileView />
       {npcStore.npcIds.map((id) => {
         const npc = npcStore.npcs[id];
 

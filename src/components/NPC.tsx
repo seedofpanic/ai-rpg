@@ -147,6 +147,8 @@ const NPC: React.FC<NPCProps> = ({
       onMouseLeave={onMouseLeave}
     >
       <NPCContainer
+        id={id}
+        data-type={'npc'}
         data-testid={`npc-view-${id}`}
         style={{ left: x, top: y }}
         onClick={onClick}

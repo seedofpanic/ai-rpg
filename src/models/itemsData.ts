@@ -32,6 +32,7 @@ export interface ItemData {
   stats?: ItemStats;
   isUsable?: 'single' | 'multiple';
   effect?: Effect;
+  mode?: 'melee' | 'ranged';
 }
 
 export const itemsData = new Map<string, ItemData>();
@@ -683,6 +684,7 @@ itemsData.set(uuidv4(), {
     attackPower: 12,
     criticalChance: 0.06,
   },
+  mode: 'ranged',
 });
 
 // Add new consumable items

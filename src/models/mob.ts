@@ -116,6 +116,11 @@ export class Mob {
   location: Location;
   inventory: { itemId: string; quantity: number }[] = [];
 
+  private actionCooldown: number = 0;
+  private patrolDirection: Vector2 = new Vector2(0, 0);
+  private patrolPoints: Vector2[] = [];
+  private currentPatrolIndex: number = 0;
+  private patrolPointReachedThreshold: number = 10; // Distance at which we consider a patrol point reached
   constructor(mobType: MobType, x: number, y: number, location: Location) {
     const stats = MOB_STATS[mobType];
     this.id = uuidv4();
@@ -124,6 +129,7 @@ export class Mob {
     this.position = new Vector2(x, y);
     this.patrolPoint = new Vector2(x, y);
     this.location = location;
+    this.generatePatrolPoints();
 
     // Initialize stats
     this.health = stats.health;
@@ -177,6 +183,7 @@ export class Mob {
 
     const actualDamage = Math.max(1, damage - this.defense);
     this.health = Math.max(0, this.health - actualDamage);
+    this.isAggressive = true;
   }
 
   attack(target: Player): void {
@@ -190,14 +197,14 @@ export class Mob {
     target.takeDamage(damage);
   }
 
-  doActions(player: Player, currentTime: number): void {
+  doActions(player: Player, delta: number): void {
     if (!this.isAlive()) {
       return;
     }
 
-    const delta = currentTime - this.lastUpdateTime;
-    if (delta >= 100) {
-      this.lastUpdateTime = currentTime;
+    this.actionCooldown += delta;
+    if (this.actionCooldown >= 120) {
+      this.actionCooldown -= 120;
 
       // Calculate distance to player
       const distanceToPlayer = player.position
@@ -205,13 +212,16 @@ export class Mob {
         .magnitude();
 
       // Check if player is in aggro range
-      if (distanceToPlayer <= this.aggroRange) {
+      if (
+        distanceToPlayer <=
+        (this.isAggressive ? this.aggroRange * 5 : this.aggroRange)
+      ) {
         this.isAggressive = true;
         this.state = 'chasing';
 
         // Move towards player
         const direction = player.position.subtract(this.position).normalize();
-        const movement = direction.multiply(this.speed);
+        const movement = direction.multiply(this.speed * 4.5);
         this.position = this.position.add(movement);
 
         // Attack if in range
@@ -230,33 +240,58 @@ export class Mob {
           this.state = 'patrolling';
         }
 
-        // Patrol behavior
-        const patrolDelta = currentTime - this.lastPatrolTime;
-        if (patrolDelta >= 200) {
-          // Change patrol direction every 3 seconds
-          this.lastPatrolTime = currentTime;
-          const angle = Math.random() * Math.PI * 2;
-          const patrolDirection = new Vector2(Math.cos(angle), Math.sin(angle));
-
-          // Stay within patrol radius of spawn point
-          const distanceToSpawn = this.position
-            .subtract(this.patrolPoint)
-            .magnitude();
-          if (distanceToSpawn > this.patrolRadius) {
-            // Move back towards spawn point
-            const toSpawn = this.patrolPoint
-              .subtract(this.position)
-              .normalize();
-            this.position = this.position.add(toSpawn.multiply(this.speed));
-          } else {
-            // Normal patrol movement
-            this.position = this.position.add(
-              patrolDirection.multiply(this.speed),
-            );
-          }
+        if (this.state === 'patrolling') {
+          this.updatePatrolDirection();
+          // Normal patrol movement
+          this.position = this.position.add(
+            this.patrolDirection.multiply(this.speed),
+          );
         }
       }
     }
+  }
+
+  private generatePatrolPoints(): void {
+    this.patrolPoints = [];
+    const numPoints = 3 + Math.floor(Math.random() * 3); // 3-5 patrol points
+
+    for (let i = 0; i < numPoints; i++) {
+      const angle = (i / numPoints) * Math.PI * 2;
+      const radius = this.patrolRadius * (0.5 + Math.random() * 0.5); // Random radius between 50% and 100% of patrolRadius
+      const x = this.patrolPoint.x + Math.cos(angle) * radius;
+      const y = this.patrolPoint.y + Math.sin(angle) * radius;
+
+      // Ensure patrol points stay within location bounds
+      const boundedX = Math.max(
+        this.location.x,
+        Math.min(this.location.x + this.location.width - 40, x),
+      );
+      const boundedY = Math.max(
+        this.location.y,
+        Math.min(this.location.y + this.location.height - 40, y),
+      );
+
+      this.patrolPoints.push(new Vector2(boundedX, boundedY));
+    }
+  }
+
+  private updatePatrolDirection(): void {
+    if (this.patrolPoints.length === 0) {
+      this.generatePatrolPoints();
+    }
+
+    const currentTarget = this.patrolPoints[this.currentPatrolIndex];
+    const distanceToTarget = this.position.subtract(currentTarget).magnitude();
+
+    if (distanceToTarget < this.patrolPointReachedThreshold) {
+      // Move to next patrol point
+      this.currentPatrolIndex =
+        (this.currentPatrolIndex + 1) % this.patrolPoints.length;
+      return;
+    }
+
+    // Calculate direction to next patrol point
+    this.patrolDirection = currentTarget.subtract(this.position).normalize();
   }
 
   addItem(item: { itemId: string; quantity: number }): void {

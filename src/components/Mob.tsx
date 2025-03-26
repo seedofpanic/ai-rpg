@@ -130,6 +130,8 @@ const Mob: React.FC<MobProps> = ({
   return (
     <HoverableContainer>
       <MobContainer
+        id={id}
+        data-type={'mob'}
         data-testid={`mob-view-${id}`}
         style={{ left: x, top: y }}
         onClick={onClick}

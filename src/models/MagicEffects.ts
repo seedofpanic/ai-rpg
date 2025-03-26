@@ -8,6 +8,7 @@ export interface Effect {
   value: number;
   duration?: number; // in milliseconds
   startTime?: number;
+  elapsed?: number;
   source: string;
 }
 
@@ -89,13 +90,21 @@ export class MagicEffects {
     }
   }
 
-  update(currentTime: number) {
+  update(delta: number) {
     this.activeEffects.forEach((effects, targetId) => {
       effects.forEach((effect, index) => {
         if (effect.duration && effect.startTime) {
-          const elapsed = currentTime - effect.startTime;
-          if (elapsed >= effect.duration) {
-            effects.splice(index, 1);
+          effect.elapsed = effect.elapsed ? effect.elapsed + delta : delta;
+
+          while (effect.elapsed > 1000) {
+            effect.elapsed -= 1000;
+            effect.duration -= 1000;
+            this.processEffect(targetId, effect);
+
+            if (effect.elapsed >= effect.duration) {
+              effects.splice(index, 1);
+              return;
+            }
           }
         }
       });
