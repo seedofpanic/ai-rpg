@@ -1,9 +1,9 @@
 import { makeAutoObservable } from 'mobx';
-import { Vector2 } from '../utils/vector2';
-import { Location } from './location';
-import { Player } from './Player';
+import { Vector2 } from '../../utils/vector2';
+import { Location } from '../location';
+import { Player } from '../Player';
 import { v4 as uuidv4 } from 'uuid';
-import { itemsData } from './itemsData';
+import { itemsData } from '../itemsData';
 import { MOB_STATS } from './mobStats';
 
 export type MobType =

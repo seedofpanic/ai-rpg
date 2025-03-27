@@ -1,9 +1,9 @@
 import { makeAutoObservable } from 'mobx';
-import { Mob, MobType } from './mob';
-import { NPC } from './npc';
+import { Mob, MobType } from './mobs/mob';
+import { NPC } from './npcs/npc';
 import { v4 as uuidv4 } from 'uuid';
-import { npcStore } from './npcStore';
-import { mobStore } from './mobStore';
+import { npcStore } from './npcs/npcStore';
+import { mobStore } from './mobs/mobStore';
 import { gameStore } from './gameStore';
 import { Vector2 } from 'utils/vector2';
 type locationData = Omit<

@@ -5,7 +5,7 @@ import Map from './Map';
 import { Player } from '../models/Player';
 
 // Mock the stores and dependencies
-vi.mock('../models/npcStore', () => ({
+vi.mock('../models/npcs/npcStore', () => ({
   npcStore: {
     npcIds: ['npc1', 'npc2'],
     npcs: {
@@ -82,7 +82,7 @@ vi.mock('../models/npcStore', () => ({
   },
 }));
 
-vi.mock('../models/mobStore', () => ({
+vi.mock('../models/mobs/mobStore', () => ({
   mobStore: {
     mobIds: ['mob1'],
     mobs: {
@@ -124,7 +124,7 @@ vi.mock('../models/location', () => ({
   },
 }));
 
-vi.mock('../models/mob', () => ({
+vi.mock('../models/mobs/mobStats', () => ({
   MOB_STATS: {
     goblin: {
       health: 100,

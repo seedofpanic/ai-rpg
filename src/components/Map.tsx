@@ -4,13 +4,13 @@ import NPC from './NPC';
 import Mob from './Mob';
 import PlayerView from './PlayerView';
 import { observer } from 'mobx-react-lite';
-import { npcStore } from '../models/npcStore';
-import { mobStore } from '../models/mobStore';
-import { locationsStore } from '../models/location'; // Import locations
-import { Player } from '../models/Player'; // Import Player
-import { MOB_STATS } from '../models/mobStats';
+import { npcStore } from 'models/npcs/npcStore';
+import { mobStore } from 'models/mobs/mobStore';
+import { locationsStore } from 'models/location'; // Import locations
+import { Player } from 'models/Player'; // Import Player
 import ProjectileView from './ProjectileView';
 import { Vector2 } from 'utils/vector2';
+import { MOB_STATS } from 'models/mobs/mobStats';
 
 const MapContainer = styled.div`
   width: 3700px;

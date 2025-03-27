@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
-import { Mob, MobType, mobTypes } from './mob';
-import { locationsStore, Location } from './location';
-
+import { Mob, MobType, mobTypes } from 'models/mobs/mob';
+import { locationsStore } from 'models/location';
+import { Location } from 'models/location';
 class MobStore {
   mobs: Record<string, Mob> = {};
   mobIds: string[] = [];

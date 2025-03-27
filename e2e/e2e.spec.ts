@@ -183,4 +183,57 @@ test.describe("AI RPG E2E Tests", () => {
       .locator('[data-testid="item-view"]', { hasText: "Sword (x1)" })
       .waitFor({ state: "visible" });
   });
+
+  test("should give escort quest", async ({ page }) => {
+    await page.route(
+      "https://generativelanguage.googleapis.com/**",
+      async (route) => {
+        const postData = route.request().postData();
+
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify(
+            mockGeminiResponse("Please escort me to the tavern", {
+              name: "giveEscortCharacterQuest",
+              args: {
+                quests: [
+                  {
+                    name: "Escort to the tavern",
+                    description: "Escort me to the tavern",
+                    subject: "Test NPC",
+                    locationId: postData?.match(/Tavern \(id: (.*?)\)/)?.[1],
+                    reward: {
+                      gold: 100,
+                      item: { itemId: "1", quantity: 1 },
+                    },
+                  },
+                ],
+              },
+            }),
+          ),
+        });
+      },
+    );
+
+    // Interact with an NPC
+    const npc = page.locator('[data-testid^="npc-view"]').last();
+    await npc.hover();
+    await page.keyboard.press("e");
+
+    const dialogContainer = page.locator('[data-testid="dialog-container"]');
+    dialogContainer.waitFor({ state: "visible" });
+
+    await page.fill('[data-testid="message-input"]', "let's trade");
+    await page.click('[data-testid="send-message"]');
+
+    const dialogQuestSection = page.locator(
+      '[data-testid="dialog-quest-section"]',
+    );
+
+    expect(await dialogQuestSection.isVisible()).toBe(true);
+    expect(
+      await dialogQuestSection.getByText("Escort to the tavern").isVisible(),
+    ).toBe(true);
+  });
 });

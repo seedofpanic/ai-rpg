@@ -118,12 +118,12 @@ describe('modelTools', () => {
     });
   });
 
-  describe('giveBringQuest tool', () => {
+  describe('giveDeliverItemQuest tool', () => {
     const questTool = (
       modelTools as unknown as {
         functionDeclarations: ExtendedFunctionDeclaration[];
       }
-    ).functionDeclarations.find((tool) => tool.name === 'giveBringQuest');
+    ).functionDeclarations.find((tool) => tool.name === 'giveDeliverItemQuest');
 
     it('should have correct schema definition', () => {
       expect(questTool).toBeDefined();

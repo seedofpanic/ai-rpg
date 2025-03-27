@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import type { MobType } from '../models/mob';
+import type { MobType } from '../models/mobs/mob';
 
 interface MobProps {
   id: string;

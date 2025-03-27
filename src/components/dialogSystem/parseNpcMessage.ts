@@ -1,9 +1,9 @@
-import { getRelationChange, MessageType, NPC } from 'models/npc';
+import { getRelationChange, MessageType, NPC } from 'models/npcs/npc';
 import { gameStore } from 'models/gameStore';
 import { v4 as uuidv4 } from 'uuid';
 import { FunctionCall, FunctionDeclarationsTool } from '@google/generative-ai';
-import { npcStore } from 'models/npcStore';
-import { MobType, mobTypes } from 'models/mob';
+import { npcStore } from 'models/npcs/npcStore';
+import { MobType, mobTypes } from 'models/mobs/mob';
 import { itemsData } from 'models/itemsData';
 import { modelTools } from 'modelTools';
 
@@ -86,6 +86,7 @@ interface QuestData {
     npcId?: string;
     quantity?: number;
     subject?: string;
+    locationId?: string;
     item?: {
       itemId: string;
       quantity: number;
@@ -108,6 +109,7 @@ export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
     let action;
     let title = '';
     let questGiverId = npcContext.id;
+    let locationId: string | null = null;
 
     // Set subject and quantity based on quest type
     if (type === 'kill monsters' && quest.monsterType) {
@@ -146,6 +148,16 @@ export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
       subject = quest.item?.itemId || '';
       action = 'deliver';
       title = `${type} x${quest.item?.quantity || 1} ${itemsData.get(quest.item?.itemId || '')?.name || quest.item?.itemId}`;
+    } else if (type === 'escort') {
+      locationId = quest.locationId || null;
+
+      if (!locationId) {
+        return;
+      }
+
+      subject = quest.subject || '';
+      action = 'escort';
+      title = quest.name;
     }
 
     if (!title) {
@@ -157,6 +169,7 @@ export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
       title,
       description: quest.description,
       subject,
+      locationId,
       quantity,
       action: action || '',
       completed: false,
@@ -173,14 +186,14 @@ export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
 const functions = {
   giveKillMonsterQuest: (args: unknown, npcContext: NPC) =>
     addQuests('kill monsters', args as QuestData, npcContext),
-  giveBringQuest: (args: unknown, npcContext: NPC) =>
+  giveDeliverItemQuest: (args: unknown, npcContext: NPC) =>
     addQuests('bring items', args as QuestData, npcContext),
   giveKillNpcQuest: (args: unknown, npcContext: NPC) =>
     addQuests('kill NPC', args as QuestData, npcContext),
   giveInformationQuest: (args: unknown, npcContext: NPC) =>
     addQuests('information', args as QuestData, npcContext),
-  giveDeliverQuest: (args: unknown, npcContext: NPC) =>
-    addQuests('deliver', args as QuestData, npcContext),
+  giveEscortCharacterQuest: (args: unknown, npcContext: NPC) =>
+    addQuests('escort', args as QuestData, npcContext),
   completeQuest: (args: unknown, npcContext: NPC) =>
     parseCompletedQuests(args as CompletedQuestsData, npcContext),
   setBuyItemsList: (args: unknown, npcContext: NPC) =>
@@ -220,6 +233,12 @@ const functions = {
     };
 
     gameStore.spawnMonster(monsterType, quantity, location);
+  },
+  startFollowingPlayer: (_args: unknown, npcContext: NPC) => {
+    npcContext.startFollowingPlayer();
+  },
+  stopFollowingPlayer: (_args: unknown, npcContext: NPC) => {
+    npcContext.stopFollowingPlayer();
   },
 };
 

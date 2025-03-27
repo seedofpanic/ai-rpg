@@ -14,7 +14,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: "index.html",
-        "how-to-play": "how-to-play.html",
+        "what-s-new": "what-s-new.html",
       },
     },
   },

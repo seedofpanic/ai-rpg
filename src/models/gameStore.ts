@@ -1,19 +1,19 @@
 import { Player } from './Player';
 import { makeAutoObservable } from 'mobx';
-import { npcStore } from './npcStore';
+import { npcStore } from './npcs/npcStore';
 import { combatLogStore } from 'components/CombatLog';
 import { itemsData } from './itemsData';
-import { mobStore } from './mobStore';
+import { mobStore } from './mobs/mobStore';
 import { keysDown } from 'utils/keyboard';
 import { Quest } from './Quest';
 import { locationsStore } from './location';
-import { BackgroundTemplate, getBackgroundsData } from './backgroundsData';
+import { BackgroundTemplate, getBackgroundsData } from './npcs/backgroundsData';
 import { Vector2 } from 'utils/vector2';
 import { buildStory } from './scenarios/scenarioBuilder';
 import { researchersCampBuilder } from './scenarios/researchersCampBuilder';
-import { Mob, MobType } from './mob';
+import { Mob, MobType } from './mobs/mob';
 import { projectileStore } from './projectileStore';
-
+import { villageBuilder } from './scenarios/villageBuilder';
 type DayTime = 'morning' | 'afternoon' | 'evening' | 'night';
 type Weather =
   | 'clear sky'
@@ -178,6 +178,7 @@ export class GameStore {
     locationsStore.generateLocations();
     buildStory();
     researchersCampBuilder();
+    villageBuilder();
     this.startGameActions();
     projectileStore.startTimer();
     this.startDayTime();

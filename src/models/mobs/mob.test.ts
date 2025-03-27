@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { Mob } from './mob';
-import { Location } from './location';
-import { Player } from './Player';
-import { Vector2 } from '../utils/vector2';
+import { Mob } from 'models/mobs/mob';
+import { Location } from 'models/location';
+import { Player } from 'models/Player';
+import { Vector2 } from 'utils/vector2';
 
 describe('Mob', () => {
   let testLocation: Location;

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { NPC } from '../models/npc';
-import { Mob } from '../models/mob';
+import { NPC } from '../models/npcs/npc';
+import { Mob } from '../models/mobs/mob';
 import { Player } from '../models/Player';
 import { observer } from 'mobx-react';
 import { itemsData } from 'models/itemsData';

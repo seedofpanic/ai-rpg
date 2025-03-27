@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { GameStore } from './gameStore';
-import { npcStore } from './npcStore';
-import { Player } from './Player';
-import { NPC } from './npc';
+import { npcStore } from 'models/npcs/npcStore';
+import { Player } from 'models/Player';
+import { NPC } from 'models/npcs/npc';
 
 describe('GameStore', () => {
   let gameStore: GameStore;

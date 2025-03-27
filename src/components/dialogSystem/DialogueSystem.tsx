@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { observer } from 'mobx-react';
 import { gameStore } from '../../models/gameStore'; // Import gameStore
 import { itemsData } from '../../models/itemsData';
-import { MessageType } from '../../models/npc';
+import { MessageType } from '../../models/npcs/npc';
 import { dialogController } from '../../models/dialogController';
 import QuestItem from 'components/QuestItem';
 
@@ -345,21 +345,28 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
         left: position.left,
       }}
     >
-      <CloseButton onClick={onClose}>×</CloseButton>
-      <NPCHeader onMouseDown={onTitleMouseDown}>
+      <CloseButton onClick={onClose} data-testid="close-dialog-button">
+        ×
+      </CloseButton>
+      <NPCHeader onMouseDown={onTitleMouseDown} data-testid="npc-header">
         {npcContext?.background.name} {npcContext.background.role}{' '}
         {npcContext.getPlayerRelation()} {npcContext.state}
       </NPCHeader>
-      <BoxRow>
-        <Box style={{ flex: '60%' }}>
-          <MessageLog ref={messageLogRef}>
+      <BoxRow data-testid="dialog-box-row">
+        <Box style={{ flex: '60%' }} data-testid="message-box">
+          <MessageLog ref={messageLogRef} data-testid="message-log">
             {npcContext.dialogueHistory?.map((message, index) => (
-              <MessageBox key={index}>
+              <MessageBox key={index} data-testid={`message-box-${index}`}>
                 <Message data-testid="message" $type={message.type}>
-                  <p>{formatMessageText(message.text)}</p>
+                  <p data-testid={`message-text-${index}`}>
+                    {formatMessageText(message.text)}
+                  </p>
                 </Message>
                 {message.moodChange && (
-                  <MoodChange $change={message.moodChange.change}>
+                  <MoodChange
+                    $change={message.moodChange.change}
+                    data-testid={`mood-change-${index}`}
+                  >
                     {message.moodChange.state}:{' '}
                     {Math.sign(message.moodChange.change) > 0 ? '+' : ''}
                     {message.moodChange.change}
@@ -368,33 +375,36 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
               </MessageBox>
             ))}
             {dialogController.isLoading && (
-              <LoadingMessage>
-                <span>{npcContext.background.name} is thinking</span>
-                <LoadingDots />
+              <LoadingMessage data-testid="loading-message">
+                <span data-testid="loading-text">
+                  {npcContext.background.name} is thinking
+                </span>
+                <LoadingDots data-testid="loading-dots" />
               </LoadingMessage>
             )}
             {gameStore.lastMessageError && (
               <Message data-testid="message" $type={MessageType.NPC}>
-                <span>
+                <span data-testid="error-message">
                   There was an error with your last message. Please try again.
                 </span>
               </Message>
             )}
           </MessageLog>
           {possibleReplies.length > 0 && (
-            <PossibleRepliesContainer>
+            <PossibleRepliesContainer data-testid="possible-replies-container">
               {possibleReplies.map((reply, index) => (
                 <ReplyButton
                   key={index}
                   onClick={() => handleReplyClick(reply)}
                   disabled={dialogController.isLoading}
+                  data-testid={`reply-button-${index}`}
                 >
                   {reply}
                 </ReplyButton>
               ))}
             </PossibleRepliesContainer>
           )}
-          <InputContainer>
+          <InputContainer data-testid="input-container">
             <Input
               data-testid="message-input"
               value={input}
@@ -413,17 +423,19 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
             </Button>
           </InputContainer>
         </Box>
-        <Box style={{ flex: '40%', marginLeft: '20px' }}>
-          <ShopContainer>
+        <Box style={{ flex: '40%', marginLeft: '20px' }} data-testid="shop-box">
+          <ShopContainer data-testid="shop-container">
             <div data-testid="items-to-sell">
-              <h3>Shop</h3>
+              <h3 data-testid="sell-header">Shop</h3>
               {npcContext.sellingItems.length ? (
                 npcContext.sellingItems.map((item, index) => (
                   <ShopItem data-testid="trade-item" key={index}>
-                    <span>
+                    <span data-testid={`sell-item-name-${index}`}>
                       {itemsData.get(item.itemId)?.name} x{item.quantity || 0}
                     </span>
-                    <span>{item.price} gold</span>
+                    <span data-testid={`sell-item-price-${index}`}>
+                      {item.price} gold
+                    </span>
                     <ShopButton
                       data-testid="buy-item"
                       onClick={() => dialogController.handleBuyItem(item)}
@@ -437,21 +449,24 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
                   onClick={() => {
                     setInput('Show me your wares');
                   }}
+                  data-testid="ask-for-wares-button"
                 >
                   Ask to see wares
                 </Button>
               )}
             </div>
             <div data-testid="items-to-buy">
-              <h3>Sell</h3>
+              <h3 data-testid="buy-header">Sell</h3>
               {npcContext.buyingItems.length ? (
                 npcContext.buyingItems.map((item, index) => {
                   return (
-                    <ShopItem key={index}>
-                      <span>
+                    <ShopItem key={index} data-testid={`buy-item-${index}`}>
+                      <span data-testid={`buy-item-name-${index}`}>
                         {itemsData.get(item.itemId)?.name} x{item.quantity || 0}
                       </span>
-                      <span>{item.price} gold</span>
+                      <span data-testid={`buy-item-price-${index}`}>
+                        {item.price} gold
+                      </span>
                       <ShopButton
                         data-testid="sell-item"
                         onClick={() => dialogController.handleSellItem(item)}
@@ -471,20 +486,22 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
                   onClick={() => {
                     setInput('What will you buy? Check my inventory');
                   }}
+                  data-testid="ask-to-sell-button"
                 >
                   Ask to sell something
                 </Button>
               )}
             </div>
           </ShopContainer>
-          <QuestSection>
-            <h3>Available Quests</h3>
+          <QuestSection data-testid="dialog-quest-section">
+            <h3 data-testid="available-quests-header">Available Quests</h3>
             {availableQuests.length ? (
               availableQuests.map((quest) => (
                 <QuestItem
                   key={quest.id}
                   quest={quest}
                   npcName={npcContext.background.name}
+                  data-testid={`available-quest-${quest.id}`}
                 />
               ))
             ) : (
@@ -492,11 +509,12 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
                 onClick={() => {
                   setInput('Do you have a task for me?');
                 }}
+                data-testid="ask-for-quest-button"
               >
                 Ask for a quest
               </Button>
             )}
-            <h3>Completed Quests</h3>
+            <h3 data-testid="completed-quests-header">Completed Quests</h3>
             {gameStore.questLog
               .filter(
                 (quest) => quest.questGiverId === npcId && quest.completed,
@@ -506,6 +524,7 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
                   key={quest.id}
                   quest={quest}
                   npcName={npcContext.background.name}
+                  data-testid={`completed-quest-${quest.id}`}
                 />
               ))}
           </QuestSection>

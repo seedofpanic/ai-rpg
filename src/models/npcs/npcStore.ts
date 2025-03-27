@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { NPC } from './npc'; // Import NPC from npc.ts
-import { Location } from './location';
+import { Location } from '../location';
 import { BackgroundTemplate } from './backgroundsData';
 
 const getRandomElement = <T>(arr: T[]): T => {

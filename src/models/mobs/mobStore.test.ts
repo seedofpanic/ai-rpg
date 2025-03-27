@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { mobStore as MobStoreInstance } from './mobStore';
-import { Mob } from './mob';
-import { Location } from './location';
+import { Mob } from 'models/mobs/mob';
+import { Location } from 'models/location';
 
 describe('MobStore', () => {
   let mobStore: typeof MobStoreInstance;

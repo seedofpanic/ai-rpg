@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
-import { gameStore } from '../models/gameStore';
-import { npcStore } from '../models/npcStore';
+import { gameStore } from 'models/gameStore';
+import { npcStore } from 'models/npcs/npcStore';
 import QuestItem from './QuestItem';
 
 const QuestLogContainer = styled.div`

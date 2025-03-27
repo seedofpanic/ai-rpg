@@ -1,7 +1,7 @@
 import { Vector2 } from 'utils/vector2';
 import { makeAutoObservable } from 'mobx';
-import { mobStore } from './mobStore';
-import { npcStore } from './npcStore';
+import { mobStore } from 'models/mobs/mobStore';
+import { npcStore } from 'models/npcs/npcStore';
 
 let nextId = 0;
 

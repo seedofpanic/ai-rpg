@@ -1,18 +1,18 @@
 import { v4 as uuidv4 } from 'uuid';
 import { makeAutoObservable } from 'mobx';
-import { itemsData } from './itemsData';
-import { Location } from './location'; // Import related types
+import { itemsData } from '../itemsData';
+import { Location, locationsStore } from '../location'; // Import related types
 import {
   BackgroundTemplate,
   getRandomBackground,
   Need,
 } from './backgroundsData';
-import { Player } from './Player';
-import { Vector2 } from '../utils/vector2'; // Import Vector2
+import { Player } from '../Player';
+import { Vector2 } from '../../utils/vector2'; // Import Vector2
 import { combatLogStore } from 'components/CombatLog';
-import { roleSpecificItems } from './roleItems';
 import { roleSpecificNeeds } from './roleNeeds';
-import { gameStore } from './gameStore';
+import { gameStore } from '../gameStore';
+import { roleSpecificItems } from './roleItems';
 
 export interface InventoryItem {
   itemId: string;
@@ -257,6 +257,7 @@ export class NPC {
   memory: string[] = [];
   sellingItems: TradeItem[] = [];
   buyingItems: TradeItem[] = [];
+  isFollowingPlayer: boolean = false;
 
   // utils
   private actionCooldown: number = 0;
@@ -279,6 +280,9 @@ export class NPC {
     this.position = new Vector2(x, y);
     this.background = background;
     this.location = location;
+    if (!this.location.npcs.includes(this)) {
+      this.location.npcs.push(this);
+    }
     this.dialogueHistory = null;
     this.inventory = inventory;
     this.gold = gold;
@@ -489,6 +493,35 @@ export class NPC {
         }
         return;
       }
+
+      // Follow player if following is enabled
+      if (this.isFollowingPlayer) {
+        const distance = player.position.subtract(this.position);
+        const magnitude = distance.magnitude();
+
+        // Only follow if not too close to the player
+        if (magnitude > 60) {
+          const direction = distance.normalize();
+          const movement = direction.multiply(this.speed);
+          this.position = this.position.add(movement);
+        }
+      }
+
+      this.updateLocation();
+    }
+  }
+
+  updateLocation() {
+    const location = locationsStore.locations.find(
+      (l) => l.x === this.position.x && l.y === this.position.y,
+    );
+
+    if (location && location !== this.location) {
+      this.location.npcs = this.location.npcs.filter(
+        (npc) => npc.id !== this.id,
+      );
+      this.location = location;
+      this.location.npcs.push(this);
     }
   }
 
@@ -584,5 +617,23 @@ export class NPC {
 
   addMemory(information: string) {
     this.memory.push(information);
+  }
+
+  startFollowingPlayer() {
+    this.isFollowingPlayer = true;
+    this.addDialogHistory({
+      text: `${this.background.name} is now following you.`,
+      type: MessageType.Action,
+      tokensCount: 10,
+    });
+  }
+
+  stopFollowingPlayer() {
+    this.isFollowingPlayer = false;
+    this.addDialogHistory({
+      text: `${this.background.name} stopped following you.`,
+      type: MessageType.Action,
+      tokensCount: 10,
+    });
   }
 }

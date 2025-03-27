@@ -1,6 +1,6 @@
 import { SchemaType, Tool } from '@google/generative-ai';
 import { gameStore } from 'models/gameStore';
-import { mobTypes } from 'models/mob';
+import { mobTypes } from 'models/mobs/mob';
 
 const modelTools: Tool = {
   functionDeclarations: [
@@ -47,8 +47,9 @@ const modelTools: Tool = {
       },
     },
     {
-      name: 'giveBringQuest',
-      description: 'Give a quest to the player',
+      name: 'giveDeliverItemQuest',
+      description:
+        'Give a quest to the player for bringing or delivering items',
       parameters: {
         type: SchemaType.OBJECT,
         properties: {
@@ -66,6 +67,7 @@ const modelTools: Tool = {
                   nullable: false,
                 },
                 itemId: {
+                  description: 'itemId for the item to bring to the player',
                   type: SchemaType.STRING,
                   nullable: false,
                 },
@@ -231,34 +233,55 @@ const modelTools: Tool = {
       },
     },
     {
-      name: 'giveDeliverQuest',
+      name: 'giveEscortCharacterQuest',
       description:
-        'Give a quest to the player to deliver an item to a specific location',
+        'Give a quest to the player to escort a character to a specific location',
       parameters: {
         type: SchemaType.OBJECT,
+        required: ['quests'],
         properties: {
-          questId: { type: SchemaType.STRING, nullable: false },
-          item: {
-            type: SchemaType.OBJECT,
-            nullable: false,
-            properties: {
-              itemId: { type: SchemaType.STRING, nullable: false },
-              quantity: { type: SchemaType.NUMBER, nullable: false },
-              description: {
-                type: SchemaType.STRING,
-                nullable: false,
-                description: 'Unique description of the item',
+          quests: {
+            type: SchemaType.ARRAY,
+            items: {
+              type: SchemaType.OBJECT,
+              nullable: false,
+              required: [
+                'name',
+                'description',
+                'subject',
+                'locationId',
+                'reward',
+              ],
+              properties: {
+                name: { type: SchemaType.STRING, nullable: false },
+                description: { type: SchemaType.STRING, nullable: false },
+                subject: {
+                  type: SchemaType.STRING,
+                  nullable: false,
+                  description: 'Character to escort to the location',
+                },
+                locationId: {
+                  type: SchemaType.STRING,
+                  nullable: false,
+                  description: 'Location id to escort the character to',
+                },
+                reward: {
+                  type: SchemaType.OBJECT,
+                  properties: {
+                    gold: { type: SchemaType.NUMBER },
+                    item: {
+                      type: SchemaType.OBJECT,
+                      properties: {
+                        itemId: { type: SchemaType.STRING, nullable: false },
+                        quantity: { type: SchemaType.NUMBER, nullable: false },
+                      },
+                    },
+                  },
+                },
               },
             },
-            required: ['itemId', 'quantity', 'description'],
-          },
-          subject: {
-            type: SchemaType.STRING,
-            nullable: false,
-            description: 'Character to bring the item to',
           },
         },
-        required: ['questId', 'item', 'subject'],
       },
     },
     {
@@ -342,6 +365,14 @@ const modelTools: Tool = {
         },
         required: ['monsterType', 'quantity', 'location'],
       },
+    },
+    {
+      name: 'startFollowingPlayer',
+      description: 'Start following the player',
+    },
+    {
+      name: 'stopFollowingPlayer',
+      description: 'Stop following the player',
     },
   ],
 };

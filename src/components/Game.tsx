@@ -8,9 +8,9 @@ import QuestLog from './QuestLog';
 import { observer } from 'mobx-react-lite';
 import { gameStore } from '../models/gameStore'; // Import gameStore
 import CombatLog, { combatLogStore } from './CombatLog'; // Import CombatLog
-import { npcStore } from 'models/npcStore';
+import { npcStore } from 'models/npcs/npcStore';
 import LootDialog from './LootDialog';
-import { mobStore } from '../models/mobStore';
+import { mobStore } from 'models/mobs/mobStore';
 import HelpDialog from './HelpDialog';
 
 const GameContainer = styled.div`
@@ -35,6 +35,23 @@ const HelpButton = styled.button`
 
   &:hover {
     background-color: #e76f51;
+  }
+`;
+
+const WhatsNewButton = styled.button`
+  position: fixed;
+  top: 10px;
+  left: calc(50% + 160px);
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #2a9d8f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #218879;
   }
 `;
 
@@ -141,6 +158,10 @@ const Game: React.FC = () => {
     setIsHelpOpen(!isHelpOpen);
   };
 
+  const openWhatsNew = () => {
+    window.open('/ai-rpg/what-s-new.html', '_blank');
+  };
+
   const npcContext = gameStore.activeNpcId
     ? npcStore.npcs[gameStore.activeNpcId]
     : null;
@@ -191,6 +212,7 @@ const Game: React.FC = () => {
         </>
       )}
       <HelpButton onClick={toggleHelp}>Help</HelpButton>
+      <WhatsNewButton onClick={openWhatsNew}>What&apos;s New</WhatsNewButton>
       {isHelpOpen && <HelpDialog onClose={toggleHelp} />}
     </GameContainer>
   );

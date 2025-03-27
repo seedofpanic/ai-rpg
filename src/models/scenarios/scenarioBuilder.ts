@@ -1,5 +1,5 @@
 import { gameStore } from 'models/gameStore';
-import { npcStore } from 'models/npcStore';
+import { npcStore } from 'models/npcs/npcStore';
 import { v4 as uuidv4 } from 'uuid';
 
 export const buildStory = () => {
@@ -19,6 +19,7 @@ export const buildStory = () => {
 Someone is making sacrifices — find out who, and why.`,
     subject: mainCulprit.background.name,
     quantity: 0,
+    locationId: null,
     killCount: 0,
     completed: false,
     questGiverId: null,

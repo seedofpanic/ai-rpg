@@ -1,9 +1,9 @@
-import { NPC, MessageType, TradeItem } from './npc';
+import { NPC, MessageType, TradeItem } from './npcs/npc';
 import { gameStore } from './gameStore';
 import { itemsData } from './itemsData';
 import { sendMessage } from '../api';
 import { parseNpcMessage } from '../components/dialogSystem/parseNpcMessage';
-import { npcStore } from './npcStore';
+import { npcStore } from './npcs/npcStore';
 import { makeAutoObservable } from 'mobx';
 export class DialogController {
   npcContext: NPC | null = null;

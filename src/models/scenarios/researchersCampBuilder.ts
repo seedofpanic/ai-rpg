@@ -1,10 +1,6 @@
-import {
-  BackgroundTemplate,
-  scienceCampBackgrounds,
-} from 'models/backgroundsData';
-import { locationsStore, Location } from 'models/location';
-import { NPC } from 'models/npc';
-import { npcStore } from 'models/npcStore';
+import { scienceCampBackgrounds } from 'models/npcs/scienceCampBackgrounds';
+import { locationsStore } from 'models/location';
+import { addToLoaction } from './addToLoaction';
 
 export const researchersCampBuilder = () => {
   const camp = locationsStore.locations.find(
@@ -27,19 +23,4 @@ export const researchersCampBuilder = () => {
   addToLoaction(0, 0, scienceCampBackgrounds['Serna'], camp);
   addToLoaction(0, 0, scienceCampBackgrounds['Jorek'], camp);
   addToLoaction(0, 0, scienceCampBackgrounds['Elra'], camp);
-};
-
-const addToLoaction = (
-  x: number,
-  y: number,
-  background: BackgroundTemplate,
-  location: Location,
-) => {
-  const locX =
-    location.x + (x ? x : Math.floor(Math.random() * location.width));
-  const locY =
-    location.y + (y ? y : Math.floor(Math.random() * location.height));
-
-  const npc = new NPC(locX, locY, background, location);
-  npcStore.addNpc(npc);
 };

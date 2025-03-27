@@ -1,8 +1,8 @@
-import { npcStore } from './models/npcStore';
-import { itemsData, itemsDataContext } from './models/itemsData';
-import { lore } from './models/lore/loreBook';
-import { MessageType } from 'models/npc';
-import { gameStore } from './models/gameStore';
+import { npcStore } from 'models/npcs/npcStore';
+import { itemsData, itemsDataContext } from 'models/itemsData';
+import { lore } from 'models/lore/loreBook';
+import { MessageType } from 'models/npcs/npc';
+import { gameStore } from 'models/gameStore';
 import { locationsStore } from 'models/location';
 
 export const createContext = (
@@ -77,13 +77,13 @@ ${locationsStore.locations
       })
       .join(', ')}`;
     const mobs = `Monsters in ${loc.name}:
-${loc.monsters
-  .map((mob) => {
-    return `- ${mob.name} (${mob.isAlive() ? 'Alive' : 'Dead'}) x1`;
-  })
-  .join(', ')}`;
+    ${loc.monsters
+      .map((mob) => {
+        return `- ${mob.name} (${mob.isAlive() ? 'Alive' : 'Dead'}) x1`;
+      })
+      .join(', ')}`;
 
-    return `- ${loc.name}: ${loc.description}\n${loc.npcs.length ? npcs : ''}\n${mobs}`;
+    return `- ${loc.name} (id: ${loc.id}): ${loc.description}\n${loc.npcs.length ? npcs : ''}\n${mobs}`;
   })
   .join('\n')}
 
@@ -199,10 +199,14 @@ Whenever you engage in any trade-related action, always call the setSellItemsLis
 If you want to buy something from the player or update prices in your buying list, call setBuyItemsList function with the list of items you want to buy.
 If you give a quest, or ask for something, or command player to do something, or agreeing for player to help you with something, or agreeing for player to do something call a quest function:
 - if you want player to kill some monsters, call giveKillMonsterQuest function.
-- if you want player to bring you some items, call giveBringQuest function.
+- if you want player to bring you some items, call giveBringItemQuest function.
 - if you want player to kill some NPC, call giveKillNpcQuest function.
 - if you want player to find some information, call giveInformationQuest function.
-- if you want player to deliver a letter or an item to a specific character, call giveDeliverQuest function.
+- if you want player to deliver a letter or an item to a specific character, call giveDeliverItemQuest function.
+- if you want to start following player, call startFollowingPlayer function.
+- if you want to stop following player, call stopFollowingPlayer function.
+- if you want player to escort you or someone else to a specific location, call giveEscortCharacterQuest function.
+- if you need to find bring someone back to you or to some specific location, call giveEscortCharacterQuest function.
 
 Quests rules:
 When assigning kill quests, only target monsters that are currently present in the area. The number of monsters requested must not exceed the actual count of living monsters in the vicinity.
@@ -222,6 +226,7 @@ If you don't have much to say, express interest through simple gestures or brief
 Keep track of your dialogue history and use it to make your responses more natural.
 Don't explicitly mention your location in your response if you are not asked about it.
 Always suggest 2 or more possible replies for the player's message using possibleReplies function.
+Never add code to your response.
 
 ${
   !systemMessage && player.stats.intelligence > 0

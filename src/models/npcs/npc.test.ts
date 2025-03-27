@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { getRelationChange, MessageType, NPC } from './npc';
-import { Vector2 } from '../utils/vector2';
-import { Location } from './location';
+import { getRelationChange, MessageType, NPC } from 'models/npcs/npc';
+import { Vector2 } from 'utils/vector2';
+import { Location } from 'models/location';
 
 describe('NPC', () => {
   let npc: NPC;
