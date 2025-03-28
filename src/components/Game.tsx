@@ -133,10 +133,13 @@ const Game: React.FC = () => {
         player.events.add(`${player.name} defeated some number of ${mob.name}`);
         combatLogStore.push(`${mob.name} has been defeated!`);
         gameStore.updateKillQuest(mob.type);
-        setTimeout(() => {
-          mobStore.removeMob(mob.id);
-          mobStore.respawnMob(mob);
-        }, 60000);
+        setTimeout(
+          () => {
+            mobStore.removeMob(mob.id);
+            mobStore.respawnMob(mob);
+          },
+          10 * 60 * 1000,
+        );
         return;
       }
     } else if (npc) {
