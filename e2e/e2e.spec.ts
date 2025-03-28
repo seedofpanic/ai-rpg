@@ -188,8 +188,6 @@ test.describe("AI RPG E2E Tests", () => {
     await page.route(
       "https://generativelanguage.googleapis.com/**",
       async (route) => {
-        const postData = route.request().postData();
-
         await route.fulfill({
           status: 200,
           contentType: "application/json",
@@ -202,7 +200,6 @@ test.describe("AI RPG E2E Tests", () => {
                     name: "Escort to the tavern",
                     description: "Escort me to the tavern",
                     subject: "Test NPC",
-                    locationId: postData?.match(/Tavern \(id: (.*?)\)/)?.[1],
                     reward: {
                       gold: 100,
                       item: { itemId: "1", quantity: 1 },

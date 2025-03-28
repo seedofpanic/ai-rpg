@@ -109,7 +109,6 @@ export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
     let action;
     let title = '';
     let questGiverId = npcContext.id;
-    let locationId: string | null = null;
 
     // Set subject and quantity based on quest type
     if (type === 'kill monsters' && quest.monsterType) {
@@ -149,12 +148,6 @@ export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
       action = 'deliver';
       title = `${type} x${quest.item?.quantity || 1} ${itemsData.get(quest.item?.itemId || '')?.name || quest.item?.itemId}`;
     } else if (type === 'escort') {
-      locationId = quest.locationId || null;
-
-      if (!locationId) {
-        return;
-      }
-
       subject = quest.subject || '';
       action = 'escort';
       title = quest.name;
@@ -169,7 +162,6 @@ export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
       title,
       description: quest.description,
       subject,
-      locationId,
       quantity,
       action: action || '',
       completed: false,
