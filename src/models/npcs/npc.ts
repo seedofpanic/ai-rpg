@@ -513,7 +513,11 @@ export class NPC {
 
   updateLocation() {
     const location = locationsStore.locations.find(
-      (l) => l.x === this.position.x && l.y === this.position.y,
+      (l) =>
+        l.x < this.position.x &&
+        l.y < this.position.y &&
+        l.x + l.width > this.position.x &&
+        l.y + l.height > this.position.y,
     );
 
     if (location && location !== this.location) {

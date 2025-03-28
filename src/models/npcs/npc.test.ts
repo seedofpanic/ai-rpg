@@ -2,12 +2,16 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { getRelationChange, MessageType, NPC } from 'models/npcs/npc';
 import { Vector2 } from 'utils/vector2';
 import { Location } from 'models/location';
+import { locationsStore } from 'models/location';
 
 describe('NPC', () => {
   let npc: NPC;
   let location: Location;
 
   beforeEach(() => {
+    // Clear locations store before each test
+    locationsStore.locations = [];
+
     location = new Location({
       name: 'Market Square',
       description: 'A bustling trading square in the city center.',
@@ -18,6 +22,9 @@ describe('NPC', () => {
       npcsTemplate: [],
       monstersTemplate: [],
     });
+
+    // Add location to locationsStore
+    locationsStore.locations.push(location);
 
     npc = new NPC(
       150,
@@ -152,5 +159,57 @@ describe('NPC', () => {
   it('should be aggrasive if attacked', () => {
     npc.takeDamage(10);
     expect(npc.relation).toBe(0);
+  });
+
+  it('should update location when NPC moves to a new location', () => {
+    // Create a new location
+    const newLocation = new Location({
+      name: 'New Area',
+      description: 'A new area for testing.',
+      x: 0,
+      y: 0,
+      width: 10,
+      height: 10,
+      npcsTemplate: [],
+      monstersTemplate: [],
+    });
+
+    // Add new location to locationsStore
+    locationsStore.locations.push(newLocation);
+
+    // Move NPC to new location's position
+    npc.position = new Vector2(5, 5);
+
+    // Store initial location reference
+    const initialLocation = npc.location;
+
+    // Call updateLocation
+    npc.updateLocation();
+
+    // Verify NPC was removed from initial location
+    expect(initialLocation.npcs).not.toContain(npc);
+
+    // Verify NPC was added to new location
+    expect(newLocation.npcs).toContain(npc);
+
+    // Verify NPC's location property was updated
+    expect(npc.location).toBe(newLocation);
+  });
+
+  it('should not update location when NPC is not within any new location bounds', () => {
+    // Store initial location reference
+    const initialLocation = npc.location;
+
+    // Move NPC to position outside any location
+    npc.position = new Vector2(1000, 1000);
+
+    // Call updateLocation
+    npc.updateLocation();
+
+    // Verify NPC's location remained unchanged
+    expect(npc.location).toBe(initialLocation);
+
+    // Verify NPC is still in initial location's NPCs array
+    expect(initialLocation.npcs).toContain(npc);
   });
 });
