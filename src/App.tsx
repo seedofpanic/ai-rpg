@@ -52,14 +52,6 @@ function App() {
           />
         </>
       )}
-      <a
-        href="https://github.com/seedofpanic/ai-rpg"
-        className="github-link"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        GitHub
-      </a>
     </>
   );
 }

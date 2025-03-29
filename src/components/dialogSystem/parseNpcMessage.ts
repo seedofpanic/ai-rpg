@@ -1,11 +1,11 @@
 import { getRelationChange, MessageType, NPC } from 'models/npcs/npc';
 import { gameStore } from 'models/gameStore';
-import { v4 as uuidv4 } from 'uuid';
 import { FunctionCall, FunctionDeclarationsTool } from '@google/generative-ai';
 import { npcStore } from 'models/npcs/npcStore';
 import { MobType, mobTypes } from 'models/mobs/mob';
 import { itemsData } from 'models/itemsData';
 import { modelTools } from 'modelTools';
+import { Quest } from 'models/Quest';
 
 interface QuestData {
   action: string;
@@ -18,6 +18,14 @@ interface QuestData {
 }
 
 interface CompletedQuestsData {
+  questId: string;
+}
+
+interface AcceptedQuestData {
+  questId: string;
+}
+
+interface DeclinedQuestData {
   questId: string;
 }
 
@@ -72,9 +80,16 @@ const parseCompletedQuests = (data: CompletedQuestsData, npcContext: NPC) => {
     npcContext.addDialogHistory({
       text: `Quest completed: ${quest.title}`,
       type: MessageType.Action,
-      tokensCount: 10,
     }); // Save to dialogue history
   }
+};
+
+const parseAcceptedQuest = (data: AcceptedQuestData, npcContext: NPC) => {
+  gameStore.acceptQuest(data.questId, npcContext);
+};
+
+const parseDeclinedQuest = (data: DeclinedQuestData, npcContext: NPC) => {
+  gameStore.declineQuest(data.questId, npcContext);
 };
 
 interface QuestData {
@@ -157,37 +172,40 @@ export const addQuests = (type: string, data: QuestData, npcContext: NPC) => {
       return;
     }
 
-    gameStore.addQuest({
-      id: uuidv4(),
-      title,
-      description: quest.description,
-      subject,
-      quantity,
-      action: action || '',
-      completed: false,
-      questGiverId,
-      rewards: {
-        gold: quest.reward.gold,
-        items: quest.reward.item ? [quest.reward.item.itemId] : undefined,
-      },
-      killCount: 0,
-    });
+    npcContext.offerQuest(
+      new Quest({
+        title,
+        description: quest.description,
+        subject,
+        quantity,
+        action: action || '',
+        questGiverId,
+        rewards: {
+          gold: quest.reward.gold,
+          items: quest.reward.item ? [quest.reward.item.itemId] : undefined,
+        },
+      }),
+    );
   }
 };
 
 const functions = {
-  giveKillMonsterQuest: (args: unknown, npcContext: NPC) =>
+  offerKillMonsterQuest: (args: unknown, npcContext: NPC) =>
     addQuests('kill monsters', args as QuestData, npcContext),
-  giveDeliverItemQuest: (args: unknown, npcContext: NPC) =>
+  offerDeliverItemQuest: (args: unknown, npcContext: NPC) =>
     addQuests('bring items', args as QuestData, npcContext),
-  giveKillNpcQuest: (args: unknown, npcContext: NPC) =>
+  offerKillNpcQuest: (args: unknown, npcContext: NPC) =>
     addQuests('kill NPC', args as QuestData, npcContext),
-  giveInformationQuest: (args: unknown, npcContext: NPC) =>
+  offerInformationQuest: (args: unknown, npcContext: NPC) =>
     addQuests('information', args as QuestData, npcContext),
-  giveEscortCharacterQuest: (args: unknown, npcContext: NPC) =>
+  offerEscortCharacterQuest: (args: unknown, npcContext: NPC) =>
     addQuests('escort', args as QuestData, npcContext),
   completeQuest: (args: unknown, npcContext: NPC) =>
     parseCompletedQuests(args as CompletedQuestsData, npcContext),
+  acceptQuest: (args: unknown, npcContext: NPC) =>
+    parseAcceptedQuest(args as AcceptedQuestData, npcContext),
+  declineQuest: (args: unknown, npcContext: NPC) =>
+    parseDeclinedQuest(args as DeclinedQuestData, npcContext),
   setBuyItemsList: (args: unknown, npcContext: NPC) =>
     parseBuyItems(npcContext, args as BuyItemsData),
   setSellItemsList: (args: unknown, npcContext: NPC) =>
@@ -236,7 +254,6 @@ const functions = {
 
 export const parseNpcMessage = (
   text: string,
-  tokensCount: number,
   npcContext: NPC,
   functionCalls: FunctionCall[],
 ) => {
@@ -268,7 +285,6 @@ export const parseNpcMessage = (
   npcContext.addDialogHistory({
     text,
     type: MessageType.NPC,
-    tokensCount,
     moodChange: stateChange,
   }); // Save to dialogue history
 };

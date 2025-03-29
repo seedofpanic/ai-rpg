@@ -39,7 +39,6 @@ export class DialogController {
         this.npcContext.addDialogHistory({
           text: message,
           type: MessageType.Player,
-          tokensCount: 30,
         });
       }
 
@@ -55,14 +54,13 @@ export class DialogController {
         return;
       }
 
-      const { text, tokensCount, functionCalls } = response;
-      parseNpcMessage(text, tokensCount, this.npcContext, functionCalls);
+      const { text, functionCalls } = response;
+      parseNpcMessage(text, this.npcContext, functionCalls);
     } catch (error) {
       console.error('Failed to send message:', error);
-      this.npcContext.addDialogHistory({
+      this.npcContext?.addDialogHistory({
         text: "Sorry, I couldn't process that message. Please try again.",
         type: MessageType.NPC,
-        tokensCount: 20,
       });
     } finally {
       this.setIsLoading(false);
@@ -101,7 +99,6 @@ export class DialogController {
         this.npcContext.addDialogHistory({
           text: textToAdd,
           type: MessageType.Action,
-          tokensCount: 20,
         });
       }
       console.log(`Bought ${itemData.name} for ${item.price} gold.`);
@@ -137,7 +134,6 @@ export class DialogController {
       this.npcContext.addDialogHistory({
         text: `Player sold ${itemData.name} for ${item.price} gold to ${this.npcContext.background.name}`,
         type: MessageType.Action,
-        tokensCount: 20,
       });
       console.log(`Sold ${itemData.name} for ${item.price} gold.`);
       gameStore.player.events.add(

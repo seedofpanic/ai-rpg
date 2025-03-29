@@ -53,10 +53,10 @@ const QuestLog: React.FC = () => {
       </QuestLogHeader>
       {!isCollapsed && (
         <>
-          {gameStore.questLog.length === 0 ? (
+          {gameStore.acceptedQuests.length === 0 ? (
             <p>No active quests</p>
           ) : (
-            gameStore.questLog.map((quest) => (
+            gameStore.acceptedQuests.map((quest) => (
               <QuestItem
                 key={quest.id}
                 quest={quest}
@@ -68,6 +68,18 @@ const QuestLog: React.FC = () => {
               />
             ))
           )}
+          {gameStore.completedQuests.length > 0 &&
+            gameStore.completedQuests.map((quest) => (
+              <QuestItem
+                key={quest.id}
+                quest={quest}
+                npcName={
+                  quest.questGiverId
+                    ? npcStore.npcs[quest.questGiverId]?.background.name
+                    : null
+                }
+              />
+            ))}
         </>
       )}
     </QuestLogContainer>

@@ -47,9 +47,9 @@ const modelTools: Tool = {
       },
     },
     {
-      name: 'giveDeliverItemQuest',
+      name: 'offerDeliverItemQuest',
       description:
-        'Give a quest to the player for bringing or delivering items',
+        'Offer a quest to the player for bringing or delivering items',
       parameters: {
         type: SchemaType.OBJECT,
         properties: {
@@ -96,8 +96,8 @@ const modelTools: Tool = {
       },
     },
     {
-      name: 'giveKillMonsterQuest',
-      description: 'Give a quest to the player',
+      name: 'offerKillMonsterQuest',
+      description: 'Offer a quest to the player',
       parameters: {
         type: SchemaType.OBJECT,
         properties: {
@@ -151,8 +151,8 @@ const modelTools: Tool = {
       },
     },
     {
-      name: 'giveKillNpcQuest',
-      description: 'Give a quest to the player',
+      name: 'offerKillNpcQuest',
+      description: 'Offer a quest to the player',
       parameters: {
         type: SchemaType.OBJECT,
         properties: {
@@ -194,8 +194,8 @@ const modelTools: Tool = {
       },
     },
     {
-      name: 'giveInformationQuest',
-      description: 'Give a quest to the player',
+      name: 'offerInformationQuest',
+      description: 'Offer a quest to the player',
       parameters: {
         type: SchemaType.OBJECT,
         properties: {
@@ -233,9 +233,9 @@ const modelTools: Tool = {
       },
     },
     {
-      name: 'giveEscortCharacterQuest',
+      name: 'offerEscortCharacterQuest',
       description:
-        'Give a quest to the player to escort a character to a specific location',
+        'Offer a quest to the player to escort a character to a specific location',
       parameters: {
         type: SchemaType.OBJECT,
         required: ['quests'],
@@ -291,6 +291,36 @@ const modelTools: Tool = {
         type: SchemaType.OBJECT,
         properties: {
           questId: { type: SchemaType.STRING, nullable: false },
+        },
+        required: ['questId'],
+      },
+    },
+    {
+      name: 'acceptQuest',
+      description: 'Accept a quest',
+      parameters: {
+        type: SchemaType.OBJECT,
+        properties: {
+          questId: {
+            type: SchemaType.STRING,
+            nullable: false,
+            description: 'Quest id to accept',
+          },
+        },
+        required: ['questId'],
+      },
+    },
+    {
+      name: 'declineQuest',
+      description: 'Decline a quest',
+      parameters: {
+        type: SchemaType.OBJECT,
+        properties: {
+          questId: {
+            type: SchemaType.STRING,
+            nullable: false,
+            description: 'Quest id to decline',
+          },
         },
         required: ['questId'],
       },

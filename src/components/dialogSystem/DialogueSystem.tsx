@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { observer } from 'mobx-react';
-import { gameStore } from '../../models/gameStore'; // Import gameStore
-import { itemsData } from '../../models/itemsData';
+import { gameStore } from '../../models/gameStore';
 import { MessageType } from '../../models/npcs/npc';
 import { dialogController } from '../../models/dialogController';
-import QuestItem from 'components/QuestItem';
+import QuestsSection from './QuestsSection';
+import TradeSection from './TradeSection';
 
 interface DialogueSystemProps {
   npcId: string;
@@ -154,46 +154,6 @@ const NPCHeader = styled.div`
   user-select: none;
 `;
 
-const ShopContainer = styled.div`
-  flex: 0.5;
-  background-color: rgba(38, 70, 83, 0.95);
-  border-radius: 8px;
-  padding: 20px;
-  color: white;
-  overflow-y: auto;
-`;
-
-const QuestSection = styled.div`
-  flex: 0.5;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  overflow: auto;
-`;
-
-const ShopItem = styled.div`
-  margin-bottom: 10px;
-  padding: 10px;
-  background-color: #2a9d8f;
-  border-radius: 4px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const ShopButton = styled.button`
-  padding: 5px 10px;
-  border: none;
-  border-radius: 4px;
-  background-color: #e76f51;
-  color: white;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #f4a261;
-  }
-`;
-
 const Box = styled.div`
   display: flex;
   flex-direction: column;
@@ -329,10 +289,6 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
 
   if (!npcContext) return null;
 
-  const availableQuests = gameStore.questLog.filter(
-    (quest) => quest.questGiverId === npcId && !quest.completed,
-  );
-
   return (
     <DialogueContainer
       data-testid="dialog-container"
@@ -424,110 +380,8 @@ const DialogueSystem: React.FC<DialogueSystemProps> = ({
           </InputContainer>
         </Box>
         <Box style={{ flex: '40%', marginLeft: '20px' }} data-testid="shop-box">
-          <ShopContainer data-testid="shop-container">
-            <div data-testid="items-to-sell">
-              <h3 data-testid="sell-header">Shop</h3>
-              {npcContext.sellingItems.length ? (
-                npcContext.sellingItems.map((item, index) => (
-                  <ShopItem data-testid="trade-item" key={index}>
-                    <span data-testid={`sell-item-name-${index}`}>
-                      {itemsData.get(item.itemId)?.name} x{item.quantity || 0}
-                    </span>
-                    <span data-testid={`sell-item-price-${index}`}>
-                      {item.price} gold
-                    </span>
-                    <ShopButton
-                      data-testid="buy-item"
-                      onClick={() => dialogController.handleBuyItem(item)}
-                    >
-                      Buy
-                    </ShopButton>
-                  </ShopItem>
-                ))
-              ) : (
-                <Button
-                  onClick={() => {
-                    setInput('Show me your wares');
-                  }}
-                  data-testid="ask-for-wares-button"
-                >
-                  Ask to see wares
-                </Button>
-              )}
-            </div>
-            <div data-testid="items-to-buy">
-              <h3 data-testid="buy-header">Sell</h3>
-              {npcContext.buyingItems.length ? (
-                npcContext.buyingItems.map((item, index) => {
-                  return (
-                    <ShopItem key={index} data-testid={`buy-item-${index}`}>
-                      <span data-testid={`buy-item-name-${index}`}>
-                        {itemsData.get(item.itemId)?.name} x{item.quantity || 0}
-                      </span>
-                      <span data-testid={`buy-item-price-${index}`}>
-                        {item.price} gold
-                      </span>
-                      <ShopButton
-                        data-testid="sell-item"
-                        onClick={() => dialogController.handleSellItem(item)}
-                        disabled={!item.quantity}
-                        style={{
-                          opacity: item.quantity ? 1 : 0.5,
-                          cursor: item.quantity ? 'pointer' : 'not-allowed',
-                        }}
-                      >
-                        Sell
-                      </ShopButton>
-                    </ShopItem>
-                  );
-                })
-              ) : (
-                <Button
-                  onClick={() => {
-                    setInput('What will you buy? Check my inventory');
-                  }}
-                  data-testid="ask-to-sell-button"
-                >
-                  Ask to sell something
-                </Button>
-              )}
-            </div>
-          </ShopContainer>
-          <QuestSection data-testid="dialog-quest-section">
-            <h3 data-testid="available-quests-header">Available Quests</h3>
-            {availableQuests.length ? (
-              availableQuests.map((quest) => (
-                <QuestItem
-                  key={quest.id}
-                  quest={quest}
-                  npcName={npcContext.background.name}
-                  data-testid={`available-quest-${quest.id}`}
-                />
-              ))
-            ) : (
-              <Button
-                onClick={() => {
-                  setInput('Do you have a task for me?');
-                }}
-                data-testid="ask-for-quest-button"
-              >
-                Ask for a quest
-              </Button>
-            )}
-            <h3 data-testid="completed-quests-header">Completed Quests</h3>
-            {gameStore.questLog
-              .filter(
-                (quest) => quest.questGiverId === npcId && quest.completed,
-              )
-              .map((quest) => (
-                <QuestItem
-                  key={quest.id}
-                  quest={quest}
-                  npcName={npcContext.background.name}
-                  data-testid={`completed-quest-${quest.id}`}
-                />
-              ))}
-          </QuestSection>
+          <TradeSection setInput={setInput} />
+          <QuestsSection npcId={npcId} setInput={setInput} />
         </Box>
       </BoxRow>
     </DialogueContainer>

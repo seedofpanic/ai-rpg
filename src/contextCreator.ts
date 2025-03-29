@@ -72,8 +72,11 @@ ${locationsStore.locations
       .map((npc) => {
         const isAlive = npc.isAlive();
 
-        return `${npc.background.name} ${npc.background.title} (is ${isAlive ? 'Alive' : 'Dead'})\n${isAlive ? 
-          `${npc.background.name}'s Inventory:\n${npc.inventory?.map((item) => `- ${itemsData.get(item.itemId)?.name} x${item.quantity}`).join('\n') || 'No items in inventory'}` : ''}`;
+        return `${npc.background.name} ${npc.background.title} (is ${isAlive ? 'Alive' : 'Dead'})\n${
+          isAlive
+            ? `${npc.background.name}'s Inventory:\n${npc.inventory?.map((item) => `- ${itemsData.get(item.itemId)?.name} x${item.quantity}`).join('\n') || 'No items in inventory'}`
+            : ''
+        }`;
       })
       .join('\n')}`;
     const mobs = `Monsters in ${loc.name}:
@@ -106,7 +109,7 @@ ${Array.from(player.events)
 
 Player's Active Global Quests (don't speak about them in your response):
 ${
-  gameStore.questLog
+  gameStore.acceptedQuests
     ?.filter((quest) => !quest.completed && quest.questGiverId === null)
     .map((quest) => `- ${quest.title}`)
     .join('\n') || 'No active global quests'
@@ -114,7 +117,7 @@ ${
 
 Player's Active Quests for you:
 ${
-  gameStore.questLog
+  gameStore.acceptedQuests
     ?.filter((quest) => !quest.completed && quest.questGiverId === npcId)
     .map((quest) => {
       const { action, quantity } = quest;
@@ -132,10 +135,17 @@ ${
 
 Player's Completed Quests for you:
 ${
-  gameStore.questLog
-    .filter((quest) => quest.completed && quest.questGiverId === npcId)
+  gameStore.completedQuests
+    .filter((quest) => quest.questGiverId === npcId)
     .map((quest) => `- ${quest.title}`)
     .join('\n') || 'No completed quests'
+}
+
+You offered quests to the player:
+${
+  npcContext.offeredQuests
+    .map((quest) => `- ${quest.title}, id: ${quest.id}`)
+    .join('\n') || 'No offered quests'
 }
 
 ${npcContext.background.name} currently sells:
@@ -151,21 +161,6 @@ Player's inventory:${
         (item) =>
           ` - ${itemsData.get(item.itemId)?.name} x${item.quantity} cost ${itemsData.get(item.itemId)?.price} piece`,
       ),
-      ...gameStore.questLog
-        .filter((quest) => quest.questGiverId === npcId)
-        .map((quest) => {
-          const { action, subject } = quest;
-          const targetNpc = Object.keys(npcStore.npcs).find(
-            (npc) => npcStore.npcs[npc].background.name === subject,
-          );
-          if (
-            action === 'kill' &&
-            targetNpc &&
-            !npcStore.npcs[targetNpc].isAlive()
-          ) {
-            return `      - ${subject}'s head`;
-          }
-        }),
     ].join('\n') || '\nNo items in inventory'
   }
 
@@ -198,15 +193,21 @@ Whenever you engage in any trade-related action, always call the setSellItemsLis
 - Applying discounts.
 If you want to buy something from the player or update prices in your buying list, call setBuyItemsList function with the list of items you want to buy.
 If you give a quest, or ask for something, or command player to do something, or agreeing for player to help you with something, or agreeing for player to do something call a quest function:
-- if you want player to kill some monsters, call giveKillMonsterQuest function.
-- if you want player to bring you some items, call giveBringItemQuest function.
-- if you want player to kill some NPC, call giveKillNpcQuest function.
-- if you want player to find some information, call giveInformationQuest function.
-- if you want player to deliver a letter or an item to a specific character, call giveDeliverItemQuest function.
+- if you want player to kill some monsters, call offerKillMonsterQuest function.
+- if you want player to bring you some items, call offerDeliverItemQuest function.
+- if you want player to kill some NPC, call offerKillNpcQuest function.
+- if you want player to find some information, call offerInformationQuest function.
+- if you want player to deliver a letter or an item to a specific character, call offerEscortCharacterQuest function.
+- if you are speaking about a quest, offer it to player if you haven't offered it yet.
+- if you are speaking about something bothering you, offer a quest to player if you haven't offered it yet.
 - if you want to start following player, call startFollowingPlayer function.
 - if you want to stop following player, call stopFollowingPlayer function.
-- if you want player to escort you or someone else to a specific location, call giveEscortCharacterQuest function.
-- if you need to find bring someone back to you or to some specific location, call giveEscortCharacterQuest function.
+- if you want player to escort you or someone else to a specific location, call offerEscortCharacterQuest function.
+- if you need to find bring someone back to you or to some specific location, call offerEscortCharacterQuest function.
+- if you offer a quest to player and he is showing willigness to do the quest, call acceptQuest function.
+- if you offer a quest to player and he is saying that he will not do it, call declineQuest function.
+- if you offer a quest to player and he is not willing to do it, call declineQuest function.
+- if player is not willing to do somthing, call declineQuest function for the accoridng quest.
 
 Quests rules:
 When assigning kill quests, only target monsters that are currently present in the area. The number of monsters requested must not exceed the actual count of living monsters in the vicinity.

@@ -40,7 +40,7 @@ Someone is making sacrifices — find out who, and why.`,
 
   witness.additionalInstructions = `- You witnessed ${mainCulprit.background.name} sacrificing a villager. He got him drunk brought to his house and sacrificed him.
 - Ask player to do a quest for you to find out what you know.
-You want the player to investigate ${mainCulprit.background.name}, but you don’t want to share everything you know upfront.
+- You want the player to investigate ${mainCulprit.background.name}, but you don't want to share everything you know upfront.
 You must not mention ${mainCulprit.background.name} at all until the player completes at least one quest for you.
   `;
 
@@ -51,16 +51,26 @@ You must not mention ${mainCulprit.background.name} at all until the player comp
   const worriedGuy = npcStore.npcs[worriedGuyId];
 
   worriedGuy.additionalInstructions = `- You are worried because you know that ${witness.background.name} witnessed something connected to people disappearing in Grenthollow.
-Ask player to do a quest for you to find out what you know.
-You want the player to investigate ${witness.background.name}, but you don’t want to share everything you know upfront.
+- Ask player to do a quest for you to find out what you know.
+- You want the player to investigate ${witness.background.name}, but you don't want to share everything you know upfront.
 You must not mention ${witness.background.name} at all until the player completes at least one quest for you.
   `;
 
-  npcsIdsPool.forEach((id) => {
+  const knowsWorriedGuy = [...npcsIdsPool];
+  const knowsWorriedGuyCount = Math.min(
+    Math.floor(Math.random() * 3) + 1,
+    knowsWorriedGuy.length,
+  );
+
+  for (let i = 0; i < knowsWorriedGuyCount; i++) {
+    const id = knowsWorriedGuy.splice(
+      Math.floor(Math.random() * knowsWorriedGuy.length),
+      1,
+    )[0];
     const npc = npcStore.npcs[id];
     npc.additionalInstructions = `You suspect that ${worriedGuy.background.name} is involved in the disappearances in Grenthollow.
-You want the player to investigate ${worriedGuy.background.name}, but you don’t want to share everything you know upfront.
+- You want the player to investigate ${worriedGuy.background.name}, but you don't want to share everything you know upfront.
 You must not mention ${worriedGuy.background.name} at all until the player completes at least one quest for you.
     `;
-  });
+  }
 };

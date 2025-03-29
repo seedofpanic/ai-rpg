@@ -20,13 +20,19 @@ const GameContainer = styled.div`
   overflow: auto;
 `;
 
-const HelpButton = styled.button`
+const ButtonsBox = styled.div`
   position: fixed;
   top: 10px;
   left: 50%;
   transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  align-items: center;
+`;
+
+const HelpButton = styled.button`
   padding: 10px 20px;
-  font-size: 18px;
+  font-size: 24px;
   background-color: #e76f51;
   color: white;
   border: none;
@@ -38,20 +44,31 @@ const HelpButton = styled.button`
   }
 `;
 
-const WhatsNewButton = styled.button`
-  position: fixed;
-  top: 10px;
-  left: calc(50% + 160px);
+const GithubButton = styled.button`
   padding: 10px 20px;
   font-size: 18px;
-  background-color: #2a9d8f;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #4a4a4a;
+  color: white;
+
+  &:hover {
+    background-color: #6a6a6a;
+  }
+`;
+
+const WhatsNewButton = styled.button`
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #1a6b61;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 
   &:hover {
-    background-color: #218879;
+    background-color: #145048;
   }
 `;
 
@@ -214,8 +231,17 @@ const Game: React.FC = () => {
           )}
         </>
       )}
-      <HelpButton onClick={toggleHelp}>Help</HelpButton>
-      <WhatsNewButton onClick={openWhatsNew}>What&apos;s New</WhatsNewButton>
+      <ButtonsBox>
+        <WhatsNewButton onClick={openWhatsNew}>What&apos;s New</WhatsNewButton>
+        <HelpButton onClick={toggleHelp}>Help</HelpButton>
+        <GithubButton
+            onClick={() =>
+              window.open('https://github.com/seedofpanic/ai-rpg', '_blank')
+            }
+        >
+          GitHub
+        </GithubButton>
+      </ButtonsBox>
       {isHelpOpen && <HelpDialog onClose={toggleHelp} />}
     </GameContainer>
   );

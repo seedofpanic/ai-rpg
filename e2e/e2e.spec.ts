@@ -193,7 +193,7 @@ test.describe("AI RPG E2E Tests", () => {
           contentType: "application/json",
           body: JSON.stringify(
             mockGeminiResponse("Please escort me to the tavern", {
-              name: "giveEscortCharacterQuest",
+              name: "offerEscortCharacterQuest",
               args: {
                 quests: [
                   {

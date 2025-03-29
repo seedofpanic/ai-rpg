@@ -14,7 +14,10 @@ import { researchersCampBuilder } from './scenarios/researchersCampBuilder';
 import { Mob, MobType } from './mobs/mob';
 import { projectileStore } from './projectileStore';
 import { villageBuilder } from './scenarios/villageBuilder';
+import { NPC, MessageType } from './npcs/npc';
+
 type DayTime = 'morning' | 'afternoon' | 'evening' | 'night';
+
 type Weather =
   | 'clear sky'
   | 'cloudy'
@@ -23,6 +26,7 @@ type Weather =
   | 'stormy'
   | 'clear'
   | 'overcast';
+
 const weather: Weather[] = [
   'clear sky',
   'cloudy',
@@ -44,12 +48,13 @@ export class GameStore {
   currentNpcId: string | null = null;
   player: Player = {} as Player;
   isOver = true;
-  questLog: Quest[] = [];
   hoveredNpcId: string | null = null;
   api: 'gemini' | 'proxy' = 'gemini';
   backgroundsData: BackgroundTemplate[] = [];
   dayTime: DayTime = 'morning';
   weather: Weather = 'clear sky';
+  acceptedQuests: Quest[] = [];
+  completedQuests: Quest[] = [];
   possibleReplies: Record<string, string[]> = {};
   lastMessageError: string | null = null;
 
@@ -88,19 +93,40 @@ export class GameStore {
   }
 
   addQuest(quest: Quest) {
-    makeAutoObservable(quest);
+    this.acceptedQuests.push(quest);
+  }
 
-    const index = this.questLog.findIndex((q) => q.title === quest.title);
-    if (index !== -1) {
-      this.questLog[index] = quest;
-    } else {
-      this.questLog.push(quest);
+  acceptQuest(questId: string, npc: NPC) {
+    const quest = npc.removeOfferedQuest(questId);
+    if (quest) {
+      gameStore.addQuest(quest);
+
+      if (npc) {
+        npc.addDialogHistory({
+          text: `You accepted the quest: ${quest.title}`,
+          type: MessageType.Action,
+        });
+      }
+    }
+  }
+
+  declineQuest(questId: string, npc: NPC) {
+    const declinedQuest = npc.removeOfferedQuest(questId);
+    if (declinedQuest && npc) {
+      npc.addDialogHistory({
+        text: `You declined the quest: ${declinedQuest.title}`,
+        type: MessageType.Action,
+      });
     }
   }
 
   completeQuest(questId: string) {
-    const quest = this.questLog.find((q) => q.id === questId);
+    const quest = this.acceptedQuests.splice(
+      this.acceptedQuests.findIndex((q) => q.id === questId),
+      1,
+    )[0];
     if (quest && !quest.completed) {
+      this.completedQuests.push(quest);
       if (quest.action.toLowerCase() === 'bring') {
         if (itemsData.has(quest.subject)) {
           this.player.removeItemFromInventory({
@@ -201,7 +227,8 @@ export class GameStore {
 
     projectileStore.reset();
 
-    this.questLog.length = 0;
+    this.acceptedQuests.length = 0;
+    this.completedQuests.length = 0;
     this.isOver = false;
     combatLogStore.log.length = 0;
     locationsStore.reset();
@@ -253,7 +280,7 @@ export class GameStore {
   }
 
   updateKillQuest(subject: string, questGiverId?: string) {
-    for (const quest of this.questLog) {
+    for (const quest of this.acceptedQuests) {
       if (quest.subject.toLowerCase() === subject.toLowerCase()) {
         if (quest.questGiverId) {
           quest.killCount++;
@@ -262,7 +289,7 @@ export class GameStore {
     }
 
     if (questGiverId) {
-      this.questLog = this.questLog.filter(
+      this.acceptedQuests = this.acceptedQuests.filter(
         (q) => q.questGiverId !== questGiverId,
       );
     }

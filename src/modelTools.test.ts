@@ -40,6 +40,14 @@ type ExtendedSchema = {
         type: SchemaType;
         nullable: boolean;
       };
+      subject?: {
+        type: SchemaType;
+        nullable: boolean;
+      };
+      locationId?: {
+        type: SchemaType;
+        nullable: boolean;
+      };
       reward?: {
         type: SchemaType;
         properties?: {
@@ -72,6 +80,24 @@ interface ExtendedFunctionDeclaration
 }
 
 describe('modelTools', () => {
+  describe('possibleReplies tool', () => {
+    const repliesTool = (
+      modelTools as unknown as {
+        functionDeclarations: ExtendedFunctionDeclaration[];
+      }
+    ).functionDeclarations.find((tool) => tool.name === 'possibleReplies');
+
+    it('should have correct schema definition', () => {
+      expect(repliesTool).toBeDefined();
+      if (!repliesTool) return;
+
+      const params = repliesTool.parameters;
+      expect(params.type).toBe(SchemaType.OBJECT);
+      expect(params.properties?.replies.type).toBe(SchemaType.ARRAY);
+      expect(params.properties?.replies.items?.type).toBe(SchemaType.STRING);
+    });
+  });
+
   describe('giveReaction tool', () => {
     const reactionTool = (
       modelTools as unknown as {
@@ -118,12 +144,14 @@ describe('modelTools', () => {
     });
   });
 
-  describe('giveDeliverItemQuest tool', () => {
+  describe('offerDeliverItemQuest tool', () => {
     const questTool = (
       modelTools as unknown as {
         functionDeclarations: ExtendedFunctionDeclaration[];
       }
-    ).functionDeclarations.find((tool) => tool.name === 'giveDeliverItemQuest');
+    ).functionDeclarations.find(
+      (tool) => tool.name === 'offerDeliverItemQuest',
+    );
 
     it('should have correct schema definition', () => {
       expect(questTool).toBeDefined();
@@ -157,12 +185,14 @@ describe('modelTools', () => {
     });
   });
 
-  describe('giveKillMonsterQuest tool', () => {
+  describe('offerKillMonsterQuest tool', () => {
     const questTool = (
       modelTools as unknown as {
         functionDeclarations: ExtendedFunctionDeclaration[];
       }
-    ).functionDeclarations.find((tool) => tool.name === 'giveKillMonsterQuest');
+    ).functionDeclarations.find(
+      (tool) => tool.name === 'offerKillMonsterQuest',
+    );
 
     it('should have correct schema definition', () => {
       expect(questTool).toBeDefined();
@@ -196,12 +226,12 @@ describe('modelTools', () => {
     });
   });
 
-  describe('giveKillNpcQuest tool', () => {
+  describe('offerKillNpcQuest tool', () => {
     const questTool = (
       modelTools as unknown as {
         functionDeclarations: ExtendedFunctionDeclaration[];
       }
-    ).functionDeclarations.find((tool) => tool.name === 'giveKillNpcQuest');
+    ).functionDeclarations.find((tool) => tool.name === 'offerKillNpcQuest');
 
     it('should have correct schema definition', () => {
       expect(questTool).toBeDefined();
@@ -233,6 +263,86 @@ describe('modelTools', () => {
     });
   });
 
+  describe('offerInformationQuest tool', () => {
+    const questTool = (
+      modelTools as unknown as {
+        functionDeclarations: ExtendedFunctionDeclaration[];
+      }
+    ).functionDeclarations.find(
+      (tool) => tool.name === 'offerInformationQuest',
+    );
+
+    it('should have correct schema definition', () => {
+      expect(questTool).toBeDefined();
+      if (!questTool) return;
+
+      const params = questTool.parameters;
+      expect(params.type).toBe(SchemaType.OBJECT);
+      expect(params.properties?.quests.type).toBe(SchemaType.ARRAY);
+    });
+
+    it('should have correct quest item schema', () => {
+      expect(questTool).toBeDefined();
+      if (!questTool) return;
+
+      const questSchema = questTool.parameters.properties?.quests;
+      const questItemSchema = questSchema?.items;
+      expect(questItemSchema?.type).toBe(SchemaType.OBJECT);
+
+      const properties = questItemSchema?.properties;
+      expect(properties).toBeDefined();
+      if (!properties) return;
+
+      expect(properties.name?.type).toBe(SchemaType.STRING);
+      expect(properties.name?.nullable).toBe(false);
+      expect(properties.description?.type).toBe(SchemaType.STRING);
+      expect(properties.description?.nullable).toBe(false);
+      expect(properties.subject?.type).toBe(SchemaType.STRING);
+      expect(properties.subject?.nullable).toBe(false);
+    });
+  });
+
+  describe('offerEscortCharacterQuest tool', () => {
+    const questTool = (
+      modelTools as unknown as {
+        functionDeclarations: ExtendedFunctionDeclaration[];
+      }
+    ).functionDeclarations.find(
+      (tool) => tool.name === 'offerEscortCharacterQuest',
+    );
+
+    it('should have correct schema definition', () => {
+      expect(questTool).toBeDefined();
+      if (!questTool) return;
+
+      const params = questTool.parameters;
+      expect(params.type).toBe(SchemaType.OBJECT);
+      expect(params.properties?.quests.type).toBe(SchemaType.ARRAY);
+    });
+
+    it('should have correct quest item schema', () => {
+      expect(questTool).toBeDefined();
+      if (!questTool) return;
+
+      const questSchema = questTool.parameters.properties?.quests;
+      const questItemSchema = questSchema?.items;
+      expect(questItemSchema?.type).toBe(SchemaType.OBJECT);
+
+      const properties = questItemSchema?.properties;
+      expect(properties).toBeDefined();
+      if (!properties) return;
+
+      expect(properties.name?.type).toBe(SchemaType.STRING);
+      expect(properties.name?.nullable).toBe(false);
+      expect(properties.description?.type).toBe(SchemaType.STRING);
+      expect(properties.description?.nullable).toBe(false);
+      expect(properties.subject?.type).toBe(SchemaType.STRING);
+      expect(properties.subject?.nullable).toBe(false);
+      expect(properties.locationId?.type).toBe(SchemaType.STRING);
+      expect(properties.locationId?.nullable).toBe(false);
+    });
+  });
+
   describe('completeQuest tool', () => {
     const completeQuestTool = (
       modelTools as unknown as {
@@ -245,6 +355,42 @@ describe('modelTools', () => {
       if (!completeQuestTool) return;
 
       const params = completeQuestTool.parameters;
+      expect(params.type).toBe(SchemaType.OBJECT);
+      expect(params.properties?.questId.type).toBe(SchemaType.STRING);
+      expect(params.properties?.questId.nullable).toBe(false);
+    });
+  });
+
+  describe('acceptQuest tool', () => {
+    const acceptQuestTool = (
+      modelTools as unknown as {
+        functionDeclarations: ExtendedFunctionDeclaration[];
+      }
+    ).functionDeclarations.find((tool) => tool.name === 'acceptQuest');
+
+    it('should have correct schema definition', () => {
+      expect(acceptQuestTool).toBeDefined();
+      if (!acceptQuestTool) return;
+
+      const params = acceptQuestTool.parameters;
+      expect(params.type).toBe(SchemaType.OBJECT);
+      expect(params.properties?.questId.type).toBe(SchemaType.STRING);
+      expect(params.properties?.questId.nullable).toBe(false);
+    });
+  });
+
+  describe('declineQuest tool', () => {
+    const declineQuestTool = (
+      modelTools as unknown as {
+        functionDeclarations: ExtendedFunctionDeclaration[];
+      }
+    ).functionDeclarations.find((tool) => tool.name === 'declineQuest');
+
+    it('should have correct schema definition', () => {
+      expect(declineQuestTool).toBeDefined();
+      if (!declineQuestTool) return;
+
+      const params = declineQuestTool.parameters;
       expect(params.type).toBe(SchemaType.OBJECT);
       expect(params.properties?.questId.type).toBe(SchemaType.STRING);
       expect(params.properties?.questId.nullable).toBe(false);
@@ -322,6 +468,64 @@ describe('modelTools', () => {
       expect(properties.quantity?.nullable).toBe(false);
       expect(properties.price?.type).toBe(SchemaType.NUMBER);
       expect(properties.price?.nullable).toBe(false);
+    });
+  });
+
+  describe('memorizeImportantInformation tool', () => {
+    const memorizeTool = (
+      modelTools as unknown as {
+        functionDeclarations: ExtendedFunctionDeclaration[];
+      }
+    ).functionDeclarations.find(
+      (tool) => tool.name === 'memorizeImportantInformation',
+    );
+
+    it('should have correct schema definition', () => {
+      expect(memorizeTool).toBeDefined();
+      if (!memorizeTool) return;
+
+      const params = memorizeTool.parameters;
+      expect(params.type).toBe(SchemaType.OBJECT);
+      expect(params.properties?.information.type).toBe(SchemaType.STRING);
+      expect(params.properties?.information.nullable).toBe(false);
+    });
+  });
+
+  describe('spawnMonster tool', () => {
+    const spawnTool = (
+      modelTools as unknown as {
+        functionDeclarations: ExtendedFunctionDeclaration[];
+      }
+    ).functionDeclarations.find((tool) => tool.name === 'spawnMonster');
+
+    it('should have correct schema definition', () => {
+      expect(spawnTool).toBeDefined();
+      if (!spawnTool) return;
+
+      const params = spawnTool.parameters;
+      expect(params.type).toBe(SchemaType.OBJECT);
+      expect(params.properties?.monsterType.type).toBe(SchemaType.STRING);
+      expect(params.properties?.quantity.type).toBe(SchemaType.NUMBER);
+      expect(params.properties?.location.type).toBe(SchemaType.STRING);
+    });
+  });
+
+  describe('startFollowingPlayer and stopFollowingPlayer tools', () => {
+    const startFollowTool = (
+      modelTools as unknown as {
+        functionDeclarations: ExtendedFunctionDeclaration[];
+      }
+    ).functionDeclarations.find((tool) => tool.name === 'startFollowingPlayer');
+
+    const stopFollowTool = (
+      modelTools as unknown as {
+        functionDeclarations: ExtendedFunctionDeclaration[];
+      }
+    ).functionDeclarations.find((tool) => tool.name === 'stopFollowingPlayer');
+
+    it('should have correct definitions', () => {
+      expect(startFollowTool).toBeDefined();
+      expect(stopFollowTool).toBeDefined();
     });
   });
 });

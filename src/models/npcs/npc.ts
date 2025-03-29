@@ -13,6 +13,7 @@ import { combatLogStore } from 'components/CombatLog';
 import { roleSpecificNeeds } from './roleNeeds';
 import { gameStore } from '../gameStore';
 import { roleSpecificItems } from './roleItems';
+import { Quest } from 'models/Quest';
 
 export interface InventoryItem {
   itemId: string;
@@ -34,7 +35,6 @@ export enum MessageType {
 interface Message {
   text: string;
   type: MessageType;
-  tokensCount: number;
   moodChange?: { state: string; change: number };
 }
 
@@ -258,6 +258,7 @@ export class NPC {
   sellingItems: TradeItem[] = [];
   buyingItems: TradeItem[] = [];
   isFollowingPlayer: boolean = false;
+  offeredQuests: Quest[] = [];
 
   // utils
   private actionCooldown: number = 0;
@@ -299,6 +300,18 @@ export class NPC {
     NPC.generateFamily(this);
     this.updateLocation();
     makeAutoObservable(this);
+  }
+
+  offerQuest(quest: Quest) {
+    this.offeredQuests.push(quest);
+  }
+
+  removeOfferedQuest(questId: string): Quest | undefined {
+    const index = this.offeredQuests.findIndex((q) => q.id === questId);
+    if (index !== -1) {
+      return this.offeredQuests.splice(index, 1)[0];
+    }
+    return undefined;
   }
 
   static generateFamily(npc: NPC) {
@@ -627,7 +640,6 @@ export class NPC {
     this.addDialogHistory({
       text: `${this.background.name} is now following you.`,
       type: MessageType.Action,
-      tokensCount: 10,
     });
   }
 
@@ -636,7 +648,6 @@ export class NPC {
     this.addDialogHistory({
       text: `${this.background.name} stopped following you.`,
       type: MessageType.Action,
-      tokensCount: 10,
     });
   }
 }
