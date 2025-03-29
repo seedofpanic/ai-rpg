@@ -68,13 +68,12 @@ ${itemsDataContext}
 Other Locations:
 ${locationsStore.locations
   ?.map((loc) => {
-    const npcs = ` Characters in ${loc.name}:
-    ${Array.from(loc.npcs)
+    const npcs = `Characters in ${loc.name}:\n${Array.from(loc.npcs)
       .map((npc) => {
         const isAlive = npc.isAlive();
 
-        return `${npc.background.name} ${npc.background.title} (is ${isAlive ? 'Alive' : 'Dead'})
-        ${isAlive ? `- Inventory: ${npc.inventory?.map((item) => `- ${itemsData.get(item.itemId)?.name} x${item.quantity}`).join('\n') || 'No items in inventory'}` : ''}`;
+        return `${npc.background.name} ${npc.background.title} (is ${isAlive ? 'Alive' : 'Dead'})\n${isAlive ? 
+          `${npc.background.name}'s Inventory:\n${npc.inventory?.map((item) => `- ${itemsData.get(item.itemId)?.name} x${item.quantity}`).join('\n') || 'No items in inventory'}` : ''}`;
       })
       .join('\n')}`;
     const mobs = `Monsters in ${loc.name}:
