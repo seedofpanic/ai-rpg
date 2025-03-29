@@ -32,8 +32,8 @@ export class Location {
     minQuantity: number;
     maxQuantity: number;
   }[];
-  npcs: NPC[] = [];
-  monsters: Mob[] = [];
+  npcs: Set<NPC> = new Set();
+  monsters: Set<Mob> = new Set();
 
   constructor(data: locationData) {
     this.name = data.name;
@@ -64,7 +64,7 @@ class LocationsStore {
           Math.random() * (template.maxQuantity - template.minQuantity + 1),
         ) + template.minQuantity;
       for (let i = 0; i < quantity; i++) {
-        location.npcs.push(npcStore.generateRandomNPC(location));
+        location.npcs.add(npcStore.generateRandomNPC(location));
       }
     }
   }
@@ -76,7 +76,7 @@ class LocationsStore {
           Math.random() * (template.maxQuantity - template.minQuantity + 1),
         ) + template.minQuantity;
       for (let i = 0; i < quantity; i++) {
-        location.monsters.push(
+        location.monsters.add(
           mobStore.generateRandomMob(location, template.type),
         );
       }
@@ -312,7 +312,7 @@ class LocationsStore {
           suitableLocations[
             Math.floor(Math.random() * suitableLocations.length)
           ];
-        randomLocation.npcs.push(
+        randomLocation.npcs.add(
           npcStore.generateRandomNPC(randomLocation, background),
         );
       }

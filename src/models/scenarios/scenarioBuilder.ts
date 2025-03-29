@@ -19,7 +19,6 @@ export const buildStory = () => {
 Someone is making sacrifices — find out who, and why.`,
     subject: mainCulprit.background.name,
     quantity: 0,
-    locationId: null,
     killCount: 0,
     completed: false,
     questGiverId: null,

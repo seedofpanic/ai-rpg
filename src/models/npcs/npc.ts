@@ -280,8 +280,8 @@ export class NPC {
     this.position = new Vector2(x, y);
     this.background = background;
     this.location = location;
-    if (!this.location.npcs.includes(this)) {
-      this.location.npcs.push(this);
+    if (!this.location.npcs.has(this)) {
+      this.location.npcs.add(this);
     }
     this.dialogueHistory = null;
     this.inventory = inventory;
@@ -297,6 +297,7 @@ export class NPC {
       children: [],
     };
     NPC.generateFamily(this);
+    this.updateLocation();
     makeAutoObservable(this);
   }
 
@@ -521,11 +522,9 @@ export class NPC {
     );
 
     if (location && location !== this.location) {
-      this.location.npcs = this.location.npcs.filter(
-        (npc) => npc.id !== this.id,
-      );
+      this.location.npcs.delete(this);
       this.location = location;
-      this.location.npcs.push(this);
+      this.location.npcs.add(this);
     }
   }
 
