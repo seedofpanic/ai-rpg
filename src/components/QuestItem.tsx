@@ -78,7 +78,7 @@ const QuestItem: React.FC<QuestItemComponentProps> = ({ quest, npcName }) => {
     if (quest.action === 'kill') {
       return `${quest.killCount}/${quest.quantity} ${quest.subject} killed`;
     } else if (quest.action === 'bring') {
-      return `${gameStore.player.inventory.find((slot) => slot.itemId === quest.subject)?.quantity || 0}/${quest.quantity} ${itemsData.get(quest.subject)?.name || ''} collected`;
+      return `${gameStore.player?.inventory.find((slot) => slot.itemId === quest.subject)?.quantity || 0}/${quest.quantity} ${itemsData.get(quest.subject)?.name || ''} collected`;
     } else if (quest.action === 'find') {
       return `In progress`;
     }

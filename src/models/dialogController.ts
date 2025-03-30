@@ -73,14 +73,14 @@ export class DialogController {
 
   handleBuyItem(item: TradeItem): void {
     if (this.npcContext === null) return;
-    if (gameStore.player.gold >= item.price) {
+    if ((gameStore.player?.gold ?? 0) >= item.price) {
       const itemData = itemsData.get(item.itemId);
 
       if (!itemData) {
         return;
       }
 
-      gameStore.player.updateGold(-item.price);
+      gameStore.player?.updateGold(-item.price);
       this.npcContext.updateGold(item.price);
       this.npcContext.removeBuyItem(item, 1);
 
@@ -102,8 +102,8 @@ export class DialogController {
         });
       }
       console.log(`Bought ${itemData.name} for ${item.price} gold.`);
-      gameStore.player.events.add(
-        `${gameStore.player.name} traded with ${this.npcContext.background.name}`,
+      gameStore.player?.events.add(
+        `${gameStore.player?.name} traded with ${this.npcContext.background.name}`,
       );
     } else {
       console.log('Not enough gold.');
@@ -111,7 +111,7 @@ export class DialogController {
   }
 
   handleSellItem(item: TradeItem): void {
-    if (!gameStore.player.inventory.find((i) => i.itemId === item.itemId)) {
+    if (!gameStore.player?.inventory.find((i) => i.itemId === item.itemId)) {
       return;
     }
 
@@ -123,7 +123,7 @@ export class DialogController {
         return;
       }
 
-      gameStore.player.updateGold(item.price);
+      gameStore.player?.updateGold(item.price);
       this.npcContext.updateGold(-item.price);
       this.npcContext.removeBuyItem(item, 1);
       gameStore.player?.removeItemFromInventory({
@@ -136,8 +136,8 @@ export class DialogController {
         type: MessageType.Action,
       });
       console.log(`Sold ${itemData.name} for ${item.price} gold.`);
-      gameStore.player.events.add(
-        `${gameStore.player.name} traded with ${this.npcContext.background.name}`,
+      gameStore.player?.events.add(
+        `${gameStore.player?.name} traded with ${this.npcContext.background.name}`,
       );
     }
   }

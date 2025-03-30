@@ -9,7 +9,6 @@ import { mobStore } from 'models/mobs/mobStore';
 import { locationsStore } from 'models/location'; // Import locations
 import { Player } from 'models/Player'; // Import Player
 import ProjectileView from './ProjectileView';
-import { Vector2 } from 'utils/vector2';
 import { MOB_STATS } from 'models/mobs/mobStats';
 
 const MapContainer = styled.div`
@@ -49,19 +48,8 @@ interface MapProps {
 }
 
 const Map: React.FC<MapProps> = ({ onNpcInteraction, player, onNpcHover }) => {
-  const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (player.combatMode !== 'ranged') {
-      return;
-    }
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    player.shootArrow(new Vector2(x, y));
-  };
-
   return (
-    <MapContainer onClick={handleMapClick}>
+    <MapContainer>
       {locationsStore.locations.map((location, index) => (
         <LocationContainer
           key={index}
@@ -93,7 +81,7 @@ const Map: React.FC<MapProps> = ({ onNpcInteraction, player, onNpcHover }) => {
             race={npc.background.race}
             personality={npc.background.personality}
             relation={npc.relation}
-            onClick={() => onNpcInteraction(id)}
+            onMouseDown={() => onNpcInteraction(id)}
             onMouseEnter={() => onNpcHover(id)}
             onMouseLeave={() => onNpcHover(null)}
           />
@@ -114,7 +102,7 @@ const Map: React.FC<MapProps> = ({ onNpcInteraction, player, onNpcHover }) => {
             maxHealth={MOB_STATS[mob.type].health}
             isAggressive={mob.isAggressive}
             isAlive={mob.isAlive()}
-            onClick={() => onNpcInteraction(id)}
+            onMouseDown={() => onNpcInteraction(id)}
           />
         );
       })}

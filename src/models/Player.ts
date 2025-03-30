@@ -5,6 +5,10 @@ import { Equipment, itemsData } from './itemsData';
 import { MagicEffects } from './MagicEffects';
 import { Projectile } from './Projectile';
 import { projectileStore } from './projectileStore';
+import { gameStore } from './gameStore';
+import { mobStore } from './mobs/mobStore';
+import { Mob } from './mobs/mob';
+import { NPC } from './npcs/npc';
 
 interface InventorySlot {
   itemId: string;
@@ -55,6 +59,36 @@ export class Player {
   };
 
   private movementCooldown: number = 0;
+
+  // Attack timing variables
+  private _isAttacking: boolean = false;
+  private _attackTimer: number = 0;
+  private _attackCooldown: number = 500; // 500ms (0.5 seconds) between attacks
+  private _attackDamagePoint: number = 250; // Damage happens at 250ms (0.25 seconds) into the cycle
+  private currentTarget: Mob | NPC | null = null;
+  private _attackDoneThisCycle: boolean = false;
+  private _arrowTarget: Vector2 | null = null;
+
+  get attackDoneThisCycle(): boolean {
+    return this._attackDoneThisCycle;
+  }
+
+  // Getters for attack visualization
+  get isAttacking(): boolean {
+    return this._isAttacking;
+  }
+
+  get attackTimer(): number {
+    return this._attackTimer;
+  }
+
+  get attackCooldown(): number {
+    return this._attackCooldown;
+  }
+
+  get attackDamagePoint(): number {
+    return this._attackDamagePoint;
+  }
 
   // Computed stats (including equipment)
   get maxHealth(): number {
@@ -109,6 +143,10 @@ export class Player {
     this.magicEffects = new MagicEffects(this);
 
     makeAutoObservable(this);
+  }
+
+  updateArrowTarget(target: Vector2) {
+    this._arrowTarget = target;
   }
 
   private calculateEquipmentStats(): EquipmentStats {
@@ -202,9 +240,51 @@ export class Player {
     return distance <= 70;
   }
 
-  attack(target: { takeDamage: (damage: number) => void; position: Vector2 }) {
+  meleeAttack(target: Mob | NPC) {
     if (!this.isCloseTo(target.position)) {
-      // Assuming 100 is the maximum attack range
+      console.log(`${this.name} is too far away to attack.`);
+      combatLogStore.push(`${this.name} is too far away to attack.`);
+      return;
+    }
+
+    this.currentTarget = target;
+    this.attack();
+  }
+
+  rangedAttack(target: Vector2) {
+    this._arrowTarget = target;
+    this.attack();
+  }
+
+  attack() {
+    // Store the target and start the attack process
+    this._isAttacking = true;
+    this._attackTimer = 0;
+  }
+
+  // Start attacking
+  startAttack(target?: Mob | NPC | Vector2) {
+    if (this.combatMode === 'ranged' && target instanceof Vector2) {
+      this.rangedAttack(target);
+    } else if (target instanceof Mob || target instanceof NPC) {
+      this.meleeAttack(target);
+    }
+  }
+
+  // Stop attacking when mouse button is released
+  stopAttack() {
+    this._isAttacking = false;
+    this.currentTarget = null;
+    this._attackTimer = 0;
+  }
+
+  // Execute a single attack against the stored target
+  private executeAttack() {
+    const currentTarget = this.currentTarget;
+
+    if (!currentTarget) return;
+
+    if (!this.isCloseTo(currentTarget.position)) {
       console.log(`${this.name} is too far away to attack.`);
       combatLogStore.push(`${this.name} is too far away to attack.`);
       return;
@@ -212,7 +292,38 @@ export class Player {
 
     const isCritical = Math.random() < this.criticalChance;
     const damage = isCritical ? this.attackPower * 2 : this.attackPower;
-    target.takeDamage(damage);
+    currentTarget.takeDamage(damage);
+
+    if (currentTarget.isAlive()) {
+      // Handle mob defeat
+      if (currentTarget instanceof Mob) {
+        // It's a mob
+        this.events.add(
+          `${this.name} defeated some number of ${currentTarget.name}`,
+        );
+        combatLogStore.push(`${currentTarget.name} has been defeated!`);
+
+        gameStore.updateKillQuest(currentTarget.type);
+        setTimeout(
+          () => {
+            mobStore.removeMob(currentTarget.id);
+            mobStore.respawnMob(currentTarget);
+          },
+          10 * 60 * 1000,
+        );
+      } else if (currentTarget instanceof NPC) {
+        // It's an NPC
+        combatLogStore.push(
+          `${currentTarget.background.name} has been defeated!`,
+        );
+        this.events.add(`${this.name} killed ${currentTarget.background.name}`);
+
+        gameStore.updateKillQuest(
+          currentTarget.background.name,
+          currentTarget.id,
+        );
+      }
+    }
   }
 
   isAlive(): boolean {
@@ -231,6 +342,7 @@ export class Player {
     if (!dialogIsAcitve) {
       this.updateMovement(keysDown, delta);
       this.magicEffects.update(delta);
+      this.updateAttack(delta);
     }
   }
 
@@ -325,21 +437,45 @@ export class Player {
     }
   }
 
-  shootArrow(targetPosition: Vector2) {
-    const currentTime = Date.now();
-    if (currentTime - this.lastShotTime < this.shotCooldown) {
-      return;
-    }
+  shootArrow() {
+    if (!this._arrowTarget) return;
 
     const projectile = new Projectile(
       this.position,
-      targetPosition,
+      this._arrowTarget,
       0.5, // speed
       this.attackPower * 1.5, // damage based on attack power
       500, // range
     );
 
     projectileStore.addProjectile(projectile);
-    this.lastShotTime = currentTime;
+  }
+
+  private updateAttack(delta: number) {
+    if (!this._isAttacking) return;
+
+    this._attackTimer += delta;
+
+    // Apply damage at the damage point (0.25 seconds)
+    if (
+      !this._attackDoneThisCycle &&
+      this._attackTimer >= this._attackDamagePoint &&
+      this._attackTimer < this._attackCooldown
+    ) {
+      if (!!this.currentTarget) {
+        this.executeAttack();
+      }
+
+      if (!!this._arrowTarget) {
+        this.shootArrow();
+      }
+      this._attackDoneThisCycle = true;
+    }
+
+    // Reset the timer when we reach the full cooldown (0.5 seconds)
+    if (this._attackTimer >= this._attackCooldown) {
+      this._attackTimer -= this._attackCooldown;
+      this._attackDoneThisCycle = false;
+    }
   }
 }

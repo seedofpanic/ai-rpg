@@ -17,7 +17,8 @@ interface NPCProps {
   race: string;
   personality?: string;
   relation: number;
-  onClick: () => void;
+  onMouseDown?: () => void;
+  onMouseUp?: () => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
 }
@@ -127,7 +128,8 @@ const NPC: React.FC<NPCProps> = ({
   race,
   personality,
   relation,
-  onClick,
+  onMouseDown,
+  onMouseUp,
   onMouseEnter,
   onMouseLeave,
   isAlive,
@@ -151,7 +153,8 @@ const NPC: React.FC<NPCProps> = ({
         data-type={'npc'}
         data-testid={`npc-view-${id}`}
         style={{ left: x, top: y }}
-        onClick={onClick}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
         $isAlive={isAlive}
       >
         <InteractionHint>Interact [E]</InteractionHint>

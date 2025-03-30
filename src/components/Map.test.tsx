@@ -239,7 +239,7 @@ describe('Map Component', () => {
   it('handles NPC interaction', () => {
     render(<Map {...mockProps} />);
     const npc = screen.getByTestId('npc-view-npc1');
-    fireEvent.click(npc);
+    fireEvent.mouseDown(npc);
     expect(mockProps.onNpcInteraction).toHaveBeenCalledWith('npc1');
   });
 
@@ -257,7 +257,7 @@ describe('Map Component', () => {
   it('handles mob interaction', () => {
     render(<Map {...mockProps} />);
     const mob = screen.getByTestId('mob-view-mob1');
-    fireEvent.click(mob);
+    fireEvent.mouseDown(mob);
     expect(mockProps.onNpcInteraction).toHaveBeenCalledWith('mob1');
   });
 });

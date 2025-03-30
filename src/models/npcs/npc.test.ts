@@ -21,6 +21,20 @@ describe('NPC', () => {
       height: 500,
       npcsTemplate: [],
       monstersTemplate: [],
+      time: {
+        morning: 'morning',
+        afternoon: 'afternoon',
+        evening: 'evening',
+        night: 'night',
+      },
+      weather: {
+        cloudy: 'cloudy',
+        rainy: 'rainy',
+        foggy: 'foggy',
+        stormy: 'stormy',
+        clear: 'clear',
+        overcast: 'overcast',
+      },
     });
 
     // Add location to locationsStore
@@ -135,7 +149,6 @@ describe('NPC', () => {
     npc.addDialogHistory({
       text: 'Hello, traveler!',
       type: MessageType.NPC,
-      tokensCount: 10,
     });
     expect(npc.dialogueHistory).toHaveLength(1);
     expect(npc.dialogueHistory?.[0].text).toBe('Hello, traveler!');
@@ -172,6 +185,20 @@ describe('NPC', () => {
       height: 10,
       npcsTemplate: [],
       monstersTemplate: [],
+      weather: {
+        cloudy: 'cloudy',
+        rainy: 'rainy',
+        foggy: 'foggy',
+        stormy: 'stormy',
+        clear: 'clear',
+        overcast: 'overcast',
+      },
+      time: {
+        morning: 'morning',
+        afternoon: 'afternoon',
+        evening: 'evening',
+        night: 'night',
+      },
     });
 
     // Add new location to locationsStore

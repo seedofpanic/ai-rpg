@@ -20,6 +20,20 @@ describe('Mob', () => {
       height: 1000,
       npcsTemplate: [],
       monstersTemplate: [],
+      weather: {
+        cloudy: 'cloudy',
+        rainy: 'rainy',
+        foggy: 'foggy',
+        stormy: 'stormy',
+        clear: 'clear',
+        overcast: 'overcast',
+      },
+      time: {
+        morning: 'morning',
+        afternoon: 'afternoon',
+        evening: 'evening',
+        night: 'night',
+      },
     });
 
     // Create a test mob

@@ -407,7 +407,7 @@ const modelTools: Tool = {
   ],
 };
 
-if (gameStore.player.stats?.intelligence > 0) {
+if (gameStore.player && gameStore.player.stats?.intelligence > 0) {
   modelTools.functionDeclarations?.push({
     name: 'setTransformedUserMessage',
     description: "Transformed player's message.",

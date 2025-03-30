@@ -12,7 +12,7 @@ interface MobProps {
   maxHealth: number;
   isAggressive: boolean;
   isAlive: boolean;
-  onClick: () => void;
+  onMouseDown: () => void;
 }
 
 const HoverableContainer = styled.div`
@@ -119,7 +119,7 @@ const Mob: React.FC<MobProps> = ({
   maxHealth,
   isAggressive,
   isAlive,
-  onClick,
+  onMouseDown,
 }) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
@@ -134,7 +134,7 @@ const Mob: React.FC<MobProps> = ({
         data-type={'mob'}
         data-testid={`mob-view-${id}`}
         style={{ left: x, top: y }}
-        onClick={onClick}
+        onMouseDown={onMouseDown}
         onMouseMove={handleMouseMove}
         $isAggressive={isAggressive}
         $isAlive={isAlive}

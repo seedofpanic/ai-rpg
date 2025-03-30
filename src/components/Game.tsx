@@ -12,7 +12,7 @@ import { npcStore } from 'models/npcs/npcStore';
 import LootDialog from './LootDialog';
 import { mobStore } from 'models/mobs/mobStore';
 import HelpDialog from './HelpDialog';
-
+import { Vector2 } from '../utils/vector2';
 const GameContainer = styled.div`
   width: 100vw;
   height: 100vh;
@@ -114,6 +114,7 @@ const Game: React.FC = () => {
         left: e.clientX - dragOffset.x,
       });
     }
+    gameStore.player?.updateArrowTarget(new Vector2(e.clientX, e.clientY));
   };
 
   const handleMouseUp = () => {
@@ -157,35 +158,16 @@ const Game: React.FC = () => {
     if (!player) return;
 
     if (mob) {
-      // Player attacks mob
-      player.attack(mob);
-      combatLogStore.push(`${player.name} attacked ${mob.name}.`);
-
-      if (!mob.isAlive()) {
-        player.events.add(`${player.name} defeated some number of ${mob.name}`);
-        combatLogStore.push(`${mob.name} has been defeated!`);
-        gameStore.updateKillQuest(mob.type);
-        setTimeout(
-          () => {
-            mobStore.removeMob(mob.id);
-            mobStore.respawnMob(mob);
-          },
-          10 * 60 * 1000,
-        );
-        return;
-      }
+      // Start continuous attack on mouse down
+      player.startAttack(mob);
+      combatLogStore.push(`${player.name} is attacking ${mob.name}.`);
     } else if (npc) {
-      // Player attacks NPC
-      player.attack(npc);
-      combatLogStore.push(`${player.name} attacked ${npc.background.name}.`);
+      // Start continuous attack on mouse down
+      player.startAttack(npc);
+      combatLogStore.push(
+        `${player.name} is attacking ${npc.background.name}.`,
+      );
       player.events.add(`${player.name} attacked ${npc.background.name}`);
-
-      if (!npc.isAlive()) {
-        combatLogStore.push(`${npc.background.name} has been defeated!`);
-        player.events.add(`${player.name} killed ${npc.background.name}`);
-        gameStore.updateKillQuest(npc.background.name, npc.id);
-        return;
-      }
     }
   };
 
@@ -211,7 +193,18 @@ const Game: React.FC = () => {
     <GameContainer
       data-testid="game-container"
       onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
+      onMouseDown={(e) => {
+        if (gameStore.player) {
+          gameStore.player.startAttack(new Vector2(e.clientX, e.clientY));
+        }
+      }}
+      onMouseUp={() => {
+        handleMouseUp();
+        // Stop attacks when mouse is released
+        if (gameStore.player) {
+          gameStore.player.stopAttack();
+        }
+      }}
     >
       {!gameStore.player || gameStore.isOver ? (
         <PlayerCustomization />

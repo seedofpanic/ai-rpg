@@ -11,7 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
-    "verify": "npm run lint:fix && npm run test && npm run test:e2e"
+    "verify": "npx tsc &&npm run lint:fix && npm run test && npm run test:e2e"
   },
   "keywords": [],
   "author": "",

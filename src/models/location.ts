@@ -19,7 +19,6 @@ type locationData = Omit<
 export type DayTime = 'morning' | 'afternoon' | 'evening' | 'night';
 
 export type Weather =
-  | 'clear sky'
   | 'cloudy'
   | 'rainy'
   | 'foggy'
@@ -138,7 +137,6 @@ class LocationsStore {
       npcsTemplate: [{ role: 'villager', minQuantity: 4, maxQuantity: 8 }],
       monstersTemplate: [],
       weather: {
-        'clear sky': 'Sunlight bathes the village center in a warm glow.',
         cloudy: 'Gray clouds cast soft shadows over the village square.',
         rainy:
           'Raindrops patter on the cobblestones as villagers hurry for shelter.',
@@ -170,7 +168,6 @@ class LocationsStore {
       npcsTemplate: [{ role: 'blacksmith', minQuantity: 1, maxQuantity: 1 }],
       monstersTemplate: [],
       weather: {
-        'clear sky': "The forge's smoke rises straight up into the blue sky.",
         cloudy: 'Smoke from the forge blends with the gray clouds above.',
         rainy: 'Steam hisses as raindrops fall near the hot forge.',
         foggy:
@@ -204,8 +201,6 @@ class LocationsStore {
       npcsTemplate: [{ role: 'herbalist', minQuantity: 1, maxQuantity: 1 }],
       monstersTemplate: [],
       weather: {
-        'clear sky':
-          'Sunlight filters through hanging herbs, creating dappled patterns.',
         cloudy: 'The hut feels cozy and enclosed under the gray sky.',
         rainy:
           'Rain patters on the roof as the scent of herbs intensifies in the humidity.',
@@ -238,8 +233,6 @@ class LocationsStore {
       npcsTemplate: [],
       monstersTemplate: [{ type: 'wolf', minQuantity: 3, maxQuantity: 6 }],
       weather: {
-        'clear sky':
-          'The vast blue sky stretches over golden fields swaying in the breeze.',
         cloudy: 'Gray clouds cast moving shadows across the open grassland.',
         rainy:
           'Rain turns the earth soft and muddy, pools forming in low spots.',
@@ -274,7 +267,6 @@ class LocationsStore {
       npcsTemplate: [],
       monstersTemplate: [{ type: 'ghost', minQuantity: 1, maxQuantity: 2 }],
       weather: {
-        'clear sky': 'The broken windmill stands stark against the blue sky.',
         cloudy:
           'Gray clouds gather ominously around the dilapidated structure.',
         rainy:
@@ -312,8 +304,6 @@ class LocationsStore {
         { type: 'boar', minQuantity: 1, maxQuantity: 2 },
       ],
       weather: {
-        'clear sky':
-          'Sunlight filters through the leaves, creating dappled patterns on the ground.',
         cloudy:
           'The forest darkens under cloudy skies, making it seem more foreboding.',
         rainy:
@@ -348,7 +338,6 @@ class LocationsStore {
       npcsTemplate: [{ role: 'hunter', minQuantity: 1, maxQuantity: 1 }],
       monstersTemplate: [],
       weather: {
-        'clear sky': 'Animal pelts dry in the sun outside the sturdy cabin.',
         cloudy: 'Smoke from the chimney blends with the gray clouds above.',
         rainy:
           'Rain drums on the cabin roof as water collects in hanging animal traps.',
@@ -385,8 +374,6 @@ class LocationsStore {
       ],
       monstersTemplate: [],
       weather: {
-        'clear sky':
-          'Sunlight streams through windows, illuminating dancing dust motes.',
         cloudy:
           'The tavern feels especially cozy against the gray skies outside.',
         rainy:
@@ -425,8 +412,6 @@ class LocationsStore {
         { type: 'ghost', minQuantity: 1, maxQuantity: 2 },
       ],
       weather: {
-        'clear sky':
-          'The ruins stand stark and imposing against the bright blue sky.',
         cloudy: 'Gray clouds gather abnormally thick over the ancient stones.',
         rainy:
           'Rain runs down carved symbols, making them seem to shift and move.',
@@ -460,7 +445,6 @@ class LocationsStore {
       npcsTemplate: [{ role: 'fisherman', minQuantity: 2, maxQuantity: 4 }],
       monstersTemplate: [],
       weather: {
-        'clear sky': 'The lake surface sparkles under the bright sun.',
         cloudy: 'The water takes on a steely gray hue under cloudy skies.',
         rainy: "Raindrops create endless ripples across the lake's surface.",
         foggy:
@@ -496,8 +480,6 @@ class LocationsStore {
         { type: 'bat', minQuantity: 3, maxQuantity: 6 },
       ],
       weather: {
-        'clear sky':
-          'The cave entrance is a dark slash against the bright mountainside.',
         cloudy:
           'The gloomy day makes the cave entrance less forbidding by contrast.',
         rainy:
@@ -535,7 +517,6 @@ class LocationsStore {
       ],
       monstersTemplate: [],
       weather: {
-        'clear sky': 'Colorful awnings flap gently under the bright blue sky.',
         cloudy:
           'Merchants keep wary eyes on the sky, ready to cover goods if rain threatens.',
         rainy:
@@ -571,8 +552,6 @@ class LocationsStore {
       npcsTemplate: [{ role: 'guard', minQuantity: 2, maxQuantity: 4 }],
       monstersTemplate: [],
       weather: {
-        'clear sky':
-          'Guards squint against the bright sun as they scan the horizon.',
         cloudy: 'The dull light makes guards more alert for potential threats.',
         rainy:
           'Guards don oilskins as they continue their watch in the downpour.',
@@ -610,7 +589,6 @@ class LocationsStore {
         { type: 'ghost', minQuantity: 1, maxQuantity: 2 },
       ],
       weather: {
-        'clear sky': 'Even under clear skies, mist rises from the swamp water.',
         cloudy: 'The swamp seems even more oppressive under heavy clouds.',
         rainy:
           'Rain creates a constant patter on the stagnant pools and broad leaves.',
@@ -644,8 +622,6 @@ class LocationsStore {
       npcsTemplate: [],
       monstersTemplate: [],
       weather: {
-        'clear sky':
-          'Researchers spread maps and findings outside to examine in good light.',
         cloudy:
           'Equipment is covered with tarps as researchers work mainly inside tents.',
         rainy:

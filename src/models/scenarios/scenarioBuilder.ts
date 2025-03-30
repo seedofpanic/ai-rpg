@@ -1,5 +1,6 @@
 import { gameStore } from 'models/gameStore';
 import { npcStore } from 'models/npcs/npcStore';
+import { Quest } from 'models/Quest';
 import { v4 as uuidv4 } from 'uuid';
 
 export const buildStory = () => {
@@ -12,18 +13,17 @@ export const buildStory = () => {
   const mainCulprit = npcStore.npcs[mainCulpritId];
 
   const questId = uuidv4();
-  gameStore.addQuest({
-    id: questId,
-    title: 'The Silent Offering',
-    description: `Villagers are disappearing in Grenthollow, a place untouched by the spreading magic.
+  gameStore.addQuest(
+    new Quest({
+      title: 'The Silent Offering',
+      description: `Villagers are disappearing in Grenthollow, a place untouched by the spreading magic.
 Someone is making sacrifices — find out who, and why.`,
-    subject: mainCulprit.background.name,
-    quantity: 0,
-    killCount: 0,
-    completed: false,
-    questGiverId: null,
-    action: 'find',
-  });
+      subject: mainCulprit.background.name,
+      quantity: 0,
+      questGiverId: null,
+      action: 'find',
+    }),
+  );
 
   mainCulprit.additionalInstructions = `- You are a member of the cult of Sigmar. You worship Sigmar.
     - You are not allowed to tell the player about the cult or its beliefs.

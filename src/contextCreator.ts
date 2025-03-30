@@ -86,16 +86,16 @@ ${locationsStore.locations
       })
       .join('\n')}`;
 
-    return `- ${loc.name} (id: ${loc.id}): ${loc.getDescription()}\n${npcs}\n${mobs}`;
+    return `- ${loc.name} (id: ${loc.id}): ${loc.getDescription(gameStore.weather, gameStore.dayTime)}\n${npcs}\n${mobs}`;
   })
   .join('\n')}
 
 Player:
-- Name: ${player.name}
-- Race: ${player.race}
-- Class: ${player.class}
-- Type: ${player.type}
-- Equipment: ${Object.entries(player.equipment || {})
+- Name: ${player?.name}
+- Race: ${player?.race}
+- Class: ${player?.class}
+- Type: ${player?.type}
+- Equipment: ${Object.entries(player?.equipment || {})
     .map(
       ([slot, itemId]) =>
         `- ${slot}: ${itemsData.get(itemId)?.name || 'Empty'}`,
@@ -103,7 +103,7 @@ Player:
     .join('\n')}
 
 Things that happend with player so far:
-${Array.from(player.events)
+${Array.from(player?.events || [])
   .map((event) => `- ${event}`)
   .join('\n')}
 
@@ -154,13 +154,13 @@ ${npcContext.sellingItems.map((item) => `- ${itemsData.get(item.itemId)?.name} c
 ${npcContext.background.name} currently buys:
 ${npcContext.buyingItems.map((item) => `- ${itemsData.get(item.itemId)?.name} cost ${itemsData.get(item.itemId)?.price} piece`).join('\n')}
 
-Player's gold: ${player.gold}
+Player's gold: ${player?.gold}
 Player's inventory:${
     [
-      ...player.inventory?.map(
+      ...(player?.inventory?.map(
         (item) =>
           ` - ${itemsData.get(item.itemId)?.name} x${item.quantity} cost ${itemsData.get(item.itemId)?.price} piece`,
-      ),
+      ) || []),
     ].join('\n') || '\nNo items in inventory'
   }
 
@@ -223,24 +223,24 @@ Global Quests rules:
 Communication rules:
 If player message is unclear, ask for clarification in a way that reflects your relationship with the Player.
 If player repeats themselves, acknowledge it and try to provide additional information or a different perspective.
-If you don't have much to say, express interest through simple gestures or brief responses like *Nods thoughtfully* or *Gives ${player.name} an encouraging smile*.
+If you don't have much to say, express interest through simple gestures or brief responses like *Nods thoughtfully* or *Gives ${player?.name} an encouraging smile*.
 Keep track of your dialogue history and use it to make your responses more natural.
 Don't explicitly mention your location in your response if you are not asked about it.
 Always suggest 2 or more possible replies for the player's message using possibleReplies function.
 Never add code to your response.
 
 ${
-  !systemMessage && player.stats.intelligence > 0
+  !systemMessage && (player?.stats?.intelligence ?? 0) > 0
     ? `In addition to your reply always call setTransformedUserMessage function. 
 Message Transformation:
-- Transform player's message to match player's intellect level (${player.getIntellectLevel()}). Always use direct speech.
+- Transform player's message to match player's intellect level (${player?.getIntellectLevel()}). Always use direct speech.
 Internal Processing:
 - Note: This function call is solely for internal processing and should not alter the way ${npcContext.background.name} speaks.
 Text Reply:
 - Generate your response as if the player's original message had already been written in the transformed style.
 - Ensure that the final text reply is clear and independent, without referencing or including the internal transformation process.
 - Never leave the response empty.
-- If you don't have much to say, express interest through simple gestures or brief responses like *Nods thoughtfully* or *Gives ${player.name} an encouraging smile*`
+- If you don't have much to say, express interest through simple gestures or brief responses like *Nods thoughtfully* or *Gives ${player?.name} an encouraging smile*`
     : ''
 }
 

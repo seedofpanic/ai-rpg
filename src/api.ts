@@ -58,7 +58,7 @@ const initializeModel = () => {
         - <text> *<action>*
         
         ${
-          gameStore.player.stats.intelligence > 0
+          (gameStore.player?.stats?.intelligence ?? 0) > 0
             ? 'IMPORTANT: When using the setTransformedUserMessage function, you must ALWAYS follow it with a complete text response. Never end your response with only a function call.'
             : ''
         }

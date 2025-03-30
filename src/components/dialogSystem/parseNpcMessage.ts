@@ -228,12 +228,16 @@ const functions = {
     );
   },
   giveItem: (args: unknown) => {
-    gameStore.player.addItemToInventory(
-      args as { itemId: string; quantity: number },
-    );
+    if (gameStore.player) {
+      gameStore.player.addItemToInventory(
+        args as { itemId: string; quantity: number },
+      );
+    }
   },
   giveGold: (args: unknown) => {
-    gameStore.player.addGold((args as { gold: number }).gold);
+    if (gameStore.player) {
+      gameStore.player.addGold((args as { gold: number }).gold);
+    }
   },
   spawnMonster: (args: unknown) => {
     const { monsterType, quantity, location } = args as {

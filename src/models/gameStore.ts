@@ -18,12 +18,11 @@ import { NPC, MessageType } from './npcs/npc';
 import { Weather, DayTime } from './location';
 
 const weather: Weather[] = [
-  'clear sky',
+  'clear',
   'cloudy',
   'rainy',
   'foggy',
   'stormy',
-  'clear',
   'overcast',
 ];
 
@@ -36,13 +35,13 @@ export class GameStore {
   isDialogueOpen: boolean = false;
   activeNpcId: string | null = null;
   currentNpcId: string | null = null;
-  player: Player = {} as Player;
+  player: Player | null = null;
   isOver = true;
   hoveredNpcId: string | null = null;
   api: 'gemini' | 'proxy' = 'gemini';
   backgroundsData: BackgroundTemplate[] = [];
   dayTime: DayTime = 'morning';
-  weather: Weather = 'clear sky';
+  weather: Weather = 'clear';
   acceptedQuests: Quest[] = [];
   completedQuests: Quest[] = [];
   possibleReplies: Record<string, string[]> = {};
@@ -125,7 +124,7 @@ export class GameStore {
       this.completedQuests.push(quest);
       if (quest.action.toLowerCase() === 'bring') {
         if (itemsData.has(quest.subject)) {
-          this.player.removeItemFromInventory({
+          this.player?.removeItemFromInventory({
             itemId: quest.subject,
             quantity: quest.quantity,
           });
@@ -145,11 +144,11 @@ export class GameStore {
       quest.completed = true;
       if (quest.rewards) {
         if (quest.rewards.gold) {
-          this.player.updateGold(quest.rewards.gold);
+          this.player?.updateGold(quest.rewards.gold);
         }
         if (quest.rewards.items) {
           quest.rewards.items.forEach((itemId) => {
-            this.player.addItemToInventory({ itemId, quantity: 1 });
+            this.player?.addItemToInventory({ itemId, quantity: 1 });
           });
         }
       }
@@ -268,7 +267,7 @@ export class GameStore {
   updateControls(keyDown: string) {
     if (keyDown === 'KeyE' && this.hoveredNpcId) {
       const npc = npcStore.npcs[this.hoveredNpcId];
-      if (npc?.isAlive() && this.player.isCloseTo(npc.position)) {
+      if (npc?.isAlive() && this.player?.isCloseTo(npc.position)) {
         this.setCurrentNpcId(this.hoveredNpcId);
         this.setDialogueOpen(true);
       }

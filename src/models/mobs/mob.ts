@@ -219,10 +219,12 @@ export class Mob {
         this.isAggressive = true;
         this.state = 'chasing';
 
-        // Move towards player
-        const direction = player.position.subtract(this.position).normalize();
-        const movement = direction.multiply(this.speed * 4.5);
-        this.position = this.position.add(movement);
+        if (distanceToPlayer > 50) {
+          // Move towards player
+          const direction = player.position.subtract(this.position).normalize();
+          const movement = direction.multiply(this.speed * 4.5);
+          this.position = this.position.add(movement);
+        }
 
         // Attack if in range
         if (distanceToPlayer <= 50) {

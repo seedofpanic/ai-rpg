@@ -23,6 +23,20 @@ describe('MobStore', () => {
         { type: 'wolf', minQuantity: 1, maxQuantity: 1 },
         { type: 'bandit', minQuantity: 1, maxQuantity: 1 },
       ],
+      weather: {
+        cloudy: 'cloudy',
+        rainy: 'rainy',
+        foggy: 'foggy',
+        stormy: 'stormy',
+        clear: 'clear',
+        overcast: 'overcast',
+      },
+      time: {
+        morning: 'morning',
+        afternoon: 'afternoon',
+        evening: 'evening',
+        night: 'night',
+      },
     });
 
     mobStore = MobStoreInstance;
@@ -96,6 +110,20 @@ describe('MobStore', () => {
           { type: 'wolf', minQuantity: 1, maxQuantity: 1 },
           { type: 'bandit', minQuantity: 1, maxQuantity: 1 },
         ],
+        weather: {
+          cloudy: 'cloudy',
+          rainy: 'rainy',
+          foggy: 'foggy',
+          stormy: 'stormy',
+          clear: 'clear',
+          overcast: 'overcast',
+        },
+        time: {
+          morning: 'morning',
+          afternoon: 'afternoon',
+          evening: 'evening',
+          night: 'night',
+        },
       });
 
       // Add a mob to the store

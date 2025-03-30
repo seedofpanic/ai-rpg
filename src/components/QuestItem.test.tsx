@@ -21,22 +21,19 @@ vi.mock('../models/itemsData', () => ({
 }));
 
 describe('QuestItem Component', () => {
-  const baseQuest: Quest = {
-    id: '1',
+  const baseQuest: Quest = new Quest({
     title: 'Test Quest',
     description: 'Test Description',
     action: 'kill',
     subject: 'goblin',
     quantity: 5,
-    killCount: 0,
-    completed: false,
     questGiverId: 'npc1',
     rewards: {
       gold: 100,
       experience: 200,
       items: ['item1', 'item2'],
     },
-  };
+  });
 
   it('renders basic quest information', () => {
     render(<QuestItem quest={baseQuest} npcName="Test NPC" />);
@@ -60,7 +57,8 @@ describe('QuestItem Component', () => {
   });
 
   it('shows correct status for completed quest', () => {
-    const completedQuest = { ...baseQuest, completed: true };
+    const completedQuest = new Quest({ ...baseQuest });
+    completedQuest.completed = true;
     render(<QuestItem quest={completedQuest} npcName="Test NPC" />);
 
     expect(screen.getByTestId('quest-status')).toHaveTextContent('Completed');
@@ -77,13 +75,15 @@ describe('QuestItem Component', () => {
   });
 
   it('handles collect quest type correctly', () => {
-    const collectQuest = {
+    const collectQuest = new Quest({
       ...baseQuest,
       action: 'bring',
       subject: 'herb1',
-    };
+    });
 
-    gameStore.player.inventory = [{ itemId: 'herb1', quantity: 2 }];
+    if (gameStore.player) {
+      gameStore.player.inventory = [{ itemId: 'herb1', quantity: 2 }];
+    }
 
     render(<QuestItem quest={collectQuest} npcName="Test NPC" />);
     expect(screen.getByTestId('quest-progress')).toHaveTextContent(
