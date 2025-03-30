@@ -135,9 +135,14 @@ const sendMessageGemini = async (
         }
       });
       const prompt = createContext(npcId, message, isSystemMessage);
-      const result = await model.generateContent(prompt);
-      lastRequestTimestamp = Date.now();
-      resolve(result);
+      try {
+        const result = await model.generateContent(prompt);
+        lastRequestTimestamp = Date.now();
+        resolve(result);
+      } catch (error) {
+        console.error('Error calling Gemini API:', error);
+        throw error;
+      }
     });
 
     const result = await lastRequestPromise;

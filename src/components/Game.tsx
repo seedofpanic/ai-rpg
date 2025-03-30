@@ -30,6 +30,21 @@ const ButtonsBox = styled.div`
   align-items: center;
 `;
 
+const WeatherTimeDisplay = styled.div`
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 10;
+`;
+
 const HelpButton = styled.button`
   padding: 10px 20px;
   font-size: 24px;
@@ -229,15 +244,21 @@ const Game: React.FC = () => {
               size={dialogueSize}
             />
           )}
+          {gameStore.player && (
+            <WeatherTimeDisplay>
+              <div>Time: {gameStore.dayTime}</div>
+              <div>Weather: {gameStore.weather}</div>
+            </WeatherTimeDisplay>
+          )}
         </>
       )}
       <ButtonsBox>
         <WhatsNewButton onClick={openWhatsNew}>What&apos;s New</WhatsNewButton>
         <HelpButton onClick={toggleHelp}>Help</HelpButton>
         <GithubButton
-            onClick={() =>
-              window.open('https://github.com/seedofpanic/ai-rpg', '_blank')
-            }
+          onClick={() =>
+            window.open('https://github.com/seedofpanic/ai-rpg', '_blank')
+          }
         >
           GitHub
         </GithubButton>

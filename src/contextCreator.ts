@@ -53,7 +53,7 @@ Your important memories from conversations with the player:
 ${npcContext.memory.map((memory) => `- ${memory}`).join('\n')}
 
 You are in Grenthollow village that is located in Agnir not far from Kadera, (${npcContext.location.name}):
-${npcContext.location.description}
+${npcContext.location.getDescription(gameStore.weather, gameStore.dayTime)}
 
 Now it is ${gameStore.dayTime} and it is ${gameStore.weather}.
 
@@ -86,7 +86,7 @@ ${locationsStore.locations
       })
       .join('\n')}`;
 
-    return `- ${loc.name} (id: ${loc.id}): ${loc.description}\n${npcs}\n${mobs}`;
+    return `- ${loc.name} (id: ${loc.id}): ${loc.getDescription()}\n${npcs}\n${mobs}`;
   })
   .join('\n')}
 

@@ -15,17 +15,7 @@ import { Mob, MobType } from './mobs/mob';
 import { projectileStore } from './projectileStore';
 import { villageBuilder } from './scenarios/villageBuilder';
 import { NPC, MessageType } from './npcs/npc';
-
-type DayTime = 'morning' | 'afternoon' | 'evening' | 'night';
-
-type Weather =
-  | 'clear sky'
-  | 'cloudy'
-  | 'rainy'
-  | 'foggy'
-  | 'stormy'
-  | 'clear'
-  | 'overcast';
+import { Weather, DayTime } from './location';
 
 const weather: Weather[] = [
   'clear sky',
@@ -75,21 +65,27 @@ export class GameStore {
       clearTimeout(dayTimeTimer);
     }
 
+    this.updateDayTimeAndWeather();
+
     dayTimeTimer = setTimeout(
       () => {
-        if (this.dayTime === 'morning') {
-          this.dayTime = 'afternoon';
-        } else if (this.dayTime === 'afternoon') {
-          this.dayTime = 'evening';
-        } else if (this.dayTime === 'evening') {
-          this.dayTime = 'night';
-        } else if (this.dayTime === 'night') {
-          this.dayTime = 'morning';
-        }
-        this.updateWeather();
+        this.startDayTime();
       },
       1000 * 60 * 10,
     );
+  }
+
+  updateDayTimeAndWeather() {
+    if (this.dayTime === 'morning') {
+      this.dayTime = 'afternoon';
+    } else if (this.dayTime === 'afternoon') {
+      this.dayTime = 'evening';
+    } else if (this.dayTime === 'evening') {
+      this.dayTime = 'night';
+    } else if (this.dayTime === 'night') {
+      this.dayTime = 'morning';
+    }
+    this.updateWeather();
   }
 
   addQuest(quest: Quest) {

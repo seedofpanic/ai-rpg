@@ -270,4 +270,77 @@ describe('GameStore', () => {
     expect(gameStore.isDialogueOpen).toBe(true);
     expect(gameStore.currentNpcId).toBe('npc-1');
   });
+
+  it('should update day time in the correct sequence and update weather', () => {
+    // Setup spy on updateWeather method
+    const updateWeatherSpy = vi.spyOn(gameStore, 'updateWeather');
+
+    // Test morning to afternoon transition
+    gameStore.dayTime = 'morning';
+    gameStore.updateDayTimeAndWeather();
+    expect(gameStore.dayTime).toBe('afternoon');
+    expect(updateWeatherSpy).toHaveBeenCalledTimes(1);
+
+    // Test afternoon to evening transition
+    gameStore.updateDayTimeAndWeather();
+    expect(gameStore.dayTime).toBe('evening');
+    expect(updateWeatherSpy).toHaveBeenCalledTimes(2);
+
+    // Test evening to night transition
+    gameStore.updateDayTimeAndWeather();
+    expect(gameStore.dayTime).toBe('night');
+    expect(updateWeatherSpy).toHaveBeenCalledTimes(3);
+
+    // Test night to morning transition (completing the cycle)
+    gameStore.updateDayTimeAndWeather();
+    expect(gameStore.dayTime).toBe('morning');
+    expect(updateWeatherSpy).toHaveBeenCalledTimes(4);
+
+    // Clean up
+    updateWeatherSpy.mockRestore();
+  });
+
+  it('should update weather to a random value from the weather array', () => {
+    // Mock Math.random to return a predictable value in the range [0, 1)
+    const mockRandom = vi.spyOn(Math, 'random').mockReturnValue(0.2);
+
+    // Test with fixed random value
+    gameStore.updateWeather();
+
+    // Verify weather is set to a valid value
+    expect([
+      'clear sky',
+      'cloudy',
+      'rainy',
+      'foggy',
+      'stormy',
+      'clear',
+      'overcast',
+    ]).toContain(gameStore.weather);
+
+    // Testing that it changes when called again with a different mock value
+    mockRandom.mockReturnValue(0.8);
+
+    // Remember the current weather before updating
+    const previousWeather = gameStore.weather;
+
+    // Call updateWeather again with our new mocked random value
+    gameStore.updateWeather();
+
+    expect(gameStore.weather).not.toBe(previousWeather);
+
+    // Verify weather is still a valid value
+    expect([
+      'clear sky',
+      'cloudy',
+      'rainy',
+      'foggy',
+      'stormy',
+      'clear',
+      'overcast',
+    ]).toContain(gameStore.weather);
+
+    // Restore original Math.random
+    mockRandom.mockRestore();
+  });
 });
