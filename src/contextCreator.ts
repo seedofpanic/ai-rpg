@@ -36,8 +36,7 @@ ${npcContext.additionalInstructions}
 Family:
 - Children: ${npcContext.family.children.map((child) => `- ${child}`).join('\n')}
 
-Current Needs:
-You are bothered by monsters around.
+Current Needs:${npcContext.location.name === 'Researchers camp' ? '' : '\nYou are bothered by monsters around.'}
 ${npcContext.needs.map((need) => `- ${need.type}: ${need.subject} ${need.potentialGoldReward ? `(Potential base Gold Reward: ${need.potentialGoldReward})` : ''} (Priority: ${need.priority.toFixed(1)})`).join('\n')}
 
 You have only items that are in your inventory:

@@ -1,7 +1,7 @@
 export const researchCampLore = `
-Common Knowledge About the Camp:
+Common Knowledge About the Research Camp:
 
-- People in the camp arn't really bothered by monsters.
+- You don't care about any monsters around.
 
 Location & Purpose
 - The camp is a temporary but reinforced outpost established near the edge of the Zone of Unstable Magic.

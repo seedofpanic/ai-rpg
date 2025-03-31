@@ -198,11 +198,13 @@ const modelTools: Tool = {
       description: 'Offer a quest to the player',
       parameters: {
         type: SchemaType.OBJECT,
+        required: ['quests'],
         properties: {
           quests: {
             type: SchemaType.ARRAY,
             items: {
               type: SchemaType.OBJECT,
+              required: ['name', 'description', 'reward'],
               properties: {
                 name: { type: SchemaType.STRING, nullable: false },
                 description: { type: SchemaType.STRING, nullable: false },
