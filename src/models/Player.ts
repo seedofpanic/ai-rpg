@@ -437,7 +437,7 @@ export class Player {
     }
   }
 
-  shootArrow() {
+  private shootArrow() {
     if (!this._arrowTarget) return;
 
     const projectile = new Projectile(
@@ -462,11 +462,12 @@ export class Player {
       this._attackTimer >= this._attackDamagePoint &&
       this._attackTimer < this._attackCooldown
     ) {
-      if (!!this.currentTarget) {
+      if (this.combatMode === 'melee' && !!this.currentTarget) {
         this.executeAttack();
       }
 
-      if (!!this._arrowTarget) {
+      console.log(this.combatMode, this._arrowTarget);
+      if (this.combatMode === 'ranged' && !!this._arrowTarget) {
         this.shootArrow();
       }
       this._attackDoneThisCycle = true;

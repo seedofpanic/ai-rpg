@@ -3,6 +3,7 @@ import { Player } from './Player';
 import { Vector2 } from '../utils/vector2';
 import { itemsData } from './itemsData';
 import { Mob } from './mobs/mob';
+import { projectileStore } from './projectileStore';
 
 describe('Player', () => {
   let player: Player;
@@ -193,24 +194,6 @@ describe('Player', () => {
     expect(takeDamageSpy).not.toHaveBeenCalled();
   });
 
-  it('should attempt to shoot projectiles in ranged mode', () => {
-    // Skip if projectileStore is not available in this test environment
-    if (!(player as any).projectileStore) return;
-
-    // Set combat mode to ranged
-    player.setCombatMode('ranged');
-    // Trigger shooting with Space key
-    const keysDown = new Set(['Space']);
-    const currentTime = Date.now() + 1000; // Ensure cooldown has passed
-    player.lastShotTime = 0;
-
-    player.doActions(keysDown, currentTime, false);
-
-    // Verify the ranged attack was attempted
-    expect(player.combatMode).toBe('ranged');
-    expect(player.shootArrow).toHaveBeenCalled();
-  });
-
   it('should have magic effects system initialized', () => {
     // Check if magic effects system is initialized
     expect(player.magicEffects).toBeDefined();
@@ -351,33 +334,6 @@ describe('Player', () => {
     expect(player.getIntellectLevel()).toBe('high intelligence');
   });
 
-  it('should properly shoot arrows in ranged mode', () => {
-    // Skip this test if running in a test environment without proper mocking capabilities
-    if (typeof vi.fn !== 'function') return;
-
-    // Mock the shootArrow function to verify it's called
-    const originalShootArrow = player.shootArrow;
-    player.shootArrow = vi.fn();
-
-    // Set combat mode to ranged
-    player.setCombatMode('ranged');
-    player.startAttack(
-      new Vector2(player.position.x + 100, player.position.y + 100),
-    );
-
-    // Try to shoot by setting up key press
-    const keysDown = new Set(['Space']);
-
-    // This should trigger shooting
-    player.doActions(keysDown, 499, false);
-
-    // Check if shootArrow was called
-    expect(player.shootArrow).toHaveBeenCalled();
-
-    // Restore original method
-    player.shootArrow = originalShootArrow;
-  });
-
   it('should start and stop attacking correctly', () => {
     // Create a target
     const location = { id: 'test-location', name: 'Test Location' } as any;
@@ -511,6 +467,47 @@ describe('Player', () => {
     expect((player as any)._attackDoneThisCycle).toBe(false);
   });
 
+  it('should not shoot arrow if not in ranged mode', () => {
+    // Set combat mode to melee
+    player.setCombatMode('melee');
+    const target = new Mob(
+      'wolf',
+      player.position.x + 10,
+      player.position.y + 10,
+      { id: 'test-location', name: 'Test Location' } as any,
+    );
+    target.takeDamage = vi.fn();
+    player.startAttack(target);
+
+    player.doActions(new Set(), player.attackCooldown - 1, false);
+
+    expect(projectileStore.projectiles.size).toBe(0);
+    expect(target.takeDamage).toHaveBeenCalled();
+  });
+
+  it('should shoot arrow if in ranged mode', () => {
+    // Set combat mode to ranged
+    player.setCombatMode('ranged');
+    const target = new Mob(
+      'wolf',
+      player.position.x + 10,
+      player.position.y + 10,
+      { id: 'test-location', name: 'Test Location' } as any,
+    );
+    target.takeDamage = vi.fn();
+    player.startAttack(target);
+    player.startAttack(
+      new Vector2(player.position.x + 10, player.position.y + 10),
+    );
+
+    // Mock shootArrow method
+    player.doActions(new Set(), player.attackCooldown - 1, false);
+
+    // Check that shootArrow was called
+    expect(projectileStore.projectiles.size).toBe(1);
+    expect(target.takeDamage).not.toHaveBeenCalled();
+  });
+
   it('should properly handle attack cycle with damage point and cooldown', () => {
     // Create a target
     const location = { id: 'test-location', name: 'Test Location' } as any;
@@ -539,34 +536,5 @@ describe('Player', () => {
 
     // Restore spy
     executeAttackSpy.mockRestore();
-  });
-
-  it('should properly execute ranged attack and shoot arrow', () => {
-    // Skip if no shootArrow method exists
-    if (typeof player.shootArrow !== 'function') return;
-
-    // Set combat mode to ranged
-    player.setCombatMode('ranged');
-
-    // Mock shootArrow method
-    const shootArrowSpy = vi.spyOn(player, 'shootArrow');
-
-    // Set a ranged target
-    const targetPosition = new Vector2(
-      player.position.x + 100,
-      player.position.y + 100,
-    );
-    (player as any)._arrowTarget = targetPosition;
-    (player as any)._isAttacking = true;
-
-    // Trigger at damage point
-    (player as any)._attackTimer = (player as any)._attackDamagePoint;
-    (player as any).updateAttack(10);
-
-    // Check arrow was shot
-    expect(shootArrowSpy).toHaveBeenCalled();
-
-    // Restore spy
-    shootArrowSpy.mockRestore();
   });
 });
