@@ -468,7 +468,14 @@ export class NPC {
     combatLogStore.push(
       `${this.background.name} took ${reducedDamage} damage.`,
     );
-    this.changeRelation(-50);
+
+    // Handle NPC defeat if health is 0
+    if (!this.isAlive()) {
+      combatLogStore.push(`${this.background.name} has been defeated!`);
+
+      // Update kill quest with the NPC's name and id
+      gameStore.updateKillQuest(this.background.name, this.id);
+    }
   }
 
   isAlive() {

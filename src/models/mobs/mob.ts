@@ -5,6 +5,9 @@ import { Player } from '../Player';
 import { v4 as uuidv4 } from 'uuid';
 import { itemsData } from '../itemsData';
 import { MOB_STATS } from './mobStats';
+import { combatLogStore } from 'components/CombatLog';
+import { gameStore } from '../gameStore';
+import { mobStore } from './mobStore';
 
 export type MobType =
   | 'wolf'
@@ -184,6 +187,23 @@ export class Mob {
     const actualDamage = Math.max(1, damage - this.defense);
     this.health = Math.max(0, this.health - actualDamage);
     this.isAggressive = true;
+
+    // Handle mob defeat if health is 0
+    if (!this.isAlive()) {
+      combatLogStore.push(`${this.name} has been defeated!`);
+
+      // Update kill quest
+      gameStore.updateKillQuest(this.type);
+
+      // Remove mob and set respawn timer
+      setTimeout(
+        () => {
+          mobStore.removeMob(this.id);
+          mobStore.respawnMob(this);
+        },
+        10 * 60 * 1000,
+      );
+    }
   }
 
   attack(target: Player): void {

@@ -613,8 +613,8 @@ class LocationsStore {
     });
 
     this.addLocation({
-      name: 'Researchers camp',
       description: 'A camp of researchers who are studying the zone.',
+      name: 'Researchers camp',
       x: BASE_X + 50,
       y: BASE_Y + 1100,
       width: 800,

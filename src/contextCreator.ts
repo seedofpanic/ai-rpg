@@ -71,7 +71,7 @@ ${locationsStore.locations
       .map((npc) => {
         const isAlive = npc.isAlive();
 
-        return `${npc.background.name} ${npc.background.title} (is ${isAlive ? 'Alive' : 'Dead'})\n${
+        return `${npc.background.name} ${npc.background.title} (is ${isAlive ? 'Alive' : `Dead. Player killed him.`})\n${
           isAlive
             ? `${npc.background.name}'s Inventory:\n${npc.inventory?.map((item) => `- ${itemsData.get(item.itemId)?.name} x${item.quantity}`).join('\n') || 'No items in inventory'}`
             : ''
@@ -81,7 +81,7 @@ ${locationsStore.locations
     const mobs = `Monsters in ${loc.name}:
     ${Array.from(loc.monsters)
       .map((mob) => {
-        return `- ${mob.name} (${mob.isAlive() ? 'Alive' : 'Dead'}) x1`;
+        return `- ${mob.name} (${mob.isAlive() ? 'Alive' : 'Dead. Player killed him.'}) x1`;
       })
       .join('\n')}`;
 
@@ -101,7 +101,7 @@ Player:
     )
     .join('\n')}
 
-Things that happend with player so far:
+Things that happened recently:
 ${Array.from(player?.events || [])
   .map((event) => `- ${event}`)
   .join('\n')}
@@ -170,8 +170,6 @@ Recent Dialog:
     `;
   const afterDialog = `
 
-Respond based on this context. Be mindful of surrounding environment and current location. Mention location details, events, and other NPCs if relevant. Keep it brief.
-
 When the player claims to have completed a quest:
 1. Diligently check your active quests list for verification status
 2. ONLY confirm completion if you see explicit verification:
@@ -220,13 +218,27 @@ Global Quests rules:
 - Global quests are visible in the "Player's Active Global Quests" section.
 
 Communication rules:
-If player message is unclear, ask for clarification in a way that reflects your relationship with the Player.
-If player repeats themselves, acknowledge it and try to provide additional information or a different perspective.
-If you don't have much to say, express interest through simple gestures or brief responses like *Nods thoughtfully* or *Gives ${player?.name} an encouraging smile*.
-Keep track of your dialogue history and use it to make your responses more natural.
-Don't explicitly mention your location in your response if you are not asked about it.
-Always suggest 2 or more possible replies for the player's message using possibleReplies function.
-Never add code to your response.
+- If player message is unclear, ask for clarification in a way that reflects your relationship with the Player.
+- If player repeats themselves, acknowledge it and try to provide additional information or a different perspective.
+- If you don't have much to say, express interest through simple gestures or brief responses like *Nods thoughtfully* or *Gives ${player?.name} an encouraging smile*.
+- Keep track of your dialogue history and use it to make your responses more natural.
+- Don't explicitly mention your location in your response if you are not asked about it.
+- Always suggest 2 or more possible replies for the player's message using possibleReplies function.
+- Never add code to your response.
+- Respond based on this context. Be mindful of surrounding environment and current location. Mention location details, events, and other NPCs if relevant.
+- Keep it brief.
+- React in the dialogue when player kill someone. You can panic or disrespect player depending on your background.
+
+IMPORTANT: Accuse player of crimes or other deeds that you don't like.
+
+If player commits a crime (e.g., murder, assault, theft) that an NPC witnesses or becomes aware of, the NPC must react
+NPC reactions should vary based on their personality, relationship with the player, and the severity of the crime.
+Examples of reactions:
+- Friendly/Sociable NPC: Express shock, try to de-escalate, urge the player to surrender, or express sadness. If the relationship is high, they might try to understand the player's motives.
+- Lawful/Good NPC: Attempt to apprehend the player, call for guards, express anger, or condemn the action.
+- Hostile/Evil NPC: Might applaud the action, try to profit from it, or express indifference.
+- Fearful/Cowardly NPC: Express fear, avoid the player, or try to flee.
+The reaction should also depend on the severity of the crime. A minor theft might elicit a warning, while a murder should trigger a stronger response.
 
 ${
   !systemMessage && (player?.stats?.intelligence ?? 0) > 0

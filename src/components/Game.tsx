@@ -167,7 +167,7 @@ const Game: React.FC = () => {
       combatLogStore.push(
         `${player.name} is attacking ${npc.background.name}.`,
       );
-      player.events.add(`${player.name} attacked ${npc.background.name}`);
+      player.events.add(`Player attacked ${npc.background.name}`);
     }
   };
 

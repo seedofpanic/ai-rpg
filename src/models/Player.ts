@@ -5,8 +5,6 @@ import { Equipment, itemsData } from './itemsData';
 import { MagicEffects } from './MagicEffects';
 import { Projectile } from './Projectile';
 import { projectileStore } from './projectileStore';
-import { gameStore } from './gameStore';
-import { mobStore } from './mobs/mobStore';
 import { Mob } from './mobs/mob';
 import { NPC } from './npcs/npc';
 
@@ -293,37 +291,6 @@ export class Player {
     const isCritical = Math.random() < this.criticalChance;
     const damage = isCritical ? this.attackPower * 2 : this.attackPower;
     currentTarget.takeDamage(damage);
-
-    if (currentTarget.isAlive()) {
-      // Handle mob defeat
-      if (currentTarget instanceof Mob) {
-        // It's a mob
-        this.events.add(
-          `${this.name} defeated some number of ${currentTarget.name}`,
-        );
-        combatLogStore.push(`${currentTarget.name} has been defeated!`);
-
-        gameStore.updateKillQuest(currentTarget.type);
-        setTimeout(
-          () => {
-            mobStore.removeMob(currentTarget.id);
-            mobStore.respawnMob(currentTarget);
-          },
-          10 * 60 * 1000,
-        );
-      } else if (currentTarget instanceof NPC) {
-        // It's an NPC
-        combatLogStore.push(
-          `${currentTarget.background.name} has been defeated!`,
-        );
-        this.events.add(`${this.name} killed ${currentTarget.background.name}`);
-
-        gameStore.updateKillQuest(
-          currentTarget.background.name,
-          currentTarget.id,
-        );
-      }
-    }
   }
 
   isAlive(): boolean {
